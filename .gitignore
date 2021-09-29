@@ -1,0 +1,5 @@
+*.m~
+*IPOPTinfo.txt
+*.mat
+*.slxc
+slprj
