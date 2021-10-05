@@ -18,13 +18,13 @@ auxdata.hd  = pwd;
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
-manoeuvre_spec.type = 'hold';              % 'climb' / 'hold'
+manoeuvre_spec.type = 'climb';              % 'climb' / 'hold'
 manoeuvre_spec.name = '15to25kmClimb';
-manoeuvre_spec.h0 = 20e3;
-manoeuvre_spec.hf = 20e3;
+manoeuvre_spec.h0 = 15e3;
+manoeuvre_spec.hf = 25e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
-manoeuvre_spec.use_guess = 0;
+manoeuvre_spec.use_guess = 1;
 
 [bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
 
@@ -37,8 +37,7 @@ auxdata = configure_inputs(auxdata);
 %                     Assign function handles                       %
 %------------------------------------------------------------------ %
 dynamics_func               = @tensor6;
-% objective_func              = @MinTime6;
-objective_func              = @AltHold6;
+objective_func              = @MinTime6;
 
 % ----------------------------------------------------------------- %
 %               Provide mesh refinement and method                  %

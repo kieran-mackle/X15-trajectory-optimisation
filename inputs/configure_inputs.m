@@ -11,13 +11,14 @@ function auxdata = configure_inputs(auxdata)
 % 4: ellipsoid model
 % 5: fourth order zonal harmonics model
 % 
-% 
-% 
-% 
-% 
+% Constant mass model
+% --------------------------------------
+% 0: variable mass
+% 1: constant mass (initial mass)
 % 
 % 
 % 
 % 
 
 auxdata.gravity_model = 4;
+auxdata.constant_mass = 0;

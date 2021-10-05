@@ -162,7 +162,11 @@ end
 
 Euldot      = [rolldot pitchdot yawdot];
 
-mdot        = -F_T./(g0.*Isp);
+if ad.constant_mass == 0
+    mdot = -F_T./(g0.*Isp);
+else
+    mdot = 0;
+end
 
 %-------------------------------------------------------------------%
 %                 Construct GPOPS-II Dynamics output                %
