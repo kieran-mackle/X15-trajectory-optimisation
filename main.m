@@ -8,12 +8,12 @@ clearvars; clc;
 %                  Initialise environment with paths                %
 %------------------------------------------------------------------ %
 run('./inputs/Settings_Scripts/LoadPaths.m')
-auxdata.hd  = pwd;
 
 % ----------------------------------------------------------------- %
 %                  Load vehicle configuration script                %
 %------------------------------------------------------------------ %
 auxdata = get_config('deck1.csv');
+auxdata.hd  = pwd;
 
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
@@ -25,17 +25,12 @@ manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
 manoeuvre_spec.use_guess = 1;
 
-[bounds, guess] = manoeuvre(manoeuvre_spec, auxdata);
-% Climb6;
+[bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
 
 % ----------------------------------------------------------------- %
-%                        Assign dynamics script                     %
+%                     Assign function handles                       %
 %------------------------------------------------------------------ %
 dynamics_func               = @tensor6;
-
-% ----------------------------------------------------------------- %
-%                      Assign objective script                      %
-%------------------------------------------------------------------ %
 objective_func              = @MinTime6;
 
 % ----------------------------------------------------------------- %
@@ -48,8 +43,6 @@ mesh.maxiterations          = 3;
 % ----------------------------------------------------------------- %
 %                    Construct GPOPS-II input                       %
 %------------------------------------------------------------------ %
-% setup = get_settings();
-
 setup.name                  = 'X-15_Optimisation';
 setup.functions.continuous  = dynamics_func;
 setup.functions.endpoint    = objective_func;

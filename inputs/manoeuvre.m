@@ -1,4 +1,4 @@
-function [bounds, guess] = manoeuvre(specification, auxdata)
+function [bounds, guess, auxdata] = manoeuvre(specification, auxdata)
 % ======================== Altitude Change ======================== %
 % Altitude change manoeuvre. Specify initial and final altitude.    %
 % ================================================================= %
