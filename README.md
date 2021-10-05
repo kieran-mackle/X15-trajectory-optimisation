@@ -1,36 +1,31 @@
 # X-15 Trajectory Optimisation Framework
 
 ## Directory Overview
-An overview of directories is as follows.
+An overview of directory structure is as follows.
 
-Aerodecks:
-    Contains aerodynamic force coefficient databases for different vehicle 
+**aero**: Contains aerodynamic force coefficient databases for different vehicle 
     configurations.
 
-Functions:
-    Contains various function scripts which are called during optimisation.
+**functions**: Contains various function scripts which are called during optimisation.
 
-Input Scripts:
-    Manoeuvre_Scripts: contains the scripts which specify the manoeuvre
+**inputs**: Manoeuvre_Scripts: contains the scripts which specify the manoeuvre
         being optimised.
     Objective_Functions: contains the objective functions for optimisation.
     Vehicle_Configurations: contains the vehicle configuration information.
 
-Results:
-    Structured results directory containing folders of case results. New
+**Results**: a structured results directory containing folders of case results. New
     folders will be added to this directory after running the plotting
     scripts.
 
-In current directory:
-    main.m: the master script to run a GPOPS-II optimisation problem. The 
+**home_dir**: contains main.m, the master script to run a GPOPS-II optimisation problem. The 
         input scripts are specified from within Main.m.
 
 
 ## General Running Procedure
 
-1. Specify load scripts in main.m;
-2. Run main.m;
-3. Run post-processing script;
+1. Specify load scripts in main.m,
+2. Run main.m,
+3. Run post-processing script,
 4. Run plotting script.
 
 
@@ -38,11 +33,11 @@ In current directory:
 ### Running 6DOF Optimisation
 
 The key working files associated with the 6DOF dynamics model are:
-    - Dynamics: Ellip6DOF
-    - Manoeuvre: Climb6
-    - Objective: MinTime6
-    - Post-processing: Post6.m
-    - plotting: SixPlot.m
+- Dynamics: Ellip6DOF
+- Manoeuvre: Climb6
+- Objective: MinTime6
+- Post-processing: Post6.m
+- plotting: SixPlot.m
 
 
 ## Example Optimisation Problems
