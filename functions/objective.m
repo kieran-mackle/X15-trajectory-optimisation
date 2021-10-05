@@ -1,8 +1,7 @@
-% =============== Altitude hold objective function ================ %
-% Objective function script for maintaining altitude.     %
-% ================================================================= %
-
 function output = objective(input)
+% =============== Altitude hold objective function ================ 
+% Generalised objective function for X-15 trajectory optimisation.
+% ================================================================= 
 
 tf      = input.phase.finaltime;
 X0      = input.phase.initialstate;
