@@ -3,23 +3,22 @@
 ## Directory Overview
 An overview of directory structure is as follows.
 
-**aero**: Contains aerodynamic force coefficient databases for different vehicle 
+**home_dir/**: contains main.m, the master script to run a GPOPS-II optimisation problem. The 
+        input scripts are specified from within Main.m.
+        
+**home_dir/aero**: Contains aerodynamic force coefficient databases for different vehicle 
     configurations.
 
-**functions**: Contains various function scripts which are called during optimisation.
+**home_dir/functions**: Contains various function scripts which are called during optimisation.
 
-**inputs**: Manoeuvre_Scripts: contains the scripts which specify the manoeuvre
+**home_dir/inputs**: Manoeuvre_Scripts: contains the scripts which specify the manoeuvre
         being optimised.
     Objective_Functions: contains the objective functions for optimisation.
     Vehicle_Configurations: contains the vehicle configuration information.
 
-**Results**: a structured results directory containing folders of case results. New
+**home_dir/Results**: a structured results directory containing folders of case results. New
     folders will be added to this directory after running the plotting
     scripts.
-
-**home_dir**: contains main.m, the master script to run a GPOPS-II optimisation problem. The 
-        input scripts are specified from within Main.m.
-
 
 ## General Running Procedure
 
@@ -29,15 +28,14 @@ An overview of directory structure is as follows.
 4. Run plotting script.
 
 
-
 ### Running 6DOF Optimisation
 
-The key working files associated with the 6DOF dynamics model are:
-- Dynamics: Ellip6DOF
+The key working files associated with the 6DOF dynamics model *tensor6* are:
+- Dynamics: tensor6.m
 - Manoeuvre: Climb6
 - Objective: MinTime6
-- Post-processing: Post6.m
-- plotting: SixPlot.m
+- Post-processing: post6.m
+- plotting: plot6.m
 
 
 ## Example Optimisation Problems
@@ -71,7 +69,7 @@ Minimum time to climb 15km to 25km with trimmed boundary conditions:
 
 
 
-## Works in progress or on halt
+## Works in progress
 
 Extended minimum time to climb 15km to 25km:
     - Vehicle: Config1.m
