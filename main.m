@@ -7,7 +7,7 @@ clearvars; clc;
 % ----------------------------------------------------------------- %
 %                  Initialise environment with paths                %
 %------------------------------------------------------------------ %
-run('./inputs/LoadPaths.m')
+run('./inputs/load_paths.m')
 
 % ----------------------------------------------------------------- %
 %                  Load vehicle configuration script                %
