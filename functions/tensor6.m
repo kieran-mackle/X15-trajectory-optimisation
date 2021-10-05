@@ -176,7 +176,7 @@ if ad.altitude_hold == 1
 %     output.integrand = (P - ad.P_targ).^2;
 %     output.path     = [output.path, fpa'];
 
-    output.integrand = fpa'.^2 + 0.5.*(6 - Ma).^2;
+    output.integrand = fpa'.^2 + 5*(6 - Ma).^2;
 end
 
 

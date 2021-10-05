@@ -96,9 +96,15 @@ else
     rmin    = -1e1*d2r;             rmax    = -rmin;
 end
 
-rollmin = -180*d2r;             rollmax = -rollmin;
-pitchmin = -89*d2r;             pitchmax = -pitchmin;
-yawmin  = -180*d2r;             yawmax  = -yawmin;
+if strcmpi(specification.type, 'hold')
+    rollmin = 0*d2r;                rollmax = -rollmin;
+    pitchmin = -89*d2r;             pitchmax = -pitchmin;
+    yawmin  = 0*d2r;                yawmax  = -yawmin;
+else
+    rollmin = -180*d2r;             rollmax = -rollmin;
+    pitchmin = -89*d2r;             pitchmax = -pitchmin;
+    yawmin  = -180*d2r;             yawmax  = -yawmin;
+end
 
 vBEDmin = [vxmin,vymin,vzmin];
 vBEDmax = [vxmax,vymax,vzmax];
