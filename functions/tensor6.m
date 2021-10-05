@@ -155,9 +155,10 @@ for i = 1:length(t)
     pitchdot(i) = Eulsdot(2);
     yawdot(i) = Eulsdot(3);
 
-    % FOR ALTITUDE HOLD ONLY:
-%     vBEG   = T_DG' * vBED(i,:)';
-%     [~,~,fpa(i)] = car2pol(vBEG);
+    if ad.altitude_hold == 1
+        vBEG   = T_DG' * vBED(i,:)';
+        [~,~,fpa(i)] = car2pol(vBEG);
+    end
 end
 
 Euldot      = [rolldot pitchdot yawdot];
@@ -171,9 +172,10 @@ output.dynamics = [sdot vBEDdot wBIBdot mdot dfda dthr Euldot];
 
 output.path     = [aoas,Ma];
 
-% FOR ALTITUDE HOLD ONLY:
-% output.integrand = (P - ad.P_targ).^2;
-% output.path     = [output.path, fpa'];
+if ad.altitude_hold == 1
+    output.integrand = (P - ad.P_targ).^2;
+    output.path     = [output.path, fpa'];
+end
 
 
 % Debugging --------------- %

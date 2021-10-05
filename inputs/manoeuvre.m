@@ -9,14 +9,18 @@ auxdata.name    = specification.name;
 auxdata.DOF     = '6DOF';
 
 %-------------------------------------------------------------------%
-%                            Define Climb                           %
+%                     Define Boundary Conditions                    %
 %-------------------------------------------------------------------%
 h0      = specification.h0;     hf      = specification.hf;     % (m)
 Ma0     = specification.Ma0;    Maf     = specification.Maf;    % (-)
 
-%-------------------------------------------------------------------%
-%                        Boundary Conditions                        %
-%-------------------------------------------------------------------%
+if strcmpi(specification.type, 'hold')
+    auxdata.altitude_hold = 1;
+    [~,auxdata.P_targ,~] = GetAtmo(h0);
+else
+    auxdata.altitude_hold = 0;
+end
+
 t0      = 0;                    tf      = 20;               % (s)
 
 % Define speed, heading and flight-path angle boundaries
@@ -111,8 +115,13 @@ vBEDf   = T_DGf * vBEGf;
 % Construct bounds ----------------------------------------------------- %
 bounds.phase.initialtime.lower  = t0;
 bounds.phase.initialtime.upper  = t0;
-bounds.phase.finaltime.lower    = tmin;
-bounds.phase.finaltime.upper    = tmax;
+if strcmpi(specification.type, 'hold')
+    bounds.phase.finaltime.lower    = tf;
+    bounds.phase.finaltime.upper    = tf;
+else
+    bounds.phase.finaltime.lower    = tmin;
+    bounds.phase.finaltime.upper    = tmax;
+end
 
 bounds.phase.initialstate.lower = [latmin,lonmin,dist0,     ...
                                    vBEDmin,wBIBmin,     ...
@@ -140,6 +149,14 @@ bounds.phase.control.upper      = [dfdamax,dthrmax];
 
 bounds.phase.path.lower         = [aoamin,Mamin];
 bounds.phase.path.upper         = [aoamax,Mamax];
+
+if strcmpi(specification.type, 'hold')
+    bounds.phase.path.lower = [bounds.phase.path.lower, fpa0];
+    bounds.phase.path.upper = [bounds.phase.path.upper, fpa0];
+    
+    bounds.phase.integral.lower = [0];
+    bounds.phase.integral.upper = [10e3];
+end
 
 % Eventgroups ---------------------------------------------------------- %
 bounds.eventgroup(1).lower      = [Ma0,Maf];
@@ -207,5 +224,9 @@ else
 
     guess.phase.control(:,1)        = dfda;
     guess.phase.control(:,2)        = dthr;
+    
+    if strcmpi(specification.type, 'hold')
+        guess.phase.integral            = zeros(1,1);
+    end
 end
 
