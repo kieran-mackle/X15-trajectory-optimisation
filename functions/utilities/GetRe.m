@@ -1,6 +1,6 @@
 function Re = GetRe(latitude, model)
 if model == 1
-    Re = 6378137.0;
+    Re = 6378137.0 * ones(size(latitude));
 elseif model == 2
     a = 6378137.0;
     f = 3.33528106e-3;
