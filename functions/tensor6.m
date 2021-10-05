@@ -126,9 +126,8 @@ for i = 1:length(t)
     f_spB       = (1./m(i)) * f_apB;
     
     % Gravity
-    % NOT sure if sEII should be [0,0,0]
     sBII        = T_DI'*sBED(i,:)' + sEII;
-    g_G         = GetGravity(sBII,latc(i),4);
+    g_G         = GetGravity(sBII,latc(i), ad.gravity_model);
     gs(i)       = norm(g_G);
     
     % Equations of motion -------------------------------- %
