@@ -13,12 +13,20 @@ auxdata.hd  = pwd;
 % ----------------------------------------------------------------- %
 %                  Load vehicle configuration script                %
 %------------------------------------------------------------------ %
-Config1;
+auxdata = get_config('deck1.csv');
 
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
-Climb6;
+manoeuvre_spec.name = '15to25kmClimb';
+manoeuvre_spec.h0 = 15e3;
+manoeuvre_spec.hf = 25e3;
+manoeuvre_spec.Ma0 = 6;
+manoeuvre_spec.Maf = 6;
+manoeuvre_spec.use_guess = 1;
+
+[bounds, guess] = manoeuvre(manoeuvre_spec, auxdata);
+% Climb6;
 
 % ----------------------------------------------------------------- %
 %                        Assign dynamics script                     %

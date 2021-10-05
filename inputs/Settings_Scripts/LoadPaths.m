@@ -2,6 +2,7 @@ addpath ../../aero/
 addpath ../../functions/
 addpath ../../functions/Transformations/
 addpath ../../functions/Utilities/
+addpath ../../inputs/
 addpath ../../inputs/Manoeuvre_Scripts/
 addpath ../../inputs/Objective_Functions/
 addpath ../../inputs/Vehicle_Configurations/
