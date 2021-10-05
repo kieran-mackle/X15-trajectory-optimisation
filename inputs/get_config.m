@@ -1,7 +1,9 @@
+function auxdata = get_config(aero_filename)
 % =================== Nominal X-15 Configuration ================== %
 % Configuration file for nominal configuration of X-15 with delta   %
 % wing (NASA TN D-5498).                                            %
 % ================================================================= %
+
 auxdata.config  = 'Config1';
 
 %-------------------------------------------------------------------%
@@ -18,40 +20,11 @@ auxdata.deg     = pi/180;
 auxdata.rad     = 180/pi;
 
 % Import aerodynamic force coefficient database
-% (Old aerodeck)
-% temp            = importdata('C1AeroDeck.csv');
-% dat             = sortrows(temp.data,1);
-% dat             = sortrows(dat,2);
-% data1           = sortrows(dat,3);
-% auxdata.aero    = NormDB(data);
-
-% Aerodeck from re-run:
-temp            = importdata('deck1.csv');
+temp            = importdata(aero_filename);
 dat             = sortrows(temp.data,1);
 dat             = sortrows(dat,2);
 data1           = sortrows(dat,3);
 auxdata.aero    = NormDB(data1);
-
-% % File containing viscous additions:
-% temp            = importdata('viscdeck.csv');
-% dat             = sortrows(temp.data,1);
-% dat             = sortrows(dat,2);
-% data            = sortrows(dat,3);
-% visc_coefs      = data1(:,4:6) + data(:,4:6);
-% data2           = data;
-% data2(:,4:6)    = visc_coefs;
-% auxdata.aero    = NormDB(data2);
-
-% SurfacedAero
-% ScatteredInterpfuncts
-clear temp dat data inviscDat
-
-% temp            = importdata('x15_aerodeck.txt');
-% temp2           = temp.data(:,[1,4,3,5,6,9]);
-% dat             = sortrows(temp2,2);
-% data            = sortrows(dat,3);
-% auxdata.aero    = NormDB(data);
-% clear temp* dat data
 
 % Vehcicle shape parameters (scale by 50 for lengths, 50^2 for area)
 auxdata.S       = 2*56.0205;
