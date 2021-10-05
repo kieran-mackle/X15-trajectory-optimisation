@@ -1,5 +1,5 @@
 % ======================= Wing Optimisation ======================= %
-%  Pseudospectral optimisation problem for X-15 Delta wing config.  %
+%  Pseudospectral optimisation problem for X-15 Delta wing.         %
 % ================================================================= %
 
 clearvars; clc;
@@ -12,7 +12,7 @@ run('./inputs/LoadPaths.m')
 % ----------------------------------------------------------------- %
 %                  Load vehicle configuration script                %
 %------------------------------------------------------------------ %
-auxdata = get_config('deck1.csv');
+auxdata = get_config('deck1.csv'); % Filename of aerodeck in ./aero/
 auxdata.hd  = pwd;
 
 % ----------------------------------------------------------------- %
