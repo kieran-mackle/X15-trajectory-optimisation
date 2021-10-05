@@ -1,6 +1,6 @@
-% ======================= Wing Optimisation ======================= %
-%  Pseudospectral optimisation problem for X-15 Delta wing.         %
-% ================================================================= %
+% ======================= Wing Optimisation ======================= 
+%      Pseudospectral optimisation problem for X-15 Delta wing.         
+% ================================================================= 
 
 clearvars; clc;
 
@@ -12,19 +12,19 @@ run('./inputs/load_paths.m')
 % ----------------------------------------------------------------- %
 %                  Load vehicle configuration script                %
 %------------------------------------------------------------------ %
-auxdata = get_config('deck1.csv'); % Filename of aerodeck in ./aero/
+auxdata = get_config('deck1.csv');  % Filename of aerodeck in ./aero/
 auxdata.hd  = pwd;
 
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
-manoeuvre_spec.type = 'climb';              % 'climb' / 'hold'
-manoeuvre_spec.name = '15to25kmClimb';
-manoeuvre_spec.h0 = 15e3;
-manoeuvre_spec.hf = 25e3;
+manoeuvre_spec.type = 'hold';              % 'climb' / 'hold'
+manoeuvre_spec.name = '20kmHold';
+manoeuvre_spec.h0 = 20e3;
+manoeuvre_spec.hf = 20e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
-manoeuvre_spec.use_guess = 1;
+manoeuvre_spec.use_guess = 0;
 
 [bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
 
@@ -37,7 +37,7 @@ auxdata = configure_inputs(auxdata);
 %                     Assign function handles                       %
 %------------------------------------------------------------------ %
 dynamics_func               = @tensor6;
-objective_func              = @MinTime6;
+objective_func              = @objective;
 
 % ----------------------------------------------------------------- %
 %               Provide mesh refinement and method                  %

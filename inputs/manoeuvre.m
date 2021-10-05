@@ -86,20 +86,27 @@ vxmin   = -1e4;                 vxmax   = -vxmin;
 vymin   = -1e4;                 vymax   = -vymin;
 vzmin   = -1e4;                 vzmax   = -vzmin;
 
-pmin    = -1e1*d2r;             pmax    = -pmin;
-qmin    = -1e1*d2r;             qmax    = -qmin;
-rmin    = -1e1*d2r;             rmax    = -rmin;
+if strcmpi(specification.type, 'hold')
+    pmin    = 0*d2r;             pmax    = -pmin;
+    qmin    = 0*d2r;             qmax    = -qmin;
+    rmin    = 0*d2r;             rmax    = -rmin;
+else
+    pmin    = -1e1*d2r;             pmax    = -pmin;
+    qmin    = -1e1*d2r;             qmax    = -qmin;
+    rmin    = -1e1*d2r;             rmax    = -rmin;
+end
 
 rollmin = -180*d2r;             rollmax = -rollmin;
 pitchmin = -89*d2r;             pitchmax = -pitchmin;
 yawmin  = -180*d2r;             yawmax  = -yawmin;
 
 vBEDmin = [vxmin,vymin,vzmin];
-wBIBmin = [pmin,qmin,rmin];
-Eulmin  = [rollmin,pitchmin,yawmin];
-
 vBEDmax = [vxmax,vymax,vzmax];
+
+wBIBmin = [pmin,qmin,rmin];
 wBIBmax = [pmax,qmax,rmax];
+
+Eulmin  = [rollmin,pitchmin,yawmin];
 Eulmax  = [rollmax,pitchmax,yawmax];
 
 % Want to try a better start point:
@@ -151,11 +158,18 @@ bounds.phase.path.lower         = [aoamin,Mamin];
 bounds.phase.path.upper         = [aoamax,Mamax];
 
 if strcmpi(specification.type, 'hold')
-    bounds.phase.path.lower = [bounds.phase.path.lower, fpa0];
-    bounds.phase.path.upper = [bounds.phase.path.upper, fpa0];
+    % Constrain fpa=0 and penalise deviation from P_targ
+    % ---------------------------------------------------
+%     bounds.phase.path.lower = [bounds.phase.path.lower, fpa0];
+%     bounds.phase.path.upper = [bounds.phase.path.upper, fpa0];
+%     
+%     bounds.phase.integral.lower = [0];
+%     bounds.phase.integral.upper = [10e3];
     
+    % Penalise deviation from fpa=0
+    % ---------------------------------------------------
     bounds.phase.integral.lower = [0];
-    bounds.phase.integral.upper = [10e3];
+    bounds.phase.integral.upper = [5];
 end
 
 % Eventgroups ---------------------------------------------------------- %
@@ -226,7 +240,7 @@ else
     guess.phase.control(:,2)        = dthr;
     
     if strcmpi(specification.type, 'hold')
-        guess.phase.integral            = zeros(1,1);
+        guess.phase.integral = zeros(1,1);
     end
 end
 

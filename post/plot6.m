@@ -14,20 +14,20 @@ CloseFigures    = 0;
 createGuess     = 0;
 
 % Toggle 0/1 to specify what to plot
-PlotTrajectory  = 1;
+PlotTrajectory  = 0;
 PlotGeographic  = 0;
-PlotState       = 1;
+PlotState       = 0;
 PlotStateFS     = 0;
 PlotAngles      = 0;
-PlotControls    = 1;
+PlotControls    = 0;
 PlotControlRates = 0;
 PlotVelocity    = 0;
 PlotMass        = 0;
-PlotForwardSim  = 0;
+PlotForwardSim  = 1;
 PlotAero        = 0;
 PlotForces      = 0;
 PlotAccell      = 0;
-PlotAll         = 0;
+PlotAll         = 1;
 PlotMesh        = 0;
 PlotFSonly      = 0;
 
