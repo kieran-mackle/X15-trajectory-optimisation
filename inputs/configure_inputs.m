@@ -3,6 +3,7 @@ function auxdata = configure_inputs(auxdata)
 % Model configuration function to configure models used in the 
 %                    trajectory optimisation.                          
 % ================================================================= 
+%
 % Gravity models
 % --------------------------------------
 % 1: constant gravity model 
@@ -15,10 +16,12 @@ function auxdata = configure_inputs(auxdata)
 % --------------------------------------
 % 0: variable mass
 % 1: constant mass (initial mass)
-% 
-% 
-% 
-% 
+%
+% Earth radius model
+% --------------------------------------
+% 1: constant radius model
+% 2: Geodedic earth model
 
-auxdata.gravity_model = 4;
-auxdata.constant_mass = 0;
+auxdata.gravity_model = 1;
+auxdata.constant_mass = 1;
+auxdata.radius_model = 1;

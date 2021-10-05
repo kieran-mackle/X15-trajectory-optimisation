@@ -65,10 +65,7 @@ sEII    = [0;0;0];
 %-------------------------------------------------------------------%
 %                   Aerodynamics initialisation                     %
 %-------------------------------------------------------------------%
-a       = 6378137.0;
-f       = 3.33528106e-3;
-Re      = a.*(1-(f/2).*(1-cos(2.*latd)) + ...
-          (5.*f.^2./16).*(1-cos(4.*latd)));
+Re              = GetRe(latd, ad.radius_model);
 h               = -(dist + Re);
 V               = sqrt(sum(vBED.^2,2));
 [Temp,P,rho]    = GetAtmo(h);
@@ -165,7 +162,7 @@ Euldot      = [rolldot pitchdot yawdot];
 if ad.constant_mass == 0
     mdot = -F_T./(g0.*Isp);
 else
-    mdot = 0;
+    mdot = zeros(size(t));
 end
 
 %-------------------------------------------------------------------%
@@ -176,8 +173,10 @@ output.dynamics = [sdot vBEDdot wBIBdot mdot dfda dthr Euldot];
 output.path     = [aoas,Ma];
 
 if ad.altitude_hold == 1
-    output.integrand = (P - ad.P_targ).^2;
-    output.path     = [output.path, fpa'];
+%     output.integrand = (P - ad.P_targ).^2;
+%     output.path     = [output.path, fpa'];
+
+    output.integrand = fpa'.^2;
 end
 
 
