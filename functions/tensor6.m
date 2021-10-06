@@ -82,7 +82,11 @@ sBED    = [zeros(size(t)),zeros(size(t)),dist];
 %-------------------------------------------------------------------%
 %                       Dynamics initialisation                     %
 %-------------------------------------------------------------------%
-R_EII   = R_tensor([0,0,we]);
+if ad.earth_rotation == 1
+    R_EII   = R_tensor([0,0,we]);
+else
+    R_EII   = R_tensor([0,0,0]);
+end
 
 delta   = GetDelta(h,latd);
 latc    = latd - delta;

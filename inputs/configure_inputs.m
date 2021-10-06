@@ -21,7 +21,13 @@ function auxdata = configure_inputs(auxdata)
 % --------------------------------------
 % 1: constant radius model
 % 2: Geodedic earth model
+%
+% Earth rotation model
+% --------------------------------------
+% 0: no rotation
+% 1: rotation
 
 auxdata.gravity_model = 1;
 auxdata.constant_mass = 1;
 auxdata.radius_model = 1;
+auxdata.earth_rotation = 0;
