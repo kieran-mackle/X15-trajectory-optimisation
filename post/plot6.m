@@ -23,7 +23,7 @@ PlotControls    = 0;
 PlotControlRates = 0;
 PlotVelocity    = 0;
 PlotMass        = 0;
-PlotForwardSim  = 1;
+PlotForwardSim  = 0;
 PlotAero        = 0;
 PlotForces      = 0;
 PlotAccell      = 0;
@@ -690,9 +690,7 @@ end
 
 % Full overview -------------------------------------------------- %
 if PlotAll == 1
-    fs = FSResults;
-    fst = fs.h.time;
-    
+
     figure();
     clf;
     sgtitle('Trajectory Overview');
