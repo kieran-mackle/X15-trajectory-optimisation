@@ -21,6 +21,7 @@ convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 % Define initial state
 % ----------------------------------------------------------------------- %
 % Use GPOPS solution to get initial trim state
+run('./../inputs/load_paths.m')
 load('./../Results/Config1/6DOF/20kmHold/20kmHold.mat')
 
 out = output.result.solution.phase;
