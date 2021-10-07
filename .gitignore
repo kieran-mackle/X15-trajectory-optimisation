@@ -1,3 +1,5 @@
+*.lp
+*.log
 *.m~
 *IPOPTinfo.txt
 *.mat
