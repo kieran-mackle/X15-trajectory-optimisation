@@ -46,7 +46,7 @@ plant_model                 = control_model;
 cost_weightings.output         = 1e3* [1, 0, 0, 0, 0;   % Altitude
                                        0, 0, 0, 0, 0;   % FDA
                                        0, 0, 0, 0, 0;   % THR
-                                       0, 0, 0, 0, 0;   % Ma
+                                       0, 0, 0, 1, 0;   % Ma
                                        0, 0, 0, 0, 1];  % FPA
 cost_weightings.control        = eye(length(initial.control));
 
