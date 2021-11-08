@@ -35,12 +35,15 @@ initial.control = u0;
 
 % Define control model - as seen by MPC 
 control_model.auxdata       = auxdata;
-control_model.dynamics      = @tensor6;
+control_model.dynamics      = @cart3;
 control_model.output        = @X15_outputs;
 reference_function          = @X15_reference;
 
 % Define plant model - as vehicle responds in the environment
-plant_model                 = control_model;
+plant_model.auxdata         = auxdata;
+plant_model.dynamics        = @tensor6;
+plant_model.output          = @X15_outputs;
+reference_function          = @X15_reference;
 
 % ----------------------------------------------------------------------- %
 % Define cost and constraint matrices
