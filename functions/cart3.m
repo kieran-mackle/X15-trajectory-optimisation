@@ -31,6 +31,8 @@ dthr    = u(:,2);                       % Thrust setting rate
 Re      = auxdata.Re;                   % Radius of earth (m)
 S       = auxdata.S;                    % Reference area (m^2)
 max_thrust = auxdata.thrust;            % Maximum engine thrust force (N)
+R       = ad.R;                         % (J/kg.K)
+gamma   = ad.gamma;                     % (-)
 
 % Models
 gravity_model = auxdata.gravity_model;
@@ -49,12 +51,14 @@ T_VL        = TM_VL(fpa, hda);
 
 % Atmospheric properties
 h           = sBE_L(:,3) - Re;
-[~,~,rho]   = GetAtmo(h);
+[T,~,rho]   = GetAtmo(h);
+a           = sqrt(gamma.*R.*T);
 qbar        = 0.5*rho.*V.^2;
 
 % Aerodynamic and propulsive forces
-F           = thr*max_thrust;
-[CL,CD,~]   = aerodynamics_model(fda, AoA, Mach);
+F           = thr.*max_thrust;
+Ma          = V./a;
+[CL,CD,~]   = aerodynamics_model(fda, AoA, Ma);
 f_ap_M      = [ F*cos(AoA) - qbar*S*CD; 
                          0; 
                -F*sin(AoA) - qbar*S*CL];
