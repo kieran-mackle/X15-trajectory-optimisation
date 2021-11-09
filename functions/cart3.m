@@ -5,6 +5,12 @@ function output = cart3(input)
 %  the local-level coordinate system.
 % ==================================================================
 
+% TODO 
+% ----
+%  - check units of aoa/aob: radians coming in
+%  - implement mass model
+
+
 %-------------------------------------------------------------------%
 %           Extract state and control variables from input          %
 %-------------------------------------------------------------------%
@@ -20,8 +26,8 @@ m       = X(:,7);
 fda     = X(:,8);                       % Flap deflection angle
 thr     = X(:,9);                       % Thrust setting
     % Mapped states
-AoA     = X(:,10);                      % Angle of attack
-AoB     = X(:,11);                      % Angle of bank
+AoA     = X(:,10);                      % Angle of attack (rad)
+AoB     = X(:,11);                      % Angle of bank (rad)
 
 % Control variables
 dfda    = u(:,1);                       % Flap angle rate
@@ -33,6 +39,7 @@ S       = auxdata.S;                    % Reference area (m^2)
 max_thrust = auxdata.thrust;            % Maximum engine thrust force (N)
 R       = ad.R;                         % (J/kg.K)
 gamma   = ad.gamma;                     % (-)
+rad2deg = 180/pi;
 
 % Models
 gravity_model = auxdata.gravity_model;
@@ -58,7 +65,7 @@ qbar        = 0.5*rho.*V.^2;
 % Aerodynamic and propulsive forces
 F           = thr.*max_thrust;
 Ma          = V./a;
-[CL,CD,~]   = aerodynamics_model(fda, AoA, Ma);
+[CL,CD,~]   = aerodynamics_model(auxdata, AoA*rad2deg, Ma, fda*rad2deg);
 f_ap_M      = [ F*cos(AoA) - qbar*S*CD; 
                          0; 
                -F*sin(AoA) - qbar*S*CL];
@@ -69,7 +76,7 @@ f_sp_V      = f_ap_V./m;
 d_vBE_L     = T_VL' * f_sp_V + g_L;
 d_sBE_L     = vBE_L;
 
-mdot        = mass_model();
+mdot        = 0; % mass_model(F);
 
 %-------------------------------------------------------------------%
 %                       Construct Dynamics output                   %
