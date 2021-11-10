@@ -48,6 +48,16 @@ hmin    = 10e3;                 hmax    = 50e3;             % (m)
 Mamin   = 4;                    Mamax   = 8;                % (-)
 aoamin  = -30*d2r;              aoamax  = -aoamin;          % (rad)
 
+% POSITIONAL BOUNDS
+Nmin    = 0;                    Nmax    = 0;                % (m)
+Emin    = 0;                    Emax    = vEf*tmax;         % (m)
+Dmin    = -Re-hmax;             Dmax    = -Re-hmin;         % (m)
+
+% VELOCITY BOUNDS
+vNmin   = 0;                    vNmax   = 0;                % (m)
+vEmin   = Mamin*a(0);           vEmax   = Mamax*a(2);         % (m)
+vDmin   = ;             vDmax   = ;         % (m)
+
 mmin    = m0;                   mmax    = m0;               % (kg)
 
 fdamin  = -40*d2r;              fdamax  = -fdamin;          % (rad)
