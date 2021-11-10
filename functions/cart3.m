@@ -25,9 +25,6 @@ vBE_L   = X(:,4:6);                     % [uL, vL, wL]
 m       = X(:,7);
 fda     = X(:,8);                       % Flap deflection angle
 thr     = X(:,9);                       % Thrust setting
-    % Mapped states
-% AoA     = X(:,10);                      % Angle of attack (rad)
-% AoB     = X(:,11);                      % Angle of bank (rad)
 
 % Set AoB = 0, derive AoA from pitch-trimmed lookup
 AoB     = zeros(size(t));

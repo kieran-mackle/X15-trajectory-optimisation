@@ -6,7 +6,11 @@ function [bounds, guess, auxdata] = cart_manoeuvre(specification, auxdata)
 d2r             = pi/180;
 imported_guess  = specification.use_guess;
 auxdata.name    = specification.name;
-auxdata.DOF     = '6DOF';
+auxdata.DOF     = '3DOF';
+
+Re              = auxdata.Re0;
+R               = ad.R;
+gamma           = ad.gamma;
 
 %-------------------------------------------------------------------%
 %                     Define Boundary Conditions                    %
@@ -15,54 +19,26 @@ h0      = specification.h0;     hf      = specification.hf;     % (m)
 Ma0     = specification.Ma0;    Maf     = specification.Maf;    % (-)
 
 t0      = 0;                    tf      = 20;               % (s)
-N0      = 0;
-E0      = 0; 
-D0      = 0;
 
+% DEFINE POSITION
+N0      = 0;                    Nf      = 0;                % (m)
+E0      = 0;                    Ef      = 0;                % (m)
+D0      = -Re - h0;             Df      = -Re - hf;         % (m)
 
+% DEFINE VELOCITY - flying due East
+[T,~,~] = atmospheric_model([h0, hf]);
+a       = sqrt(gamma.*R.*T);
+vN0     = 0;                    vNf     = 0;                % (m/s)
+vE0     = Ma0*a(1);             vEf     = Maf*a(2);         % (m/s)
+vD0     = 0;                    vDf     = 0;                % (m/s)
+m0      = 10e3;                 mf      = 10e3;
 
+fda0    = 0;                    fdaf    = 0;
+thr0    = 0;                    thrf    = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-% Define speed, heading and flight-path angle boundaries
-V0      = Ma2V(Ma0,h0);         Vf      = Ma2V(Maf,hf);     % (m/s)
-hda0    = 0*d2r;                hdaf    = 0*d2r;            % (rad)
-fpa0    = 0*d2r;                fpaf    = 0*d2r;            % (rad)
-
-% Define geodetic longitude and latitude
-lon0    = 0*d2r;                lonf    = 0*d2r;            % (rad)
-lat0    = 0*d2r;                latf    = 0*d2r;            % (rad)
-% define initial Greenwich celestial longitude:
-l_G0    = 0*d2r;
-auxdata.l_G0 = l_G0;
-
-% Define body rates
-p0      = 0*d2r;                pf      = 0*d2r;
-q0      = 0*d2r;                qf      = 0*d2r;
-r0      = 0*d2r;                rf      = 0*d2r;
-
-% Define Euler angles
-roll0   = 0*d2r;                rollf   = 0*d2r;
-pitch0  = 0*d2r;                pitchf  = 0*d2r;
-yaw0    = 0*d2r;                yawf    = 0*d2r;
-
-% Define remaining state variable parameters
-m0      = 10.5e3;               mf      = 8.4e3;            % (kg)
-fda0    = 10*d2r;               fdaf    = 10*d2r;           % (rad)
-dfda0   = 0;                    dfdaf   = 0;                % (rad/s)
-thr0    = 0.3;                  thrf    = 0.3;              % (-)
-dthr0   = 0;                    dthrf   = 0;                % (N/s)
+% Control inputs
+dfda0   = 0;                    dfdaf   = 0;
+dthr0   = 0;                    dthrf   = 0;
 
 %-------------------------------------------------------------------%
 %                          Variable Limits                          %
@@ -71,134 +47,57 @@ tmin    = 0;                    tmax    = 100;              % (s)
 hmin    = 10e3;                 hmax    = 50e3;             % (m)
 Mamin   = 4;                    Mamax   = 8;                % (-)
 aoamin  = -30*d2r;              aoamax  = -aoamin;          % (rad)
-fpamin  = -40*d2r;              fpamax  = -fpamin;          % (rad)
-hdamin  = -180*d2r;             hdamax  = -hdamin;          % (rad)
-latmin  = -90*d2r;              latmax  = -latmin;          % (rad)
-lonmin  = -180*d2r;             lonmax  = -lonmin;          % (rad)
-mmin    = auxdata.drymass;      mmax    = m0;               % (kg)
+
+mmin    = m0;                   mmax    = m0;               % (kg)
+
 fdamin  = -40*d2r;              fdamax  = -fdamin;          % (rad)
 dfdamin = -1e1*d2r;             dfdamax = -dfdamin;         % (rad/s)
 thrmin  = 0;                    thrmax  = 1;                % (-)
 dthrmin = -0.2;                 dthrmax = -dthrmin;         % (N/s)
 
+
 % END OF USER INPUTS --------------------------------------------------- %
 % ---------------------------------------------------------------------- %
-% Initialise state variables from input
-a       = 6378137.0;
-f       = 1/298.257223563;
-Re0      = a*(1-(f/2)*(1-cos(2*lat0)) + (5*f^2/16)*(1-cos(4*lat0)));
-Ref      = a*(1-(f/2)*(1-cos(2*latf)) + (5*f^2/16)*(1-cos(4*latf)));
-dist0   = -(Re0 + h0);
-distf   = -(Ref + hf);
-distmin = 1.2*min(dist0,distf);
-distmax = 0.8*max(dist0,distf);
+sBE_Lmin = [Nmin, Emin, Dmin];          sBE_Lmax = [Nmax, Emax, Dmax];
+vBE_Lmin = [vNmin, vEmin, vDmin];       vBE_Lmax = [vNmax, vEmax, vDmax];
 
-% Define minimum and maximum bounds
-vxmin   = -1e4;                 vxmax   = -vxmin;
-vymin   = -1e4;                 vymax   = -vymin;
-vzmin   = -1e4;                 vzmax   = -vzmin;
 
-if strcmpi(specification.type, 'hold')
-    pmin    = 0*d2r;             pmax    = -pmin;
-    qmin    = 0*d2r;             qmax    = -qmin;
-    rmin    = 0*d2r;             rmax    = -rmin;
-else
-    pmin    = -1e1*d2r;             pmax    = -pmin;
-    qmin    = -1e1*d2r;             qmax    = -qmin;
-    rmin    = -1e1*d2r;             rmax    = -rmin;
-end
 
-if strcmpi(specification.type, 'hold')
-    rollmin = 0*d2r;                rollmax = -rollmin;
-    pitchmin = -89*d2r;             pitchmax = -pitchmin;
-    yawmin  = 0*d2r;                yawmax  = -yawmin;
-else
-    rollmin = -180*d2r;             rollmax = -rollmin;
-    pitchmin = -89*d2r;             pitchmax = -pitchmin;
-    yawmin  = -180*d2r;             yawmax  = -yawmin;
-end
 
-vBEDmin = [vxmin,vymin,vzmin];
-vBEDmax = [vxmax,vymax,vzmax];
-
-wBIBmin = [pmin,qmin,rmin];
-wBIBmax = [pmax,qmax,rmax];
-
-Eulmin  = [rollmin,pitchmin,yawmin];
-Eulmax  = [rollmax,pitchmax,yawmax];
-
-% Want to try a better start point:
-delta0  = GetDelta(h0,lat0);       deltaf  = GetDelta(hf,latf);
-T_DG0   = TM_DG(delta0);           T_DGf   = TM_DG(deltaf);
-
-vBEG0   = pol2car(V0,hda0,fpa0);
-vBEGf   = pol2car(Vf,hdaf,fpaf);
-
-vBED0   = T_DG0 * vBEG0;
-vBEDf   = T_DGf * vBEGf;
 
 % Construct bounds ----------------------------------------------------- %
 bounds.phase.initialtime.lower  = t0;
 bounds.phase.initialtime.upper  = t0;
-if strcmpi(specification.type, 'hold')
-    bounds.phase.finaltime.lower    = tf;
-    bounds.phase.finaltime.upper    = tf;
-else
-    bounds.phase.finaltime.lower    = tmin;
-    bounds.phase.finaltime.upper    = tmax;
-end
+bounds.phase.finaltime.lower    = tmin;
+bounds.phase.finaltime.upper    = tmax;
 
-bounds.phase.initialstate.lower = [latmin,lonmin,dist0,     ...
-                                   vBEDmin,wBIBmin,     ...
-                                   m0,fdamin,thrmin,Eulmin];
-bounds.phase.initialstate.upper = [latmax,lonmax,dist0,     ...
-                                   vBEDmax,wBIBmax,     ...
-                                   m0,fdamax,thrmax,Eulmax];
+bounds.phase.initialstate.lower = [sBE_Lmin, vBE_Lmin, m0,  ...
+                                   fdamin, thrmin];
+bounds.phase.initialstate.upper = [sBE_Lmax, vBE_Lmax, m0,  ...
+                                   fdamax, thrmax];
 
-bounds.phase.state.lower        = [latmin,lonmin,distmin,   ...
-                                   vBEDmin,wBIBmin,     	...
-                                   mmin,fdamin,thrmin,Eulmin];
-bounds.phase.state.upper        = [latmax,lonmax,distmax,   ...
-                                   vBEDmax,wBIBmax,     	...
-                                   mmax,fdamax,thrmax,Eulmax];
+bounds.phase.state.lower        = [sBE_Lmin, vBE_Lmin, mmin,...
+                                   fdamin, thrmin];
+bounds.phase.state.upper        = [sBE_Lmax, vBE_Lmax, m0,  ...
+                                   fdamax, thrmax];
 
-bounds.phase.finalstate.lower   = [latmin,lonmin,distf,   ...
-                                   vBEDmin,wBIBmin,     	...
-                                   mmin,fdamin,thrmin,Eulmin];
-bounds.phase.finalstate.upper   = [latmax,lonmax,distf,   ...
-                                   vBEDmax,wBIBmax,     	...
-                                   mmax,fdamax,thrmax,Eulmax];
+bounds.phase.finalstate.lower   = [sBE_Lmin, vBE_Lmin, mmin,...
+                                   fdamin, thrmin];
+bounds.phase.finalstate.upper   = [sBE_Lmax, vBE_Lmax, mmax,...
+                                   fdamax, thrmax];
 
 bounds.phase.control.lower      = [dfdamin,dthrmin];
 bounds.phase.control.upper      = [dfdamax,dthrmax];
 
-bounds.phase.path.lower         = [aoamin,Mamin];
-bounds.phase.path.upper         = [aoamax,Mamax];
-
-if strcmpi(specification.type, 'hold')
-    % Constrain fpa=0 and penalise deviation from P_targ
-    % ---------------------------------------------------
-%     bounds.phase.path.lower = [bounds.phase.path.lower, fpa0];
-%     bounds.phase.path.upper = [bounds.phase.path.upper, fpa0];
-%     
-%     bounds.phase.integral.lower = [0];
-%     bounds.phase.integral.upper = [10e3];
-    
-    % Penalise deviation from fpa=0
-    % ---------------------------------------------------
-    bounds.phase.integral.lower = [0];
-    bounds.phase.integral.upper = [5];
-end
+bounds.phase.path.lower         = [aoamin, Mamin];
+bounds.phase.path.upper         = [aoamax, Mamax];
 
 % Eventgroups ---------------------------------------------------------- %
 bounds.eventgroup(1).lower      = [Ma0,Maf];
 bounds.eventgroup(1).upper      = [Ma0,Maf];
 
-bounds.eventgroup(2).lower      = [fpa0,fpaf];
-bounds.eventgroup(2).upper      = [fpa0,fpaf];
-
-bounds.eventgroup(3).lower      = [h0,hf];
-bounds.eventgroup(3).upper      = [h0,hf];
+bounds.eventgroup(2).lower      = [fpa0, fpaf];
+bounds.eventgroup(2).upper      = [fpa0, fpaf];
 
 % Construct guess ------------------------------------------------------ %
 
@@ -257,8 +156,5 @@ else
     guess.phase.control(:,1)        = dfda;
     guess.phase.control(:,2)        = dthr;
     
-    if strcmpi(specification.type, 'hold')
-        guess.phase.integral = zeros(1,1);
-    end
 end
 
