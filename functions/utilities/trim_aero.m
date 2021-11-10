@@ -9,6 +9,7 @@ function absCm = GetAeroWrapper(aoa)
     absCm = abs(Cm);
 end
 
-aoa = fminimax(@GetAeroWrapper, 0);
+
+aoa = fminimax(@GetAeroWrapper, 0, [], [], [], [], -30, 30);
 
 end
