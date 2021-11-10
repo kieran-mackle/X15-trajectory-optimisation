@@ -26,8 +26,11 @@ m       = X(:,7);
 fda     = X(:,8);                       % Flap deflection angle
 thr     = X(:,9);                       % Thrust setting
     % Mapped states
-AoA     = X(:,10);                      % Angle of attack (rad)
-AoB     = X(:,11);                      % Angle of bank (rad)
+% AoA     = X(:,10);                      % Angle of attack (rad)
+% AoB     = X(:,11);                      % Angle of bank (rad)
+
+% Set AoB = 0, derive AoA from pitch-trimmed lookup
+AoB     = zeros(size(t));
 
 % Control variables
 dfda    = u(:,1);                       % Flap angle rate
@@ -45,6 +48,7 @@ rad2deg = 180/pi;
 gravity_model = auxdata.gravity_model;
 aerodynamics_model = auxdata.aerodynamics_model;
 mass_model = auxdata.mass_model;
+atmospheric_model = auxdata.atmospheric_model;
 
 %-------------------------------------------------------------------%
 %                         Calculate Dynamics                        %
@@ -58,16 +62,17 @@ T_VL        = TM_VL(fpa, hda);
 
 % Atmospheric properties
 h           = sBE_L(:,3) - Re;
-[T,~,rho]   = GetAtmo(h);
+[T,~,rho]   = atmospheric_model(h);
 a           = sqrt(gamma.*R.*T);
 qbar        = 0.5*rho.*V.^2;
 
 % Aerodynamic and propulsive forces
 F           = thr.*max_thrust;
 Ma          = V./a;
-[CL,CD,~]   = aerodynamics_model(auxdata, AoA*rad2deg, Ma, fda*rad2deg);
+AoA         = trim_aero(auxdata, Ma, fda*rad2deg);
+[CL,CD,~]   = aerodynamics_model(auxdata, AoA, Ma, fda*rad2deg);
 f_ap_M      = [ F*cos(AoA) - qbar*S*CD; 
-                         0; 
+                         0;
                -F*sin(AoA) - qbar*S*CL];
 f_ap_V      = TM_MV(AoB)' * f_ap_M;
 f_sp_V      = f_ap_V./m;
@@ -76,7 +81,7 @@ f_sp_V      = f_ap_V./m;
 d_vBE_L     = T_VL' * f_sp_V + g_L;
 d_sBE_L     = vBE_L;
 
-mdot        = 0; % mass_model(F);
+mdot        = mass_model(F);
 
 %-------------------------------------------------------------------%
 %                       Construct Dynamics output                   %

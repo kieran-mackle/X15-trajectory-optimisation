@@ -14,6 +14,11 @@ run('./inputs/load_paths.m')
 %------------------------------------------------------------------ %
 auxdata = get_config('deck1.csv');  % Filename of aerodeck in ./aero/
 auxdata.hd  = pwd;
+auxdata.coordinates = 'cartesian';  % 'polar' or 'cartesian'
+auxdata.mass_model = @(F)0;
+auxdata.aerodynamics_model = @GetAero;
+auxdata.gravity_model = @(h)[0,0,9.81];
+auxdata.atmospheric_model = @(h)GetAtmo(h);
 
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
@@ -26,7 +31,7 @@ manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
 manoeuvre_spec.use_guess = 0;
 
-[bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
+[bounds, guess, auxdata] = cart_manoeuvre(manoeuvre_spec, auxdata);
 
 % ----------------------------------------------------------------- %
 %                       Configure Models Used                       %
@@ -36,8 +41,8 @@ auxdata = configure_inputs(auxdata);
 % ----------------------------------------------------------------- %
 %                     Assign function handles                       %
 %------------------------------------------------------------------ %
-dynamics_func               = @tensor6;
-objective_func              = @objective;
+dynamics_func               = @cart3;
+objective_func              = @cartesian_objective;
 
 % ----------------------------------------------------------------- %
 %               Provide mesh refinement and method                  %
