@@ -58,7 +58,7 @@ g_L         = gravity_model(sBE_L);
 T_VL        = TM_VL(fpa, hda);
 
 % Atmospheric properties
-h           = sBE_L(:,3) - Re;
+h           = -sBE_L(:,3) - Re;
 [T,~,rho]   = atmospheric_model(h);
 a           = sqrt(gamma.*R.*T);
 qbar        = 0.5*rho.*V.^2;
