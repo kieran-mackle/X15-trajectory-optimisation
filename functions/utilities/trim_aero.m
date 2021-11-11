@@ -9,7 +9,9 @@ function absCm = GetAeroWrapper(aoa)
     absCm = abs(Cm);
 end
 
+options = optimoptions('fminimax');
+options.Display = 'none';
 
-aoa = fminimax(@GetAeroWrapper, 0, [], [], [], [], -30, 30);
+aoa = fminimax(@GetAeroWrapper, 0, [], [], [], [], -30, 30, [], options);
 
 end

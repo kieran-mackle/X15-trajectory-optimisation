@@ -11,6 +11,7 @@ auxdata.DOF     = '3DOF';
 Re              = auxdata.Re0;
 R               = auxdata.R;
 gamma           = auxdata.gamma;
+atmospheric_model = auxdata.atmospheric_model;
 
 %-------------------------------------------------------------------%
 %                     Define Boundary Conditions                    %
@@ -57,8 +58,8 @@ Dmin    = -Re-hmax;             Dmax    = -Re-hmin;         % (m)
 
 % VELOCITY BOUNDS  % TODO - relax velocity min/max
 vNmin   = 0;                    vNmax   = 0;                % (m)
-vEmin   = Mamin*a(0);           vEmax   = Mamax*a(2);         % (m)
-vDmin   = Mamin*a(0);           vDmax   = Mamax*a(2);         % (m)   
+vEmin   = Mamin*a(1);           vEmax   = Mamax*a(2);         % (m)
+vDmin   = Mamin*a(1);           vDmax   = Mamax*a(2);         % (m)   
 mmin    = m0;                   mmax    = m0;               % (kg)
 
 fdamin  = -40*d2r;              fdamax  = -fdamin;          % (rad)

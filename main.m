@@ -34,11 +34,6 @@ manoeuvre_spec.use_guess = 0;
 [bounds, guess, auxdata] = cart_manoeuvre(manoeuvre_spec, auxdata);
 
 % ----------------------------------------------------------------- %
-%                       Configure Models Used                       %
-%------------------------------------------------------------------ %
-auxdata = configure_inputs(auxdata);
-
-% ----------------------------------------------------------------- %
 %                     Assign function handles                       %
 %------------------------------------------------------------------ %
 dynamics_func               = @cart3;

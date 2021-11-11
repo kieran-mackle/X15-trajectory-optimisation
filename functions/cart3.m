@@ -34,11 +34,11 @@ dfda    = U(:,1);                       % Flap angle rate
 dthr    = U(:,2);                       % Thrust setting rate
 
 % Constants
-Re      = auxdata.Re;                   % Radius of earth (m)
+Re      = auxdata.Re0;                   % Radius of earth (m)
 S       = auxdata.S;                    % Reference area (m^2)
 max_thrust = auxdata.thrust;            % Maximum engine thrust force (N)
-R       = ad.R;                         % (J/kg.K)
-gamma   = ad.gamma;                     % (-)
+R       = auxdata.R;                         % (J/kg.K)
+gamma   = auxdata.gamma;                     % (-)
 rad2deg = 180/pi;
 
 % Models
@@ -53,35 +53,44 @@ atmospheric_model = auxdata.atmospheric_model;
 % Gravity modelling
 g_L         = gravity_model(sBE_L);
 
-% Transformation matrix
-[V,hda,fpa] = car2pol(vBE_L);
-T_VL        = TM_VL(fpa, hda);
 
 % Atmospheric properties
 h           = -sBE_L(:,3) - Re;
 [T,~,rho]   = atmospheric_model(h);
 a           = sqrt(gamma.*R.*T);
-qbar        = 0.5*rho.*V.^2;
 
-% Aerodynamic and propulsive forces
 F           = thr.*max_thrust;
-Ma          = V./a;
-AoA         = trim_aero(auxdata, Ma, fda*rad2deg);
-[CL,CD,~]   = aerodynamics_model(auxdata, AoA, Ma, fda*rad2deg);
-f_ap_M      = [ F*cos(AoA) - qbar*S*CD; 
-                         0;
-               -F*sin(AoA) - qbar*S*CL];
-f_ap_V      = TM_MV(AoB)' * f_ap_M;
-f_sp_V      = f_ap_V./m;
 
-% Equations of motion
-d_vBE_L     = T_VL' * f_sp_V + g_L;
-d_sBE_L     = vBE_L;
+d_vBE_L = zeros(length(t),3);
+d_sBE_L = zeros(length(t),3);
+mdot = zeros(size(t));
 
-mdot        = mass_model(F);
+for i = 1:length(t)
+    % TODO - add indexing below
+    
+    [V,hda,fpa] = car2pol(vBE_L(i,:));
+    T_VL        = TM_VL(fpa, hda);
+    
+    Ma          = V/a(i);
+    qbar        = 0.5*rho(i)*V^2;
+    
+    AoA         = trim_aero(auxdata, Ma, fda(i)*rad2deg);
+
+    [CL,CD,~]   = aerodynamics_model(auxdata, AoA, Ma, fda(i)*rad2deg);
+    f_ap_M      = [ F(i)*cos(AoA) - qbar*S*CD; 
+                             0;
+                   -F(i)*sin(AoA) - qbar*S*CL];
+    f_ap_V      = TM_MV(AoB(i))' * f_ap_M;
+    f_sp_V      = f_ap_V/m(i);
+
+    % Equations of motion
+    d_vBE_L(i,:)    = (T_VL' * f_sp_V)' + g_L;
+    d_sBE_L(i,:)    = vBE_L(i,:);
+    mdot(i)         = mass_model(F(i));
+end
 
 %-------------------------------------------------------------------%
 %                       Construct Dynamics output                   %
 %-------------------------------------------------------------------%
-output.dynamics = [d_sBE_L, d_vBE_L', mdot, dfda, dthr];
+output.dynamics = [d_sBE_L, d_vBE_L, mdot, dfda, dthr];
 
