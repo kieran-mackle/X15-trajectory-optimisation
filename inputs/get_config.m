@@ -26,6 +26,9 @@ dat             = sortrows(dat,2);
 data1           = sortrows(dat,3);
 auxdata.aero    = NormDB(data1);
 
+% Import trimmed aerodynamic force coefficient database
+
+
 % Vehcicle shape parameters (scale by 50 for lengths, 50^2 for area)
 auxdata.S       = 2*56.0205;
 auxdata.c       = 2*10.181;
