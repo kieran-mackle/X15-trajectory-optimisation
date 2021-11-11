@@ -6,14 +6,14 @@ function output = cartesian_objective(input)
 tf      = input.phase.finaltime;
 X0      = input.phase.initialstate;
 Xf      = input.phase.finalstate;
-q4      = input.phase.integral(:,1);
-ad      = input.auxdata;
+auxdata = input.auxdata;
 
-lat0    = X0(:,1);                  latf    = Xf(:,1);
-dist0   = X0(:,3);                  distf   = Xf(:,3);
-uD0     = X0(:,4);                  uDf     = Xf(:,4);
-vD0     = X0(:,5);                  vDf     = Xf(:,5);
-wD0     = X0(:,6);                  wDf     = Xf(:,6);
+N0      = X0(:,1);                  Nf      = Xf(:,1);
+E0      = X0(:,2);                  Ef      = Xf(:,2);
+D0      = X0(:,3);                  Df      = Xf(:,3);
+vN0     = X0(:,4);                  vNf     = Xf(:,4);
+vE0     = X0(:,5);                  vEf     = Xf(:,5);
+vD0     = X0(:,6);                  vDf     = Xf(:,6);
 
 % ----------------------------------------------------------------------- %
 Re0     = GetRe(lat0, ad.radius_model);
@@ -45,12 +45,7 @@ Maf = Vf/sosf;
 % ----------------------------------------------------------------------- %
 output.eventgroup(1).event = [Ma0,Maf];
 output.eventgroup(2).event = [fpa0,fpaf];
-output.eventgroup(3).event = [h0,hf];
 
-if ad.altitude_hold == 1
-    J = q4;
-else
-    J = tf;
-end
+J = tf;
     
 output.objective = J;
