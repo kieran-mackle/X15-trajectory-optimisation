@@ -35,7 +35,7 @@ vD0     = 0;                    vDf     = 0;                % (m/s)
 m0      = 10e3;                 mf      = m0;               % (kg)
 
 fda0    = 0;                    fdaf    = 0;
-thr0    = 0;                    thrf    = 0;
+thr0    = 0.2;                  thrf    = 0.2;
 
 % Control inputs
 dfda0   = 0;                    dfdaf   = 0;
@@ -53,7 +53,7 @@ fpa0    = 0*d2r;                fpaf    = 0*d2r;            % (rad)
 
 % POSITIONAL BOUNDS
 Nmin    = 0;                    Nmax    = 0;                % (m)
-Emin    = 0;                    Emax    = vEf*tmax;         % (m)
+Emin    = -vEf*tmax;                    Emax    = vEf*tmax;         % (m)
 Dmin    = -Re-hmax;             Dmax    = -Re-hmin;         % (m)
 
 % VELOCITY BOUNDS  % TODO - relax velocity min/max
