@@ -64,6 +64,8 @@ F           = thr.*max_thrust;
 d_vBE_L = zeros(length(t),3);
 d_sBE_L = zeros(length(t),3);
 mdot = zeros(size(t));
+aoas = zeros(size(t));
+machs = zeros(size(t));
 
 for i = 1:length(t)
     % TODO - add indexing below
@@ -87,10 +89,17 @@ for i = 1:length(t)
     d_vBE_L(i,:)    = (T_VL' * f_sp_V)' + g_L;
     d_sBE_L(i,:)    = vBE_L(i,:);
     mdot(i)         = mass_model(F(i));
+    
+    % Append path variables
+    aoas(i) = AoA;
+    machs(i) = Ma;
 end
+
+figure(1);
+plot(t,h);
 
 %-------------------------------------------------------------------%
 %                       Construct Dynamics output                   %
 %-------------------------------------------------------------------%
 output.dynamics = [d_sBE_L, d_vBE_L, mdot, dfda, dthr];
-
+output.path     = [aoas, machs];
