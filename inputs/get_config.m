@@ -27,7 +27,13 @@ data1           = sortrows(dat,3);
 auxdata.aero    = NormDB(data1);
 
 % Import trimmed aerodynamic force coefficient database
-
+trimmed_data    = importdata('trimmed-aero.txt');
+auxdata.trimmed_aero.CL = scatteredInterpolant(trimmed_data(:,1), ...
+                                               trimmed_data(:,2), ...
+                                               trimmed_data(:,4));
+auxdata.trimmed_aero.CD = scatteredInterpolant(trimmed_data(:,1), ...
+                                               trimmed_data(:,2), ...
+                                               trimmed_data(:,5));
 
 % Vehcicle shape parameters (scale by 50 for lengths, 50^2 for area)
 auxdata.S       = 2*56.0205;
