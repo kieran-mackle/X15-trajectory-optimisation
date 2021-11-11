@@ -9,8 +9,8 @@ auxdata.name    = specification.name;
 auxdata.DOF     = '3DOF';
 
 Re              = auxdata.Re0;
-R               = ad.R;
-gamma           = ad.gamma;
+R               = auxdata.R;
+gamma           = auxdata.gamma;
 
 %-------------------------------------------------------------------%
 %                     Define Boundary Conditions                    %
