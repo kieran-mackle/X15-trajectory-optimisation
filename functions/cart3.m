@@ -30,8 +30,8 @@ thr     = X(:,9);                       % Thrust setting
 AoB     = zeros(size(t));
 
 % Control variables
-dfda    = u(:,1);                       % Flap angle rate
-dthr    = u(:,2);                       % Thrust setting rate
+dfda    = U(:,1);                       % Flap angle rate
+dthr    = U(:,2);                       % Thrust setting rate
 
 % Constants
 Re      = auxdata.Re;                   % Radius of earth (m)
