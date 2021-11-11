@@ -78,7 +78,7 @@ for i = 1:length(t)
     
 %     AoA         = trim_aero(auxdata, Ma, fda(i)*rad2deg);
 %     [CL,CD,~]   = aerodynamics_model(auxdata, AoA, Ma, fda(i)*rad2deg);
-    
+    AoA         = auxdata.trimmed_aero.aoa(Ma, fda(i)*rad2deg);
     CL          = auxdata.trimmed_aero.CL(Ma, fda(i)*rad2deg);
     CD          = auxdata.trimmed_aero.CD(Ma, fda(i)*rad2deg);
     f_ap_M      = [ F(i)*cos(AoA) - qbar*S*CD; 
