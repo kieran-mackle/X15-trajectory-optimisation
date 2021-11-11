@@ -34,7 +34,7 @@ vE0     = Ma0*a(1);             vEf     = Maf*a(2);         % (m/s)
 vD0     = 0;                    vDf     = 0;                % (m/s)
 m0      = 10e3;                 mf      = m0;               % (kg)
 
-fda0    = 0;                    fdaf    = 0;
+fda0    = 10*pi/180;            fdaf    = fda0;
 thr0    = 0.2;                  thrf    = 0.2;
 
 % Control inputs
