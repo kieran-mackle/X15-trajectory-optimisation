@@ -23,7 +23,7 @@ t0      = 0;                    tf      = 20;               % (s)
 
 % DEFINE POSITION
 N0      = 0;                    Nf      = 0;                % (m)
-E0      = 0;                    Ef      = 0;                % (m)
+E0      = 0;                    Ef      = 1700*20;                % (m)
 D0      = -Re - h0;             Df      = -Re - hf;         % (m)
 
 % DEFINE VELOCITY - flying due East

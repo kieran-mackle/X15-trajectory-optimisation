@@ -98,7 +98,16 @@ for i = 1:length(t)
 end
 
 figure(1);
+clf;
+subplot(3,1,1); grid on; hold on;
+title("Altitude-time");
 plot(t,h);
+subplot(3,1,2); grid on; hold on;
+title('North-East trajectory');
+plot(sBE_L(:,2),sBE_L(:,1));
+subplot(3,1,3); grid on; hold on;
+title("Down-time");
+plot(t,sBE_L(:,3));
 
 %-------------------------------------------------------------------%
 %                       Construct Dynamics output                   %
