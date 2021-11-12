@@ -98,10 +98,12 @@ mfmax = bounds.phase.finalstate.upper(:,7);
 fdafmax = bounds.phase.finalstate.upper(:,8);
 thrfmax = bounds.phase.finalstate.upper(:,9);
 
-
+h0min = -D0min - Re;
+h0max = -D0max - Re;
 hmin = -Dmin - Re;
 hmax = -Dmax - Re;
-
+hfmin = -Dfmin - Re;
+hfmax = -Dfmax - Re;
 
 i = 3;
 j = 2;
@@ -117,7 +119,11 @@ xlabel('time (s)');
 ylabel('h (km)');
 plot(t, hmin*ones(size(t))*1e-3, 'r--');
 plot(t, hmax*ones(size(t))*1e-3, 'r*--');
-legend('Guess', 'Minimum', 'Maximum');
+scatter(0, h0min*1e-3, 'ko');
+scatter(0, h0max*1e-3, 'k^');
+scatter(t(end), hfmin*1e-3, 'bo');
+scatter(t(end), hfmax*1e-3, 'b^');
+legend('Guess', 'Minimum', 'Maximum', 'Location', 'Best');
 
 
 
