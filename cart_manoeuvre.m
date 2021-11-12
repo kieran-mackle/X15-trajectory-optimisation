@@ -1,7 +1,9 @@
 function [bounds, guess, auxdata] = cart_manoeuvre(specification, auxdata)
-% ======================== Altitude Change ======================== %
-% Altitude change manoeuvre. Specify initial and final altitude.    %
-% ================================================================= %
+
+% TODO
+% 1) Develop for altitude hold
+% 2) Generalise
+% 3) Develop altitude change
 
 d2r             = pi/180;
 imported_guess  = specification.use_guess;
@@ -13,22 +15,28 @@ R               = auxdata.R;
 gamma           = auxdata.gamma;
 atmospheric_model = auxdata.atmospheric_model;
 
+if strcmpi(specification.type, 'hold')
+    auxdata.altitude_hold = 1;
+end
+
 %-------------------------------------------------------------------%
 %                     Define Boundary Conditions                    %
 %-------------------------------------------------------------------%
 h0      = specification.h0;     hf      = specification.hf;     % (m)
 Ma0     = specification.Ma0;    Maf     = specification.Maf;    % (-)
 
+[T,~,~] = atmospheric_model([h0, hf]);
+a       = sqrt(gamma.*R.*T);
+
 t0      = 0;                    tf      = 20;               % (s)
 
 % DEFINE POSITION
 N0      = 0;                    Nf      = 0;                % (m)
-E0      = 0;                    Ef      = 1700*20;                % (m)
+E0      = 0;                    Ef      = Maf*a(2)*tf;      % (m)
 D0      = -Re - h0;             Df      = -Re - hf;         % (m)
 
 % DEFINE VELOCITY - flying due East
-[T,~,~] = atmospheric_model([h0, hf]);
-a       = sqrt(gamma.*R.*T);
+
 vN0     = 0;                    vNf     = 0;                % (m/s)
 vE0     = Ma0*a(1);             vEf     = Maf*a(2);         % (m/s)
 vD0     = 0;                    vDf     = 0;                % (m/s)
@@ -52,14 +60,14 @@ aoamin  = -30*d2r;              aoamax  = -aoamin;          % (rad)
 fpa0    = 0*d2r;                fpaf    = 0*d2r;            % (rad)
 
 % POSITIONAL BOUNDS
-Nmin    = 0;                    Nmax    = 0;                % (m)
+Nmin    = -Re;                    Nmax    = Re;                % (m)
 Emin    = -vEf*tmax;                    Emax    = vEf*tmax;         % (m)
 Dmin    = -Re-hmax;             Dmax    = -Re-hmin;         % (m)
 
 % VELOCITY BOUNDS  % TODO - relax velocity min/max
-vNmin   = 0;                    vNmax   = 0;                % (m)
-vEmin   = Mamin*a(1);           vEmax   = Mamax*a(2);         % (m)
-vDmin   = Mamin*a(1);           vDmax   = Mamax*a(2);         % (m)   
+vNmin   = -Mamin*a(1);                    vNmax   = Mamin*a(1);                % (m)
+vEmin   = -Mamin*a(1);           vEmax   = Mamax*a(2);         % (m)
+vDmin   = -Mamin*a(1);           vDmax   = Mamax*a(2);         % (m)   
 mmin    = m0;                   mmax    = m0;               % (kg)
 
 fdamin  = -40*d2r;              fdamax  = -fdamin;          % (rad)
@@ -67,20 +75,22 @@ dfdamin = -1e1*d2r;             dfdamax = -dfdamin;         % (rad/s)
 thrmin  = 0;                    thrmax  = 1;                % (-)
 dthrmin = -0.2;                 dthrmax = -dthrmin;         % (N/s)
 
-
 % END OF USER INPUTS --------------------------------------------------- %
 % ---------------------------------------------------------------------- %
 sBE_Lmin = [Nmin, Emin, Dmin];      sBE_Lmax = [Nmax, Emax, Dmax];
 vBE_Lmin = [vNmin, vEmin, vDmin];   vBE_Lmax = [vNmax, vEmax, vDmax];
 
-
-
-
 % Construct bounds ----------------------------------------------------- %
 bounds.phase.initialtime.lower  = t0;
 bounds.phase.initialtime.upper  = t0;
-bounds.phase.finaltime.lower    = tmin;
-bounds.phase.finaltime.upper    = tmax;
+if strcmpi(specification.type, 'hold')
+    bounds.phase.finaltime.lower    = tf;
+    bounds.phase.finaltime.upper    = tf;
+else
+    bounds.phase.finaltime.lower    = tmin;
+    bounds.phase.finaltime.upper    = tmax;
+end
+
 
 bounds.phase.initialstate.lower = [sBE_Lmin, vBE_Lmin, m0,  ...
                                    fdamin, thrmin];
@@ -102,6 +112,13 @@ bounds.phase.control.upper      = [dfdamax, dthrmax];
 
 bounds.phase.path.lower         = [aoamin, Mamin];
 bounds.phase.path.upper         = [aoamax, Mamax];
+
+if strcmpi(specification.type, 'hold')
+    % Penalise deviation from fpa=0
+    % ---------------------------------------------------
+    bounds.phase.integral.lower = [0];
+    bounds.phase.integral.upper = [5];
+end
 
 % Eventgroups ---------------------------------------------------------- %
 bounds.eventgroup(1).lower      = [Ma0, Maf];
@@ -127,10 +144,10 @@ else
     vE      = linspace(vE0, vEf, steps);
     vD      = linspace(vD0, vDf, steps);
     m       = linspace(m0,mf,steps)';
-    fda     = linspace(fda0,fdaf,steps)';
-    dfda    = linspace(dfda0,dfdaf,steps)';
-    thr     = linspace(thr0,thrf,steps)';
-    dthr    = linspace(dthr0,dthrf,steps)';
+    fda     = linspace(fda0, fdaf,steps)';
+    dfda    = linspace(dfda0, dfdaf,steps)';
+    thr     = linspace(thr0, thrf,steps)';
+    dthr    = linspace(dthr0, dthrf,steps)';
 
     guess.phase.time                = t;
     guess.phase.state(:,1)          = N;
@@ -145,6 +162,10 @@ else
 
     guess.phase.control(:,1)        = dfda;
     guess.phase.control(:,2)        = dthr;
+    
+    if strcmpi(specification.type, 'hold')
+        guess.phase.integral = zeros(1,1);
+    end
     
 end
 

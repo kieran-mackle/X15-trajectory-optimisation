@@ -17,15 +17,15 @@ auxdata.hd  = pwd;
 auxdata.coordinates = 'cartesian';  % 'polar' or 'cartesian'
 auxdata.mass_model = @(F)0;
 auxdata.aerodynamics_model = @GetAero;
-auxdata.gravity_model = @(h)[0,0,9.81];
+auxdata.gravity_model = @(h)[0,0,0];
 auxdata.atmospheric_model = @(h)GetAtmo(h);
 
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
-manoeuvre_spec.type = 'climb';              % 'climb' / 'hold'
-manoeuvre_spec.name = '15_25_cartesian_climb';
-manoeuvre_spec.h0 = 15e3;
+manoeuvre_spec.type = 'hold';              % 'climb' / 'hold'
+manoeuvre_spec.name = '15_25_cartesian_hold';
+manoeuvre_spec.h0 = 20e3;
 manoeuvre_spec.hf = 20e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
@@ -76,6 +76,11 @@ output = gpops2(setup);
 % ----------------------------------------------------------------- %
 %                     Post-Processing Routine                       %
 %------------------------------------------------------------------ %
-post6;
-plot6;
+t = output.result.solution.phase.time;
+post = post_process_cart3(auxdata, output.result.solution.phase.state, t);
+
+plot(t,results.N);
+
+% post6;
+% plot6;
 

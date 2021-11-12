@@ -66,10 +66,9 @@ d_sBE_L = zeros(length(t),3);
 mdot = zeros(size(t));
 aoas = zeros(size(t));
 machs = zeros(size(t));
+fpas = zeros(size(t));
 
 for i = 1:length(t)
-    % TODO - add indexing below
-    
     [V,hda,fpa] = car2pol(vBE_L(i,:));
     T_VL        = TM_VL(fpa, hda);
     
@@ -95,22 +94,53 @@ for i = 1:length(t)
     % Append path variables
     aoas(i) = AoA;
     machs(i) = Ma;
+    fpas(i) = fpa;
 end
 
 figure(1);
-clf;
-subplot(3,1,1); grid on; hold on;
-title("Altitude-time");
-plot(t,h);
-subplot(3,1,2); grid on; hold on;
-title('North-East trajectory');
-plot(sBE_L(:,2),sBE_L(:,1));
-subplot(3,1,3); grid on; hold on;
-title("Down-time");
-plot(t,sBE_L(:,3));
+plot(t,fpas)
+
+
+% figure(1);
+% clf;
+% subplot(3,1,1); grid on; hold on;
+% title("North");
+% plot(t, sBE_L(:,1));
+% xlabel('time (s)');
+% 
+% subplot(3,1,2); grid on; hold on;
+% title('East');
+% plot(t, sBE_L(:,2));
+% xlabel('time (s)');
+% 
+% subplot(3,1,3); grid on; hold on;
+% title("h = -Down - Re");
+% plot(t, -sBE_L(:,3) - Re);
+% xlabel('time (s)');
+% 
+% figure(2);
+% clf;
+% subplot(3,1,1); grid on; hold on;
+% title("North acceleration");
+% plot(t,d_vBE_L(:,1));
+% xlabel('time (s)');
+% 
+% subplot(3,1,2); grid on; hold on;
+% title("East acceleration");
+% plot(t,d_vBE_L(:,2));
+% xlabel('time (s)');
+% 
+% subplot(3,1,3); grid on; hold on;
+% title("Down acceleration");
+% plot(t,d_vBE_L(:,3));
+% xlabel('time (s)');
 
 %-------------------------------------------------------------------%
 %                       Construct Dynamics output                   %
 %-------------------------------------------------------------------%
 output.dynamics = [d_sBE_L, d_vBE_L, mdot, dfda, dthr];
 output.path     = [aoas, machs];
+
+if auxdata.altitude_hold == 1
+    output.integrand = fpas.^2;
+end
