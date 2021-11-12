@@ -66,7 +66,7 @@ setup.derivatives.dependencies = 'sparse';
 setup.derivatives.derivativelevel = 'first';
 setup.nlp.ipoptoptions.linear_solver = 'ma57';
 setup.nlp.ipoptoptions.tolerance = 1e-3;
-setup.nlp.ipoptoptions.maxiterations = 2000;
+setup.nlp.ipoptoptions.maxiterations = 100;
 clear objective_func dynamics_func M;
 
 % ----------------------------------------------------------------- %

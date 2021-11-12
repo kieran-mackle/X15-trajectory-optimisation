@@ -34,7 +34,7 @@ Maf     = specification.Maf;
 a       = sqrt(gamma.*R.*T);
 
 t0      = 0;
-tf      = 20;
+tf      = 15;
 
 if strcmpi(specification.type, 'hold')
     % ALTITUDE HOLD MANOEUVRE
@@ -75,11 +75,11 @@ if strcmpi(specification.type, 'hold')
     %-------------------------------------------------------------------%
     t0min    = 0;
     t0max    = 0;              % (s)
-    tfmin    = 0;
-    tfmax    = 100;              % (s)
+    tfmin    = 15;
+    tfmax    = 15;              % (s)
 
     hmin    = 10e3;
-    hmax    = 50e3;             % (m)
+    hmax    = 30e3;             % (m)
     Mamin   = 4;
     Mamax   = 8;                % (-)
     aoamin  = -30*d2r;
@@ -206,11 +206,11 @@ else
     %-------------------------------------------------------------------%
     t0min    = 0;
     t0max    = 0;              % (s)
-    tfmin    = 20;
-    tfmax    = 20;              % (s)
+    tfmin    = 0;
+    tfmax    = 30;              % (s)
 
     hmin    = 10e3;
-    hmax    = 50e3;             % (m)
+    hmax    = 30e3;             % (m)
     Mamin   = 4;
     Mamax   = 8;                % (-)
     aoamin  = -30*d2r;
