@@ -42,7 +42,9 @@ F           = thr.*max_thrust;
 aoas = zeros(size(t));
 machs = zeros(size(t));
 fpas = zeros(size(t));
-AoB     = zeros(size(t));
+hdas = zeros(size(t));
+Vs = zeros(size(t));
+% AoB = zeros(size(t));
 CLs = zeros(size(t));
 CDs = zeros(size(t));
 
@@ -60,9 +62,11 @@ for i = 1:length(t)
     CD          = auxdata.trimmed_aero.CD(Ma, fda(i)*rad2deg);
 
     % Append path variables
+    Vs(i) = V;
     aoas(i) = AoA;
     machs(i) = Ma;
     fpas(i) = fpa;
+    hdas(i) = hda;
     CLs(i) = CL;
     CDs(i) = CD;
 end
@@ -74,11 +78,14 @@ output.D = D;
 output.vN = vN;
 output.vE = vE;
 output.vD = vD;
+output.V = Vs;
 output.m = m;
 output.fda = fda;
 output.thr = thr;
 output.Ma = machs;
 output.aoa = aoas;
 output.fpa = fpas;
+output.hda = hdas;
 output.CL = CLs;
 output.CD = CDs;
+output.F = F;
