@@ -32,7 +32,7 @@ manoeuvre_spec.Maf = 6;
 manoeuvre_spec.use_guess = 0;
 
 [bounds, guess, auxdata] = cart_manoeuvre(manoeuvre_spec, auxdata);
-
+plot_bounds_and_guess(bounds, guess, auxdata)
 
 % ----------------------------------------------------------------- %
 %                     Assign function handles                       %
