@@ -5,12 +5,6 @@ function output = cart3(input)
 %  the local-level coordinate system.
 % ==================================================================
 
-% TODO 
-% ----
-%  - check units of aoa/aob: radians coming in
-%  - implement mass model
-
-
 %-------------------------------------------------------------------%
 %           Extract state and control variables from input          %
 %-------------------------------------------------------------------%
@@ -50,15 +44,10 @@ atmospheric_model = auxdata.atmospheric_model;
 %-------------------------------------------------------------------%
 %                         Calculate Dynamics                        %
 %-------------------------------------------------------------------%
-% Gravity modelling
 g_L         = gravity_model(sBE_L);
-
-
-% Atmospheric properties
 h           = -sBE_L(:,3) - Re;
 [T,~,rho]   = atmospheric_model(h);
 a           = sqrt(gamma.*R.*T);
-
 F           = thr.*max_thrust;
 
 d_vBE_L = zeros(length(t),3);
@@ -75,8 +64,6 @@ for i = 1:length(t)
     Ma          = V/a(i);
     qbar        = 0.5*rho(i)*V^2;
     
-%     AoA         = trim_aero(auxdata, Ma, fda(i)*rad2deg);
-%     [CL,CD,~]   = aerodynamics_model(auxdata, AoA, Ma, fda(i)*rad2deg);
     AoA         = auxdata.trimmed_aero.aoa(Ma, fda(i)*rad2deg)*pi/180;
     CL          = auxdata.trimmed_aero.CL(Ma, fda(i)*rad2deg);
     CD          = auxdata.trimmed_aero.CD(Ma, fda(i)*rad2deg);
@@ -140,7 +127,3 @@ plot(t,h)
 %-------------------------------------------------------------------%
 output.dynamics = [d_sBE_L, d_vBE_L, mdot, dfda, dthr];
 output.path     = [aoas, machs];
-% 
-% if auxdata.altitude_hold == 1
-%     output.integrand = fpas.^2;
-% end

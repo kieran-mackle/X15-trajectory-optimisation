@@ -6,7 +6,6 @@ function output = cartesian_objective(input)
 tf      = input.phase.finaltime;
 X0      = input.phase.initialstate;
 Xf      = input.phase.finalstate;
-% q       = input.phase.integral(:,1);
 auxdata = input.auxdata;
 
 Re      = auxdata.Re0;
@@ -32,7 +31,9 @@ Ma          = V'./a;
 % output.eventgroup(1).event = [Ma(1), Ma(2)];
 % output.eventgroup(2).event = [fpa0, fpaf];
 
-J = -tf;
-% J = q;
+
+if strcmpi(specification.type, 'hold')
+    J = -tf;
+end
 
 output.objective = J;
