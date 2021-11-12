@@ -32,8 +32,10 @@ Ma          = V'./a;
 % output.eventgroup(2).event = [fpa0, fpaf];
 
 
-if strcmpi(specification.type, 'hold')
+if auxdata.altitude_hold == 1
     J = -tf;
+else
+    J = tf;
 end
 
 output.objective = J;

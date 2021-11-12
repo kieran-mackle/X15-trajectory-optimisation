@@ -17,6 +17,8 @@ atmospheric_model = auxdata.atmospheric_model;
 
 if strcmpi(specification.type, 'hold')
     auxdata.altitude_hold = 1;
+else
+    auxdata.altitude_hold = 0;
 end
 
 
@@ -35,6 +37,139 @@ t0      = 0;
 tf      = 20;
 
 if strcmpi(specification.type, 'hold')
+    % ALTITUDE HOLD MANOEUVRE
+    % --------------------------
+    % DEFINE POSITION
+    N0      = 0;
+    Nf      = 0;                % (m)
+    E0      = 0;
+    Ef      = Maf*a(2)*tf;      % (m)
+    D0      = -Re - h0;
+    Df      = -Re - hf;         % (m)
+
+    % DEFINE VELOCITY - flying due East
+    vN0     = 0;
+    vNf     = 0;                % (m/s)
+    vE0     = Ma0*a(1);
+    vEf     = Maf*a(2);         % (m/s)
+    vD0     = 0;
+    vDf     = 0;                % (m/s)
+
+    % DEFINE MASS
+    m0      = 10e3;
+    mf      = m0;               % (kg)
+
+    % DEFINE CONTROLS
+    fda0    = 10*pi/180;
+    fdaf    = fda0;
+    thr0    = 0.2; 
+    thrf    = 0.2;
+
+    dfda0   = 0;
+    dfdaf   = 0;
+    dthr0   = 0;
+    dthrf   = 0;
+
+    %-------------------------------------------------------------------%
+    %                          Variable Limits                          %
+    %-------------------------------------------------------------------%
+    t0min    = 0;
+    t0max    = 0;              % (s)
+    tfmin    = 0;
+    tfmax    = 100;              % (s)
+
+    hmin    = 10e3;
+    hmax    = 50e3;             % (m)
+    Mamin   = 4;
+    Mamax   = 8;                % (-)
+    aoamin  = -30*d2r;
+    aoamax  = -aoamin;          % (rad)
+    fpa0    = 0*d2r;
+    fpaf    = 0*d2r;            % (rad)
+
+    % POSITIONAL BOUNDS
+    N0min    = N0;
+    N0max    = N0;                % (m)
+    E0min    = E0;
+    E0max    = E0;         % (m)
+    D0min    = D0;
+    D0max    = D0;         % (m)
+    % -------------------
+    Nmin    = N0;
+    Nmax    = N0;                % (m)
+    Emin    = -Re;
+    Emax    = Re;         % (m)
+    Dmin    = D0;
+    Dmax    = D0; % (m)
+    % -------------------
+    Nfmin    = Nf;
+    Nfmax    = Nf;                % (m)
+    Efmin    = 0;
+    Efmax    = Re;         % (m)
+    Dfmin    = Df;
+    Dfmax    = Df;         % (m)
+
+
+    % VELOCITY BOUNDS 
+    vN0min   = vN0;
+    vN0max   = vN0; % (m)
+    vE0min   = vE0;
+    vE0max   = vE0;         % (m)
+    vD0min   = vD0;
+    vD0max   = vD0;         % (m) 
+    % -------------------
+    vNmin   = vN0;
+    vNmax   = vN0; % (m)
+    vEmin   = -Mamin*a(1);
+    vEmax   = Mamax*a(2);         % (m)
+    vDmin   = vD0;
+    vDmax   = vD0;         % (m)   
+    % -------------------
+    vNfmin   = vNf;
+    vNfmax   = vNf; % (m)
+    vEfmin   = vEf;
+    vEfmax   = vEf;         % (m)
+    vDfmin   = vDf;
+    vDfmax   = vDf;         % (m) 
+
+    % MASS BOUNDS
+    m0min    = m0;
+    m0max    = m0;               % (kg)
+    % -------------------
+    mmin    = m0;
+    mmax    = m0;               % (kg)
+    % -------------------
+    mfmin    = mf;
+    mfmax    = mf;               % (kg)
+
+
+    % CONTROL BOUNDS
+    fda0min  = -40*d2r;
+    fda0max  = 40*d2r;       % (rad)
+    thr0min  = 0;
+    thr0max  = 1;  
+    % -------------------
+    fdamin  = -40*d2r;
+    fdamax  = -fdamin;          % (rad)
+    thrmin  = 0;
+    thrmax  = 1;  
+    % -------------------
+    fdafmin  = -40*d2r;
+    fdafmax  = 40*d2r;          % (rad)
+    thrfmin  = 0;
+    thrfmax  = 1;  
+
+    % CONTROL RATE BOUNDS
+    % -------------------
+    dfdamin = -1e1*d2r;
+    dfdamax = -dfdamin;
+    dthrmin = -0.2; 
+    dthrmax = -dthrmin;
+    % -------------------
+
+else
+    % ALTITUDE CHANGE MANOEUVRE
+    % --------------------------
     % DEFINE POSITION
     N0      = 0;
     Nf      = 0;                % (m)
