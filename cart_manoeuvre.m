@@ -226,12 +226,12 @@ else
     D0min    = D0;
     D0max    = D0;         % (m)
     % -------------------
-    Nmin    = N0;
-    Nmax    = N0;                % (m)
+    Nmin    = -Re;
+    Nmax    = Re;                % (m)
     Emin    = -Re;
     Emax    = Re;         % (m)
-    Dmin    = D0;
-    Dmax    = D0; % (m)
+    Dmin    = -Re-hmax;
+    Dmax    = -Re-hmin; % (m)
     % -------------------
     Nfmin    = Nf;
     Nfmax    = Nf;                % (m)
@@ -253,8 +253,8 @@ else
     vNmax   = vN0; % (m)
     vEmin   = -Mamin*a(1);
     vEmax   = Mamax*a(2);         % (m)
-    vDmin   = vD0;
-    vDmax   = vD0;         % (m)   
+    vDmin   = -Mamin*a(1);
+    vDmax   = Mamax*a(2);         % (m)   
     % -------------------
     vNfmin   = vNf;
     vNfmax   = vNf; % (m)
