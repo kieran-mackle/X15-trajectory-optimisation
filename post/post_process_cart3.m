@@ -88,3 +88,45 @@ output.hda = hdas;
 output.CL = CLs;
 output.CD = CDs;
 output.F = F;
+
+%-------------------------------------------------------------------%
+%                     Prepare save directory                        %
+%-------------------------------------------------------------------%
+ad = auxdata;
+if exist([ad.hd,'/Results/',ad.config,'/',ad.DOF,'/',ad.name],'dir')
+    reply = input('Directory already exists. Overwrite? (y/n) [y]: ','s');
+    if isempty(reply)
+        reply = 'y';
+    end
+    
+    if reply == 'n'
+        reply2 = input('Post process without saving? [y]: ','s');
+        if isempty(reply2)
+            reply2 = 'y';
+        end
+        
+        if reply2 == 'n'
+            disp('Post processing cancelled.');
+            clear solution name config reply
+            return
+        else
+            reply2 = 'y';
+        end
+        
+    end
+else
+    mkdir([ad.hd,'/Results/',ad.config,'/',ad.DOF,'/',ad.name]);
+    reply = 'y';
+    reply2 = 'n';
+end
+
+folder      = join([ad.hd,'/Results/',ad.config,'/',ad.DOF,'/',ad.name,'/']);
+
+if reply == 'n' && reply2 == 'y'
+    clear solution config reply* total
+    return
+else
+    clear solution config reply* total
+    save([folder,auxdata.name]);
+end
+
