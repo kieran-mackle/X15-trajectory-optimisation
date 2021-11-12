@@ -28,8 +28,6 @@ aerodynamics_model = auxdata.aerodynamics_model;
 mass_model = auxdata.mass_model;
 atmospheric_model = auxdata.atmospheric_model;
 
-
-
 sBE_L   = state(:,1:3);
 vBE_L   = state(:,4:6);
 
@@ -75,6 +73,7 @@ output.t = t;
 output.N = N;
 output.E = E;
 output.D = D;
+output.h = h;
 output.vN = vN;
 output.vE = vE;
 output.vD = vD;

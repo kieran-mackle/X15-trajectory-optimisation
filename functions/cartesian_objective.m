@@ -6,7 +6,7 @@ function output = cartesian_objective(input)
 tf      = input.phase.finaltime;
 X0      = input.phase.initialstate;
 Xf      = input.phase.finalstate;
-q       = input.phase.integral(:,1);
+% q       = input.phase.integral(:,1);
 auxdata = input.auxdata;
 
 Re      = auxdata.Re0;
@@ -29,10 +29,10 @@ V           = [V0, Vf];
 Ma          = V'./a;
 
 % ----------------------------------------------------------------------- %
-output.eventgroup(1).event = [Ma(1), Ma(2)];
-output.eventgroup(2).event = [fpa0, fpaf];
+% output.eventgroup(1).event = [Ma(1), Ma(2)];
+% output.eventgroup(2).event = [fpa0, fpaf];
 
-% J = tf;
-J = q;
+J = -tf;
+% J = q;
 
 output.objective = J;

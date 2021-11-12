@@ -19,93 +19,177 @@ if strcmpi(specification.type, 'hold')
     auxdata.altitude_hold = 1;
 end
 
+
 %-------------------------------------------------------------------%
-%                     Define Boundary Conditions                    %
+%                        Boundary Conditions                        %
 %-------------------------------------------------------------------%
-h0      = specification.h0;     hf      = specification.hf;     % (m)
-Ma0     = specification.Ma0;    Maf     = specification.Maf;    % (-)
+h0      = specification.h0;
+hf      = specification.hf;
+Ma0     = specification.Ma0;
+Maf     = specification.Maf;
 
 [T,~,~] = atmospheric_model([h0, hf]);
 a       = sqrt(gamma.*R.*T);
 
-t0      = 0;                    tf      = 20;               % (s)
+t0      = 0;
+tf      = 20;
 
 % DEFINE POSITION
-N0      = 0;                    Nf      = 0;                % (m)
-E0      = 0;                    Ef      = Maf*a(2)*tf;      % (m)
-D0      = -Re - h0;             Df      = -Re - hf;         % (m)
+N0      = 0;
+Nf      = 0;                % (m)
+E0      = 0;
+Ef      = Maf*a(2)*tf;      % (m)
+D0      = -Re - h0;
+Df      = -Re - hf;         % (m)
 
 % DEFINE VELOCITY - flying due East
+vN0     = 0;
+vNf     = 0;                % (m/s)
+vE0     = Ma0*a(1);
+vEf     = Maf*a(2);         % (m/s)
+vD0     = 0;
+vDf     = 0;                % (m/s)
 
-vN0     = 0;                    vNf     = 0;                % (m/s)
-vE0     = Ma0*a(1);             vEf     = Maf*a(2);         % (m/s)
-vD0     = 0;                    vDf     = 0;                % (m/s)
-m0      = 10e3;                 mf      = m0;               % (kg)
+% DEFINE MASS
+m0      = 10e3;
+mf      = m0;               % (kg)
 
-fda0    = 10*pi/180;            fdaf    = fda0;
-thr0    = 0.2;                  thrf    = 0.2;
+% DEFINE CONTROLS
+fda0    = 10*pi/180;
+fdaf    = fda0;
+thr0    = 0.2; 
+thrf    = 0.2;
 
-% Control inputs
-dfda0   = 0;                    dfdaf   = 0;
-dthr0   = 0;                    dthrf   = 0;
+dfda0   = 0;
+dfdaf   = 0;
+dthr0   = 0;
+dthrf   = 0;
 
 %-------------------------------------------------------------------%
 %                          Variable Limits                          %
 %-------------------------------------------------------------------%
-tmin    = 0;                    tmax    = 100;              % (s)
-hmin    = 10e3;                 hmax    = 50e3;             % (m)
-Mamin   = 4;                    Mamax   = 8;                % (-)
-aoamin  = -30*d2r;              aoamax  = -aoamin;          % (rad)
+t0min    = 0;
+t0max    = 0;              % (s)
+tfmin    = 20;
+tfmax    = 20;              % (s)
 
-fpa0    = 0*d2r;                fpaf    = 0*d2r;            % (rad)
+hmin    = 10e3;
+hmax    = 50e3;             % (m)
+Mamin   = 4;
+Mamax   = 8;                % (-)
+aoamin  = -30*d2r;
+aoamax  = -aoamin;          % (rad)
+fpa0    = 0*d2r;
+fpaf    = 0*d2r;            % (rad)
 
 % POSITIONAL BOUNDS
-Nmin    = -Re;                    Nmax    = Re;                % (m)
-Emin    = -vEf*tmax;                    Emax    = vEf*tmax;         % (m)
-Dmin    = -Re-hmax;             Dmax    = -Re-hmin;         % (m)
+N0min    = N0;
+N0max    = N0;                % (m)
+E0min    = E0;
+E0max    = E0;         % (m)
+D0min    = D0;
+D0max    = D0;         % (m)
+% -------------------
+Nmin    = N0;
+Nmax    = N0;                % (m)
+Emin    = -Re;
+Emax    = Re;         % (m)
+Dmin    = D0;
+Dmax    = D0; % (m)
+% -------------------
+Nfmin    = Nf;
+Nfmax    = Nf;                % (m)
+Efmin    = 0;
+Efmax    = Re;         % (m)
+Dfmin    = Df;
+Dfmax    = Df;         % (m)
 
-% VELOCITY BOUNDS  % TODO - relax velocity min/max
-vNmin   = -Mamin*a(1);                    vNmax   = Mamin*a(1);                % (m)
-vEmin   = -Mamin*a(1);           vEmax   = Mamax*a(2);         % (m)
-vDmin   = -Mamin*a(1);           vDmax   = Mamax*a(2);         % (m)   
-mmin    = m0;                   mmax    = m0;               % (kg)
 
-fdamin  = -40*d2r;              fdamax  = -fdamin;          % (rad)
-dfdamin = -1e1*d2r;             dfdamax = -dfdamin;         % (rad/s)
-thrmin  = 0;                    thrmax  = 1;                % (-)
-dthrmin = -0.2;                 dthrmax = -dthrmin;         % (N/s)
+% VELOCITY BOUNDS 
+vN0min   = vN0;
+vN0max   = vN0; % (m)
+vE0min   = vE0;
+vE0max   = vE0;         % (m)
+vD0min   = vD0;
+vD0max   = vD0;         % (m) 
+% -------------------
+vNmin   = vN0;
+vNmax   = vN0; % (m)
+vEmin   = -Mamin*a(1);
+vEmax   = Mamax*a(2);         % (m)
+vDmin   = vD0;
+vDmax   = vD0;         % (m)   
+% -------------------
+vNfmin   = vNf;
+vNfmax   = vNf; % (m)
+vEfmin   = vEf;
+vEfmax   = vEf;         % (m)
+vDfmin   = vDf;
+vDfmax   = vDf;         % (m) 
 
-% END OF USER INPUTS --------------------------------------------------- %
-% ---------------------------------------------------------------------- %
-sBE_Lmin = [Nmin, Emin, Dmin];      sBE_Lmax = [Nmax, Emax, Dmax];
-vBE_Lmin = [vNmin, vEmin, vDmin];   vBE_Lmax = [vNmax, vEmax, vDmax];
+% MASS BOUNDS
+m0min    = m0;
+m0max    = m0;               % (kg)
+% -------------------
+mmin    = m0;
+mmax    = m0;               % (kg)
+% -------------------
+mfmin    = mf;
+mfmax    = mf;               % (kg)
+
+
+% CONTROL BOUNDS
+fda0min  = -40*d2r;
+fda0max  = 40*d2r;       % (rad)
+thr0min  = 0;
+thr0max  = 1;  
+% -------------------
+fdamin  = -40*d2r;
+fdamax  = -fdamin;          % (rad)
+thrmin  = 0;
+thrmax  = 1;  
+% -------------------
+fdafmin  = -40*d2r;
+fdafmax  = 40*d2r;          % (rad)
+thrfmin  = 0;
+thrfmax  = 1;  
+
+% CONTROL RATE BOUNDS
+% -------------------
+dfdamin = -1e1*d2r;
+dfdamax = -dfdamin;
+dthrmin = -0.2; 
+dthrmax = -dthrmin;
+% -------------------
+
+
 
 % Construct bounds ----------------------------------------------------- %
-bounds.phase.initialtime.lower  = t0;
-bounds.phase.initialtime.upper  = t0;
-if strcmpi(specification.type, 'hold')
-    bounds.phase.finaltime.lower    = tf;
-    bounds.phase.finaltime.upper    = tf;
-else
-    bounds.phase.finaltime.lower    = tmin;
-    bounds.phase.finaltime.upper    = tmax;
-end
+bounds.phase.initialtime.lower  = t0min;
+bounds.phase.initialtime.upper  = t0max;
+bounds.phase.finaltime.lower    = tfmin;
+bounds.phase.finaltime.upper    = tfmax;
 
+bounds.phase.initialstate.lower = [N0min, E0min, D0min,     ...
+                                   vN0min, vE0min, vD0min,  ...
+                                   m0min, fda0min, thr0min];
+bounds.phase.initialstate.upper = [N0max, E0max, D0max,     ...
+                                   vN0max, vE0max, vD0max,   ...
+                                   m0max, fda0max, thr0max];
 
-bounds.phase.initialstate.lower = [sBE_Lmin, vBE_Lmin, m0,  ...
-                                   fdamin, thrmin];
-bounds.phase.initialstate.upper = [sBE_Lmax, vBE_Lmax, m0,  ...
-                                   fdamax, thrmax];
+bounds.phase.state.lower        = [Nmin, Emin, Dmin,        ...
+                                   vNmin, vEmin, vDmin,     ...
+                                   mmin, fdamin, thrmin];
+bounds.phase.state.upper        = [Nmax, Emax, Dmax,        ...
+                                   vNmax, vEmax, vDmax,     ...
+                                   mmax, fdamax, thrmax];
 
-bounds.phase.state.lower        = [sBE_Lmin, vBE_Lmin, mmin,...
-                                   fdamin, thrmin];
-bounds.phase.state.upper        = [sBE_Lmax, vBE_Lmax, mmax,  ...
-                                   fdamax, thrmax];
-
-bounds.phase.finalstate.lower   = [sBE_Lmin, vBE_Lmin, mmin,...
-                                   fdamin, thrmin];
-bounds.phase.finalstate.upper   = [sBE_Lmax, vBE_Lmax, mmax,...
-                                   fdamax, thrmax];
+bounds.phase.finalstate.lower   = [Nfmin, Efmin, Dfmin,     ...
+                                   vNfmin, vEfmin, vDfmin,  ...
+                                   mfmin, fdafmin, thrfmin];
+bounds.phase.finalstate.upper   = [Nfmax, Efmax, Dfmax,     ...
+                                   vNfmax, vEfmax, vDfmax,   ...
+                                   mfmax, fdafmax, thrfmax];
 
 bounds.phase.control.lower      = [dfdamin, dthrmin];
 bounds.phase.control.upper      = [dfdamax, dthrmax];
@@ -113,19 +197,20 @@ bounds.phase.control.upper      = [dfdamax, dthrmax];
 bounds.phase.path.lower         = [aoamin, Mamin];
 bounds.phase.path.upper         = [aoamax, Mamax];
 
-if strcmpi(specification.type, 'hold')
-    % Penalise deviation from fpa=0
-    % ---------------------------------------------------
-    bounds.phase.integral.lower = [0];
-    bounds.phase.integral.upper = [5];
-end
+
+% if strcmpi(specification.type, 'hold')
+%     % Penalise deviation from fpa=0
+%     % ---------------------------------------------------
+%     bounds.phase.integral.lower = [0];
+%     bounds.phase.integral.upper = [5];
+% end
 
 % Eventgroups ---------------------------------------------------------- %
-bounds.eventgroup(1).lower      = [Ma0, Maf];
-bounds.eventgroup(1).upper      = [Ma0, Maf];
+% bounds.eventgroup(1).lower      = [Ma0, Maf];
+% bounds.eventgroup(1).upper      = [Ma0, Maf];
 
-bounds.eventgroup(2).lower      = [fpa0, fpaf];
-bounds.eventgroup(2).upper      = [fpa0, fpaf];
+% bounds.eventgroup(2).lower      = [fpa0, fpaf];
+% bounds.eventgroup(2).upper      = [fpa0, fpaf];
 
 % Construct guess ------------------------------------------------------ %
 
@@ -163,9 +248,9 @@ else
     guess.phase.control(:,1)        = dfda;
     guess.phase.control(:,2)        = dthr;
     
-    if strcmpi(specification.type, 'hold')
-        guess.phase.integral = zeros(1,1);
-    end
+%     if strcmpi(specification.type, 'hold')
+%         guess.phase.integral = zeros(1,1);
+%     end
     
 end
 

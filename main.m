@@ -17,7 +17,7 @@ auxdata.hd  = pwd;
 auxdata.coordinates = 'cartesian';  % 'polar' or 'cartesian'
 auxdata.mass_model = @(F)0;
 auxdata.aerodynamics_model = @GetAero;
-auxdata.gravity_model = @(h)[0,0,0];
+auxdata.gravity_model = @(h)[0,0,9.81];
 auxdata.atmospheric_model = @(h)GetAtmo(h);
 
 % ----------------------------------------------------------------- %

@@ -97,8 +97,8 @@ for i = 1:length(t)
     fpas(i) = fpa;
 end
 
-figure(1);
-plot(t,fpas)
+figure(2);
+plot(t,h)
 
 
 % figure(1);
@@ -140,7 +140,7 @@ plot(t,fpas)
 %-------------------------------------------------------------------%
 output.dynamics = [d_sBE_L, d_vBE_L, mdot, dfda, dthr];
 output.path     = [aoas, machs];
-
-if auxdata.altitude_hold == 1
-    output.integrand = fpas.^2;
-end
+% 
+% if auxdata.altitude_hold == 1
+%     output.integrand = fpas.^2;
+% end
