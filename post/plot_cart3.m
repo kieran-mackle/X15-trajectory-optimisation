@@ -26,7 +26,7 @@ title('Flight path');
 plot(input.t, input.fpa*180/pi);
 xlabel('time (s)');
 ylabel('\gamma (deg)');
-axis equal;
+% axis equal;
 
 subplot(i,j,4);
 hold on; grid on;
@@ -41,7 +41,7 @@ title('Angle of Attack');
 plot(input.t, input.aoa*180/pi);
 xlabel('time (s)');
 ylabel('\alpha (deg)');
-axis equal;
+% axis equal;
 
 subplot(i,j,6);
 hold on; grid on;
@@ -49,6 +49,6 @@ title('Flap Deflection Angle');
 plot(input.t, input.fda*180/pi);
 xlabel('time (s)');
 ylabel('\delta_f (deg)');
-axis equal;
+% axis equal;
 
 
