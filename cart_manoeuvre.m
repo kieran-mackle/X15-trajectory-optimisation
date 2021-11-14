@@ -80,8 +80,8 @@ if strcmpi(specification.type, 'hold')
 
     hmin    = 10e3;
     hmax    = 30e3;             % (m)
-    Mamin   = 4;
-    Mamax   = 8;                % (-)
+    Mamin   = Ma0;
+    Mamax   = Ma0;                % (-)
     aoamin  = -30*d2r;
     aoamax  = -aoamin;          % (rad)
     fpa0    = 0*d2r;
