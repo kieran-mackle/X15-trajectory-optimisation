@@ -1,8 +1,10 @@
-function output = post_process_cart3(auxdata, state, t)
+function post = post_process_cart3(auxdata, output, t)
 % ====== Post Processing for Cartesian 3 DoF Flight Dynamics =======
 %  A post-processing routine for the cartesian 3DoF flight dynamics
 %  model.
 % ==================================================================
+
+state = output.result.solution.phase.state;
 
 N = state(:,1);
 E = state(:,2);
@@ -69,25 +71,25 @@ for i = 1:length(t)
     CDs(i) = CD;
 end
 
-output.t = t;
-output.N = N;
-output.E = E;
-output.D = D;
-output.h = h;
-output.vN = vN;
-output.vE = vE;
-output.vD = vD;
-output.V = Vs;
-output.m = m;
-output.fda = fda;
-output.thr = thr;
-output.Ma = machs;
-output.aoa = aoas;
-output.fpa = fpas;
-output.hda = hdas;
-output.CL = CLs;
-output.CD = CDs;
-output.F = F;
+post.t = t;
+post.N = N;
+post.E = E;
+post.D = D;
+post.h = h;
+post.vN = vN;
+post.vE = vE;
+post.vD = vD;
+post.V = Vs;
+post.m = m;
+post.fda = fda;
+post.thr = thr;
+post.Ma = machs;
+post.aoa = aoas;
+post.fpa = fpas;
+post.hda = hdas;
+post.CL = CLs;
+post.CD = CDs;
+post.F = F;
 
 %-------------------------------------------------------------------%
 %                     Prepare save directory                        %

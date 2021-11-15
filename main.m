@@ -78,7 +78,7 @@ output = gpops2(setup);
 %                     Post-Processing Routine                       %
 %------------------------------------------------------------------ %
 t = output.result.solution.phase.time;
-post = post_process_cart3(auxdata, output.result.solution.phase.state, t);
+post = post_process_cart3(auxdata, output, t);
 plot_cart3(post)
 
 % post6;
