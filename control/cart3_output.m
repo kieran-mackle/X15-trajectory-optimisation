@@ -8,14 +8,11 @@ Re = geocradius(0);
 R = 287.053;
 gamma = 1.4;
 
-% Models
-atmospheric_model = auxdata.atmospheric_model;
-
 sBE_L   = input(1:3);
 vBE_L   = input(4:6);
 
 h           = -sBE_L(:,3) - Re;
-[T,~,~]   = atmospheric_model(h);
+[T,~,~]   = GetAtmo(h);
 a           = sqrt(gamma.*R.*T);
 
 [V,~,fpa] = car2pol(vBE_L);
