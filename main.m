@@ -23,9 +23,9 @@ auxdata.atmospheric_model = @(h)GetAtmo(h);
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
-manoeuvre_spec.type = 'hold';              % 'climb' / 'hold'
-manoeuvre_spec.name = '20km_hold';
-manoeuvre_spec.h0 = 20e3;
+manoeuvre_spec.type = 'climb';              % 'climb' / 'hold'
+manoeuvre_spec.name = '15_20km_climb';
+manoeuvre_spec.h0 = 15e3;
 manoeuvre_spec.hf = 20e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;

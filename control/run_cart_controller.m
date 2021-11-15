@@ -23,6 +23,7 @@ convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 % Use GPOPS solution to get initial trim state
 run('./../inputs/load_paths.m')
 load('./../Results/Config1/3DOF/20km_hold/20km_hold.mat')
+% load('./../Results/Config1/3DOF/15_20km_climb/15_20km_climb.mat')
 
 out = output.result.solution.phase;
 x0  = out.state(1,:);
@@ -57,17 +58,17 @@ penalty_method = 'linear';      % Quadratic or linear
 penalty_weight      = 1e3;
 
 
-constraints.hard.rate    = [-10*deg, 10*deg;
-                            -0.2,   0.2];
-constraints.hard.input   = [-10*deg, 10*deg;
-                            -0.2,   0.2];
-constraints.hard.output  = [   0,      0     ;
-                            -40*deg, 40*deg  ;
-                               0,      1     ;
-                               0,      0     ;
-                               0,      0     ];
+constraints.hard.rate    = [-10*deg, 10*deg;    % Flap acceleration
+                            -0.2,   0.2];       % Thrust acceleration
+constraints.hard.input   = [-10*deg, 10*deg;    % Flap rate
+                            -0.2,   0.2];       % Thrust rate
+constraints.hard.output  = [   0,      0     ;  % Altitude
+                            -40*deg, 40*deg  ;  % Flap angle
+                               0,      1     ;  % Thrust setting
+                               0,      0     ;  % Mach number
+                               0,      0     ]; % Flight path angle
 
-constraints.soft.rate    = [-10*deg, 10*deg;
+constraints.soft.rate    = [-10*deg, 10*deg;    % 
                             -0.2,   0.2];
 constraints.soft.input   = [-10*deg, 10*deg;
                             -0.2,   0.2];
@@ -77,7 +78,7 @@ constraints.soft.output  = [   0,      0     ;
                                0,      0     ;
                                0,      0     ];
                            
-% NaN for hard constraints
+% nan for hard constraints
 constraints.weights.hard_rate   = [0, 0;
                                    0, 0];
 constraints.weights.hard_input  = [0, 0;
