@@ -57,7 +57,8 @@ constraints.type = 'soft';      % None, soft, hard or mixed
 penalty_method = 'linear';      % Quadratic or linear
 penalty_weight      = 1e3;
 
-
+% Set constraints
+% ------------------------
 constraints.hard.rate    = [-10*deg, 10*deg;    % Flap acceleration
                             -0.2,   0.2];       % Thrust acceleration
 constraints.hard.input   = [-10*deg, 10*deg;    % Flap rate
@@ -77,12 +78,14 @@ constraints.soft.output  = [   0,      0     ;
                                0,      1     ;
                                0,      0     ;
                                0,      0     ];
-                           
-% nan for hard constraints
+      
+% Set constraint weights
+% ------------------------
+% Use nan for hard constraints
 constraints.weights.hard_rate   = [0, 0;
                                    0, 0];
-constraints.weights.hard_input  = [0, 0;
-                                   0, 0];
+constraints.weights.hard_input  = 1e5 * [1, 1;
+                                         1, 1];
 constraints.weights.hard_output = [0, 0;
                                    0, 0;
                                    0, 0;

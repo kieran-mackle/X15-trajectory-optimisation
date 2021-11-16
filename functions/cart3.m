@@ -84,8 +84,8 @@ for i = 1:length(t)
     fpas(i) = fpa;
 end
 
-figure(2);
-plot(t,h)
+% figure(2);
+% plot(t,h)
 
 
 % figure(1);
