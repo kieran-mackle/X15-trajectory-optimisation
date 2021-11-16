@@ -14,7 +14,7 @@ rad = 180/pi;
 % ----------------------------------------------------------------------- %
 params.timestep     = 0.05;
 params.horizon      = 75;
-params.sim_time     = 5;
+params.sim_time     = 15;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 % ----------------------------------------------------------------------- %
