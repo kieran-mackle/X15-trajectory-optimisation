@@ -14,7 +14,7 @@ rad = 180/pi;
 % ----------------------------------------------------------------------- %
 params.timestep     = 0.05;
 params.horizon      = 75;
-params.sim_time     = 15;
+params.sim_time     = 20;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 % ----------------------------------------------------------------------- %
@@ -44,11 +44,11 @@ plant_model                 = control_model;
 % ----------------------------------------------------------------------- %
 % Define cost and constraint matrices
 % ----------------------------------------------------------------------- %
-cost_weightings.output         = 1e3* [1, 0, 0, 0, 0;   % Altitude
+cost_weightings.output         = 1e3* [20, 0, 0, 0, 0;   % Altitude
                                        0, 0, 0, 0, 0;   % FDA
                                        0, 0, 0, 0, 0;   % THR
-                                       0, 0, 0, 1, 0;   % Ma
-                                       0, 0, 0, 0, 1];  % FPA
+                                       0, 0, 0, 0, 0;   % Ma
+                                       0, 0, 0, 0, 0];  % FPA
 cost_weightings.control        = eye(length(initial.control));
 
 
@@ -74,10 +74,10 @@ constraints.hard.output  = [   0,      0     ;  % Altitude
 % Use nan for hard constraints
 constraints.weights.hard_rate   = [0, 0;
                                    0, 0];
-constraints.weights.hard_input  = 1e8 * [1, 1;
+constraints.weights.hard_input  = 1e8 * [10, 10;
                                          1, 1];
 constraints.weights.hard_output = 1e8 *  [0, 0;
-                                          1, 1;
+                                          10, 10;
                                           1, 1;
                                           0, 0;
                                           0, 0];
