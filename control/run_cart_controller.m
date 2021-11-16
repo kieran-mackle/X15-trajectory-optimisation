@@ -68,29 +68,19 @@ constraints.hard.output  = [   0,      0     ;  % Altitude
                                0,      1     ;  % Thrust setting
                                0,      0     ;  % Mach number
                                0,      0     ]; % Flight path angle
-
-constraints.soft.rate    = [-10*deg, 10*deg;    % 
-                            -0.2,   0.2];
-constraints.soft.input   = [-10*deg, 10*deg;
-                            -0.2,   0.2];
-constraints.soft.output  = [   0,      0     ;
-                            -40*deg, 40*deg  ;
-                               0,      1     ;
-                               0,      0     ;
-                               0,      0     ];
       
 % Set constraint weights
 % ------------------------
 % Use nan for hard constraints
 constraints.weights.hard_rate   = [0, 0;
                                    0, 0];
-constraints.weights.hard_input  = 1e5 * [1, 1;
+constraints.weights.hard_input  = 1e8 * [1, 1;
                                          1, 1];
-constraints.weights.hard_output = [0, 0;
-                                   0, 0;
-                                   0, 0;
-                                   0, 0;
-                                   0, 0];
+constraints.weights.hard_output = 1e8 *  [0, 0;
+                                          1, 1;
+                                          1, 1;
+                                          0, 0;
+                                          0, 0];
 
 % ----------------------------------------------------------------------- %
 % Construct MPC Input
