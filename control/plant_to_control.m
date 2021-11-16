@@ -29,10 +29,9 @@ yaw     = X(:,15);
 North   = 0;    % arbitrary starting point
 East    = 0;    % arbitrary starting point
 Down    = dist; 
-vNorth = uD;
+vNorth = uD; 
 vEast = vD;
 vDown = wD;
-
 
 mapped_state(1) = North;
 mapped_state(2) = East;
@@ -44,4 +43,10 @@ mapped_state(7) = m;
 mapped_state(8) = fda;
 mapped_state(9) = thr;
 
+% Update state
 output.initial.state = mapped_state;
+
+% Update models
+output.control_model.dynamics = @cart3;
+output.control_model.output = @cart3_output;
+
