@@ -62,7 +62,7 @@ cost_weightings.output         = 1e3* [1, 0, 0, 0, 0;   % Altitude
 cost_weightings.control        = eye(length(initial.control));
 
 
-% Quadprog constraint handling options
+% % Quadprog constraint handling options
 constraints.type = 'soft';      % None, soft, hard or mixed
 penalty_method = 'linear';      % Quadratic or linear
 penalty_weight      = 1e3;
@@ -77,27 +77,19 @@ constraints.hard.output  = [   0,      0     ;
                                0,      1     ;
                                0,      0     ;
                                0,      0     ];
-
-constraints.soft.rate    = [-10*deg, 10*deg;
-                            -0.2,   0.2];
-constraints.soft.input   = [-10*deg, 10*deg;
-                            -0.2,   0.2];
-constraints.soft.output  = [   0,      0     ;
-                            -40*deg, 40*deg  ;
-                               0,      1     ;
-                               0,      0     ;
-                               0,      0     ];
                            
-% NaN for hard constraints
+% Set constraint weights
+% ------------------------
+% Use nan for hard constraints
 constraints.weights.hard_rate   = [0, 0;
                                    0, 0];
-constraints.weights.hard_input  = [0, 0;
-                                   0, 0];
-constraints.weights.hard_output = [0, 0;
-                                   0, 0;
-                                   0, 0;
-                                   0, 0;
-                                   0, 0];
+constraints.weights.hard_input  = 1e8 * [10, 10;
+                                         1, 1];
+constraints.weights.hard_output = 1e8 *  [0, 0;
+                                          10, 10;
+                                          1, 1;
+                                          0, 0;
+                                          0, 0];
 
 % ----------------------------------------------------------------------- %
 % Construct MPC Input
