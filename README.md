@@ -4,7 +4,7 @@
 An overview of directory structure is as follows.
 
 **home_dir/**: contains main.m, the master script to run a GPOPS-II optimisation problem. The 
-        input scripts are specified from within Main.m.
+        input scripts are specified from within main.m.
         
 **home_dir/aero**: Contains aerodynamic force coefficient databases for different vehicle 
     configurations.
