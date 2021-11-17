@@ -46,6 +46,7 @@ control_model.output        = @cart3_output;
 reference_function          = @cart3_reference;
 
 % Define plant model - as vehicle responds in the environment
+auxdata = configure_inputs(auxdata);
 plant_model.auxdata         = auxdata;
 plant_model.dynamics        = @tensor6;
 plant_model.output          = @X15_outputs;
