@@ -33,6 +33,12 @@ u0  = out.control(1,:);
 initial.state = x0;
 initial.control = u0;
 
+% Add cartesian models to auxdata
+auxdata.mass_model = @(F)0;
+auxdata.aerodynamics_model = @GetAero;
+auxdata.gravity_model = @(h)[0,0,9.81];
+auxdata.atmospheric_model = @(h)GetAtmo(h);
+
 % Define control model - as seen by MPC 
 control_model.auxdata       = auxdata;
 control_model.dynamics      = @cart3;
