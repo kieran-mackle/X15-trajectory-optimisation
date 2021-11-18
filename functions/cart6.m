@@ -4,6 +4,9 @@ function output = cart6(input)
 %  Vehicle Dynamics" by Peter H. Zipfel.
 % ==================================================================
 
+% ToDo: Check indexing and dimensionality throughout code (looking at
+% quaternions specifically)
+
 %-------------------------------------------------------------------%
 %                            Extract Input                          %
 %-------------------------------------------------------------------%
@@ -12,7 +15,12 @@ auxdata = input.auxdata;
 % State variables
 sBE_L = input.phase.state(:,1:3);   % [N, E, D]
 vBE_B = input.phase.state(:,4:6);   % [u, v, w]
-wBE_B = input.phase.state(:,7:9);   % [p, q, r]
+
+% Body rates
+% wBE_B = input.phase.state(:,7:9);   % [p, q, r]
+p = input.phase.state(:,7);
+q = input.phase.state(:,8);
+r = input.phase.state(:,9);
 
 % Quaternions
 q0 = input.phase.state(:,10);
@@ -70,22 +78,37 @@ phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
 % q2 = cos(psi/2)*sin(theta/2)*cos(phi/2) + sin(psi/2)*cos(theta/2)*sin(phi/2);
 % q3 = sin(psi/2)*cos(theta/2)*cos(phi/2) - cos(psi/2)*sin(theta/2)*sin(phi/2);
 
-% Quaternion matrix
-qtm = [0, -p, -q, -r;
-       p,  0,  r, -q;
-       q, -r,  0,  p;
-       r,  q, -p,  0];
+
+
 
 
 for i = 1:length(t)
+    
+    % Quaternion matrix
+    qtm = [ 0,   -p(i), -q(i), -r(i);
+           p(i),   0,    r(i), -q(i);
+           q(i), -r(i),   0,    p(i);
+           r(i),  q(i), -p(i),   0 ];
+   
+    T_BL = [q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2,  ...
+                2*(q1(i)*q2(i) + q0(i)*q3(i)),          ...
+                2*(q1(i)*q3(i) - q0(i)*q2(i));          ...
+            2*(q1(i)*q2(i) - q0(i)*q3(i)),              ...
+                q0(i).^2 - q1(i).^2 + q2(i).^2 - q3(i).^2,  ...
+                2*(q2(i)*q3(i) + q0(i)*q1(i));          ...
+            2*(q1(i)*q3(i) + q0(i)*q2(i)),              ...
+                2*(q2(i)*q3(i) - q0(i)*q1(i));          ...
+                q0(i).^2 - q1(i).^2 - q2(i).^2 + q3(i).^2   ...
+            ];
+    
     % Equations of motion
     d_vBE_B(i,:) = f_sp_B - R_BE_B * vBE_B + T_BL * g_L;
     d_sBE_L(i,:) = T_BL' * vBE_B(i,:);
     d_wBE_B(i,:) = invMOI * (-R_BE_B*MOI*wBE_B(i,:)' + mBB);
-    d_quaternions = 0.5 * qtm * [q0; q1; q2; q3];
+    d_quaternions = 0.5 * qtm * [q0(i); q1(i); q2(i); q3(i)];
 end
 
 % Quaternions
 
 
-output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B];
+output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions];
