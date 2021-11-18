@@ -17,7 +17,7 @@ sBE_L = input.phase.state(:,1:3);   % [N, E, D]
 vBE_B = input.phase.state(:,4:6);   % [u, v, w]
 
 % Body rates
-% wBE_B = input.phase.state(:,7:9);   % [p, q, r]
+wBE_B = input.phase.state(:,7:9);   % [p, q, r]
 p = input.phase.state(:,7);
 q = input.phase.state(:,8);
 r = input.phase.state(:,9);
@@ -80,9 +80,16 @@ phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
 
 
 
+f_sp_B
+g_L
+mBB
+
+
 
 
 for i = 1:length(t)
+    % Dependencies
+    R_BE_B = R_tensor([p(i), q(i), r(i)]);
     
     % Quaternion matrix
     qtm = [ 0,   -p(i), -q(i), -r(i);
@@ -90,6 +97,7 @@ for i = 1:length(t)
            q(i), -r(i),   0,    p(i);
            r(i),  q(i), -p(i),   0 ];
    
+    % Body to local-level transformation matrix
     T_BL = [q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2,  ...
                 2*(q1(i)*q2(i) + q0(i)*q3(i)),          ...
                 2*(q1(i)*q3(i) - q0(i)*q2(i));          ...
@@ -107,8 +115,6 @@ for i = 1:length(t)
     d_wBE_B(i,:) = invMOI * (-R_BE_B*MOI*wBE_B(i,:)' + mBB);
     d_quaternions = 0.5 * qtm * [q0(i); q1(i); q2(i); q3(i)];
 end
-
-% Quaternions
 
 
 output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions];
