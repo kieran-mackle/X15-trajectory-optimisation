@@ -28,15 +28,19 @@ q1 = input.phase.state(:,11);
 q2 = input.phase.state(:,12);
 q3 = input.phase.state(:,13);
 
+% Mass
+m = input.phase.state(:,14);
+
 % Control variables
-fda = input.phase.state(:,1);       % flap deflection angle
-thr = input.phase.state(:,1);       % thrust setting
+fda = input.phase.state(:,15);       % flap deflection angle
+thr = input.phase.state(:,16);       % thrust setting
 
 % Control inputs
 dfda = input.phase.control(:,1);    % Flap angle rate
 dthr = input.phase.control(:,2);    % Thrust setting rate
 
 % Constants
+max_thrust = auxdata.thrust;
 invMOI = auxdata.invMOI;
 MOI = auxdata.MOI;
 
@@ -80,9 +84,38 @@ phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
 
 
 
-f_sp_B
+
+% Aerodynamics
+[CL,CD,Cm] = GetAero(ad,aoa*rad,Ma,fda*rad);
+Cl = 0;
+Cn = 0;
+Cx =  CL.*sin(aoa) - CD.*cos(aoa);
+Cz = -CL.*cos(aoa) - CD.*sin(aoa);
+f_aB = qbar*S*[Cx; 0; Cz];
+maB = qbar*S*[Cl*b;Cm*c;Cn*b];
+
+% Propulsion
+F_T = thr*max_thrust;
+
+f_pB = [cos(eta) * cos(zeta);
+        cos(eta) * sin(eta);
+        -sin(eta)] * F_T;
+mpB = [        0; 
+           -sin(eta); 
+       -cos(eta)*sin(zeta)] * F_T*7.5; %(xp - xcm);
+
+% Absolute force and moment
+f_apB = f_aB + f_pB;
+m_BB = maB + mpB;
+
+% Specific forces
+f_sp_B = (1./m(i)) * f_apB;
+
+
+
 g_L = gravity_model(sBE_L);
-mBB
+
+
 
 
 
@@ -112,9 +145,11 @@ for i = 1:length(t)
     % Equations of motion
     d_vBE_B(i,:) = f_sp_B - R_BE_B * vBE_B + T_BL * g_L;
     d_sBE_L(i,:) = T_BL' * vBE_B(i,:);
-    d_wBE_B(i,:) = invMOI * (-R_BE_B*MOI*wBE_B(i,:)' + mBB);
+    d_wBE_B(i,:) = invMOI * (-R_BE_B*MOI*wBE_B(i,:)' + m_BB);
     d_quaternions = 0.5 * qtm * [q0(i); q1(i); q2(i); q3(i)];
+    
 end
 
 
-output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions];
+output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions, ...
+                   dm, dfda, dthr];
