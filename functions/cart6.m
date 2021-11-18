@@ -81,7 +81,7 @@ phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
 
 
 f_sp_B
-g_L
+g_L = gravity_model(sBE_L);
 mBB
 
 
