@@ -9,9 +9,16 @@ auxdata.name    = specification.name;
 auxdata.DOF     = '6DOF';
 
 Re0             = auxdata.Re0;
-% R               = auxdata.R;
-% gamma           = auxdata.gamma;
-% atmospheric_model = auxdata.atmospheric_model;
+R               = auxdata.R;
+gamma           = auxdata.gamma;
+atmospheric_model = auxdata.atmospheric_model;
+
+% Define altitude type
+if strcmpi(specification.type, 'hold')
+    auxdata.altitude_hold = 1;
+else
+    auxdata.altitude_hold = 0;
+end
 
 %-------------------------------------------------------------------%
 %                        Boundary Conditions                        %
@@ -21,6 +28,12 @@ hf      = specification.hf;
 Ma0     = specification.Ma0;
 Maf     = specification.Maf;
 
+[T,~,~] = atmospheric_model([h0, hf]);
+a       = sqrt(gamma.*R.*T);
+
+t0      = 0;
+tf      = 15;
+
 % ALTITUDE HOLD MANOEUVRE
 % --------------------------
 % DEFINE POSITION
@@ -28,8 +41,8 @@ N0      = 0;
 Nf      = 0;                % (m)
 E0      = 0;
 Ef      = Maf*a(2)*tf;      % (m)
-D0      = -Re - h0;
-Df      = -Re - hf;         % (m)
+D0      = -Re0 - h0;
+Df      = -Re0 - hf;         % (m)
 
 % DEFINE VELOCITY
 u0      = Ma0*a(1);
@@ -97,8 +110,8 @@ D0max    = D0;         % (m)
 % -------------------
 Nmin    = N0;
 Nmax    = N0;                % (m)
-Emin    = -Re;
-Emax    = Re;         % (m)
+Emin    = -Re0;
+Emax    = Re0;         % (m)
 Dmin    = D0;
 Dmax    = D0; % (m)
 % -------------------
@@ -315,7 +328,7 @@ if imported_guess == 1
 else
     % Linearly interpolate guess
     steps   = 10;
-    t       = linspace(t0, tf, steps);
+    t       = linspace(t0, tf, steps)';
     N       = linspace(N0, Nf, steps);
     E       = linspace(E0, Ef, steps);
     D       = linspace(D0, Df, steps);
@@ -362,19 +375,6 @@ else
     guess.phase.control(:,2)        = dthr;
     
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 end

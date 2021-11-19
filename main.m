@@ -14,7 +14,7 @@ run('./inputs/load_paths.m')
 %------------------------------------------------------------------ %
 auxdata = get_config('deck1.csv');  % Filename of aerodeck in ./aero/
 auxdata.hd = pwd;
-auxdata.coordinates = 'polar';  % 'polar' or 'cartesian'
+auxdata.coordinates = 'cartesian';  % 'polar' or 'cartesian'
 auxdata.mass_model = @(F)0;
 auxdata.aerodynamics_model = @GetAero;
 auxdata.gravity_model = @(h)[0,0,9.81].*ones(size(h,1),1);
@@ -32,18 +32,23 @@ manoeuvre_spec.Maf = 6;
 manoeuvre_spec.use_guess = 0;
 
     % POLAR
-[bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
-auxdata = configure_inputs(auxdata);
+% [bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
+% auxdata = configure_inputs(auxdata);
 
-    % CARTESIAN
+    % CARTESIAN 3DOF
 % [bounds, guess, auxdata] = cart_manoeuvre(manoeuvre_spec, auxdata);
+% plot_bounds_and_guess(bounds, guess, auxdata)
+
+
+    % CARTESIAN 6DOF
+[bounds, guess, auxdata] = cart6_manoeuvre(manoeuvre_spec, auxdata);
 % plot_bounds_and_guess(bounds, guess, auxdata)
 
 % ----------------------------------------------------------------- %
 %                     Assign function handles                       %
 %------------------------------------------------------------------ %
-dynamics_func               = @tensor6;           % @tensor6 / @cart3
-objective_func              = @objective; %@cartesian_objective;
+dynamics_func               = @cart6;           % @tensor6 / @cart3 / @cart6
+objective_func              = @cart6_objective; % @objective / @cartesian_objective / @cart6_objective;
 
 % ----------------------------------------------------------------- %
 %               Provide mesh refinement and method                  %
@@ -82,10 +87,12 @@ output = gpops2(setup);
 % ----------------------------------------------------------------- %
 %                     Post-Processing Routine                       %
 %------------------------------------------------------------------ %
-% t = output.result.solution.phase.time;
+t = output.result.solution.phase.time;
 % post = post_process_cart3(auxdata, output, t);
 % plot_cart3(post)
 
-post6;
-plot6;
+% post6;
+% plot6;
+
+post = cart6_post(auxdata, output, t);
 

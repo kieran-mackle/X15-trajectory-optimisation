@@ -11,6 +11,7 @@ function output = cart6(input)
 %                            Extract Input                          %
 %-------------------------------------------------------------------%
 auxdata = input.auxdata;
+t = input.phase.time;
 
 % State variables
 sBE_L = input.phase.state(:,1:3);   % [N, E, D]
@@ -88,6 +89,7 @@ d_sBE_L = zeros(length(t),3);
 d_wBE_B = zeros(length(t),3);
 d_quaternions = zeros(length(t),4);
 dm = zeros(length(t),1);
+aoas = zeros(size(t));
 
 for i = 1:length(t)
     % Dependencies
@@ -96,7 +98,7 @@ for i = 1:length(t)
     aoa = atan(vBE_B(i,3)/vBE_B(i,1));
     
     % Aerodynamics
-    [CL,CD,Cm] = aerodynamics_model(auxdata, aoa*rad, Ma, fda*rad);
+    [CL,CD,Cm] = aerodynamics_model(auxdata, aoa*rad, Ma(i), fda(i)*rad);
     Cl = 0;
     Cn = 0;
     Cx =  CL.*sin(aoa) - CD.*cos(aoa);
@@ -133,17 +135,24 @@ for i = 1:length(t)
                 q0(i).^2 - q1(i).^2 + q2(i).^2 - q3(i).^2,  ...
                 2*(q2(i)*q3(i) + q0(i)*q1(i));          ...
             2*(q1(i)*q3(i) + q0(i)*q2(i)),              ...
-                2*(q2(i)*q3(i) - q0(i)*q1(i));          ...
+                2*(q2(i)*q3(i) - q0(i)*q1(i)),          ...
                 q0(i).^2 - q1(i).^2 - q2(i).^2 + q3(i).^2   ...
             ];
     
     % Equations of motion
-    d_vBE_B(i,:) = f_sp_B - R_BE_B * vBE_B(i,:) + T_BL * g_L(i,:);
-    d_sBE_L(i,:) = T_BL' * vBE_B(i,:);
+    d_vBE_B(i,:) = f_sp_B - R_BE_B * vBE_B(i,:)' + T_BL * g_L(i,:)';
+    d_sBE_L(i,:) = T_BL' * vBE_B(i,:)';
     d_wBE_B(i,:) = invMOI * (-R_BE_B*MOI*wBE_B(i,:)' + m_BB);
     d_quaternions(i,:) = 0.5 * qtm * [q0(i); q1(i); q2(i); q3(i)];
     dm(i) = mass_model(F_T(i));
+    
+    % Append path variables
+    aoas(i) = aoa;
 end
+
+plot(t,h);
 
 output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions, ...
                    dm, dfda, dthr];
+output.path     = [aoas, Ma];
+
