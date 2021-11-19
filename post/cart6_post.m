@@ -27,9 +27,13 @@ q3 = state(:,13);
 
 
 % Euler angles - not sure if required in the dynamics
-psi = atan( 2*(q1*q2 + q0*q3) / (q0.^2 + q1.^2 - q2.^2 - q3.^2) );
-theta = asin( -2 * (q1*q3 - q0*q2) );
-phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
+% psi = atan( 2*(q1*q2 + q0*q3) / (q0.^2 + q1.^2 - q2.^2 - q3.^2) );
+% theta = asin( -2 * (q1*q3 - q0*q2) );
+% phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
+
+psi = atan( 2*(q1(i)*q2(i) + q0(i)*q3(i)) / (q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2) );
+theta = asin( -2 * (q1(i)*q3(i) - q0(i)*q2(i)) );
+phi = atan( 2*(q2(i)*q3(i) + q0(i)*q1(i)) / (q0(i).^2 - q1(i).^2 - q2(i).^2 - q3(i).^2) );
 
 
 

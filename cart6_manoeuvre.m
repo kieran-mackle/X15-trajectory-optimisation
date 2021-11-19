@@ -170,26 +170,26 @@ r_fmax  = 0;
 
 
 % ATTITUDE BOUNDS
-phi0min = 0;                    % Roll (rad)
-phi0max = 0;
-theta0min = 0;                  % Pitch (rad)
-theta0max = 0;
-psi0min = 0;                    % Yaw (rad)
-psi0max = 0;
-% -------------------
-phimin = 0;                    % Roll (rad)
-phimax = 0;
-thetamin = 0;                  % Pitch (rad)
-thetamax = 0;
-psimin = 0;                    % Yaw (rad)
-psimax = 0;
-% -------------------
-phifmin = 0;                    % Roll (rad)
-phifmax = 0;
-thetafmin = 0;                  % Pitch (rad)
-thetafmax = 0;
-psifmin = 0;                    % Yaw (rad)
-psifmax = 0;
+% phi0min = 0;                    % Roll (rad)
+% phi0max = 0;
+% theta0min = 0;                  % Pitch (rad)
+% theta0max = 0;
+% psi0min = 0;                    % Yaw (rad)
+% psi0max = 0;
+% % -------------------
+% phimin = 0;                    % Roll (rad)
+% phimax = 0;
+% thetamin = 0;                  % Pitch (rad)
+% thetamax = 0;
+% psimin = 0;                    % Yaw (rad)
+% psimax = 0;
+% % -------------------
+% phifmin = 0;                    % Roll (rad)
+% phifmax = 0;
+% thetafmin = 0;                  % Pitch (rad)
+% thetafmax = 0;
+% psifmin = 0;                    % Yaw (rad)
+% psifmax = 0;
 
 
 % MASS BOUNDS
@@ -375,6 +375,5 @@ else
     guess.phase.control(:,2)        = dthr;
     
 end
-
 
 end
