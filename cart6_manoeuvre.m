@@ -8,6 +8,11 @@ imported_guess  = specification.use_guess;
 auxdata.name    = specification.name;
 auxdata.DOF     = '6DOF';
 
+Re0             = auxdata.Re0;
+% R               = auxdata.R;
+% gamma           = auxdata.gamma;
+% atmospheric_model = auxdata.atmospheric_model;
+
 %-------------------------------------------------------------------%
 %                        Boundary Conditions                        %
 %-------------------------------------------------------------------%
@@ -100,32 +105,79 @@ Dmax    = D0; % (m)
 Nfmin    = Nf;
 Nfmax    = Nf;                % (m)
 Efmin    = 0;
-Efmax    = Re;         % (m)
+Efmax    = Re0;         % (m)
 Dfmin    = Df;
-Dfmax    = Df;         % (m)
+Dfmax    = Df;          % (m)
 
 
 % VELOCITY BOUNDS 
-vN0min   = vN0;
-vN0max   = vN0; % (m)
-vE0min   = vE0;
-vE0max   = vE0;         % (m)
-vD0min   = vD0;
-vD0max   = vD0;         % (m) 
+u0min   = u0;
+u0max   = u0;         % (m)
+v0min   = v0;
+v0max   = v0;         % (m)
+w0min   = w0;
+w0max   = w0;         % (m) 
 % -------------------
-vNmin   = vN0;
-vNmax   = vN0; % (m)
-vEmin   = -Mamin*a(1);
-vEmax   = Mamax*a(2);         % (m)
-vDmin   = vD0;
-vDmax   = vD0;         % (m)   
+umin   = -Mamin*a(1);
+umax   = Mamax*a(2); % (m)
+vmin   = v0;
+vmax   = v0;         % (m)
+wmin   = w0;
+wmax   = w0;         % (m)   
 % -------------------
-vNfmin   = vNf;
-vNfmax   = vNf; % (m)
-vEfmin   = vEf;
-vEfmax   = vEf;         % (m)
-vDfmin   = vDf;
-vDfmax   = vDf;         % (m) 
+ufmin   = uf;
+ufmax   = uf; % (m)
+vfmin   = vf;
+vfmax   = vf;         % (m)
+wfmin   = wf;
+wfmax   = wf;         % (m) 
+
+
+% ANGULAR VELOCITY BOUNDS
+p_0min       = 0;
+p_0max       = 0;
+q_0min       = 0;
+q_0max       = 0;
+r_0min       = 0;
+r_0max       = 0;
+% -------------------
+pmin       = 0;
+pmax       = 0;
+qmin       = 0;
+qmax       = 0;
+rmin       = 0;
+rmax       = 0;
+% -------------------
+p_fmin       = 0;
+p_fmax       = 0;
+q_fmin       = 0;
+q_fmax       = 0;
+r_fmin       = 0;
+r_fmax       = 0;
+
+
+% ATTITUDE BOUNDS
+phi0min = 0;                    % Roll (rad)
+phi0max = 0;
+theta0min = 0;                  % Pitch (rad)
+theta0max = 0;
+psi0min = 0;                    % Yaw (rad)
+psi0max = 0;
+% -------------------
+phimin = 0;                    % Roll (rad)
+phimax = 0;
+thetamin = 0;                  % Pitch (rad)
+thetamax = 0;
+psimin = 0;                    % Yaw (rad)
+psimax = 0;
+% -------------------
+phifmin = 0;                    % Roll (rad)
+phifmax = 0;
+thetafmin = 0;                  % Pitch (rad)
+thetafmax = 0;
+psifmin = 0;                    % Yaw (rad)
+psifmax = 0;
+
 
 % MASS BOUNDS
 m0min    = m0;
@@ -175,14 +227,14 @@ q2_f = cos(psif/2)*sin(thetaf/2)*cos(phif/2) + sin(psif/2)*cos(thetaf/2)*sin(phi
 q3_f = sin(psif/2)*cos(thetaf/2)*cos(phif/2) - cos(psif/2)*sin(thetaf/2)*sin(phif/2);
 
 % Define limits on quaternions
-q0min = 0;
-q0max = 0;
-q1min = 0;
-q1max = 0;
-q2min = 0;
-q2max = 0;
-q3min = 0;
-q3max = 0;
+q0min = -10;
+q0max = 10;
+q1min = -10;
+q1max = 10;
+q2min = -10;
+q2max = 10;
+q3min = -10;
+q3max = 10;
 
 
 %-------------------------------------------------------------------%
@@ -193,24 +245,32 @@ bounds.phase.initialtime.upper  = t0max;
 bounds.phase.finaltime.lower    = tfmin;
 bounds.phase.finaltime.upper    = tfmax;
 
-bounds.phase.initialstate.lower = [];
-bounds.phase.initialstate.upper = [];
+bounds.phase.initialstate.lower = [N0min, E0min, D0min,     ...
+                                   u0min, v0min, w0min,     ...
+                                   m0min, fda0min, thr0min];
+bounds.phase.initialstate.upper = [N0max, E0max, D0max,     ...
+                                   u0max, v0max, w0max,     ...
+                                   m0max, fda0max, thr0max];
 
-bounds.phase.state.lower        = [];
-bounds.phase.state.upper        = [];
+bounds.phase.state.lower        = [Nmin, Emin, Dmin,        ...
+                                   umin, vmin, wmin,     ...
+                                   mmin, fdamin, thrmin];
+bounds.phase.state.upper        = [Nmax, Emax, Dmax,        ...
+                                   umax, vmax, wmax,     ...
+                                   mmax, fdamax, thrmax];
 
-bounds.phase.finalstate.lower   = [];
-bounds.phase.finalstate.upper   = [];
+bounds.phase.finalstate.lower   = [Nfmin, Efmin, Dfmin,     ...
+                                   ufmin, vfmin, wfmin,     ...
+                                   mfmin, fdafmin, thrfmin];
+bounds.phase.finalstate.upper   = [Nfmax, Efmax, Dfmax,     ...
+                                   ufmax, vfmax, wfmax,     ...
+                                   mfmax, fdafmax, thrfmax];
 
 bounds.phase.control.lower      = [dfdamin, dthrmin];
 bounds.phase.control.upper      = [dfdamax, dthrmax];
 
 bounds.phase.path.lower         = [aoamin, Mamin];
 bounds.phase.path.upper         = [aoamax, Mamax];
-
-
-
-
 
 
 %-------------------------------------------------------------------%
@@ -233,13 +293,13 @@ else
     u       = linspace(u0, uf, steps);
     v       = linspace(v0, vf, steps);
     w       = linspace(w0, wf, steps);
-    p       = linspace();
-    q       = linspace();
-    r       = linspace();
-    q0      = linspace();
-    q1      = linspace();
-    q2      = linspace();
-    q3      = linspace();
+    p       = linspace(p_0, p_f, steps);
+    q       = linspace(q_0, q_f, steps);
+    r       = linspace(r_0, r_f, steps);
+    q0      = linspace(q0_0, q0_f, steps);
+    q1      = linspace(q1_0, q1_f, steps);
+    q2      = linspace(q2_0, q2_f, steps);
+    q3      = linspace(q3_0, q3_f, steps);
     m       = linspace(m0, mf, steps);
     fda     = linspace(fda0, fdaf, steps);
     dfda    = linspace(dfda0, dfdaf, steps);
