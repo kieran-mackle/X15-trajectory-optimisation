@@ -52,8 +52,8 @@ phi0 = 0;                    % Roll (rad)
 phif = 0;
 theta0 = 0;                  % Pitch (rad)
 thetaf = 0;
-psi0 = 0;                    % Yaw (rad)
-psif = 0;
+psi0 = 90*d2r;                % Yaw (rad)
+psif = 90*d2r;
 
 % DEFINE MASS
 m0      = 10e3;
@@ -78,14 +78,14 @@ t0max    = 0;              % (s)
 tfmin    = 15;
 tfmax    = 15;              % (s)
 
-hmin    = 10e3;
-hmax    = 30e3;             % (m)
+% hmin    = 10e3;
+% hmax    = 30e3;             % (m)
 Mamin   = Ma0;
-Mamax   = Ma0;                % (-)
+Mamax   = Ma0;                % (-)                     % Constant mach
 aoamin  = -30*d2r;
 aoamax  = -aoamin;          % (rad)
-fpa0    = 0*d2r;
-fpaf    = 0*d2r;            % (rad)
+% fpa0    = 0*d2r;
+% fpaf    = 0*d2r;            % (rad)
 
 % POSITIONAL BOUNDS
 N0min    = N0;
@@ -134,26 +134,26 @@ wfmax   = wf;         % (m)
 
 
 % ANGULAR VELOCITY BOUNDS
-p_0min       = 0;
-p_0max       = 0;
-q_0min       = 0;
-q_0max       = 0;
-r_0min       = 0;
-r_0max       = 0;
+p_0min  = 0;
+p_0max  = 0;
+q_0min  = 0;
+q_0max  = 0;
+r_0min  = 0;
+r_0max  = 0;
 % -------------------
-pmin       = 0;
-pmax       = 0;
-qmin       = 0;
-qmax       = 0;
-rmin       = 0;
-rmax       = 0;
+pmin    = 0;
+pmax    = 0;
+qmin    = 0;
+qmax    = 0;
+rmin    = 0;
+rmax    = 0;
 % -------------------
-p_fmin       = 0;
-p_fmax       = 0;
-q_fmin       = 0;
-q_fmax       = 0;
-r_fmin       = 0;
-r_fmax       = 0;
+p_fmin  = 0;
+p_fmax  = 0;
+q_fmin  = 0;
+q_fmax  = 0;
+r_fmin  = 0;
+r_fmax  = 0;
 
 
 % ATTITUDE BOUNDS
@@ -214,7 +214,6 @@ dthrmin = -0.2;
 dthrmax = -dthrmin;
 % -------------------
 
-
 % Initialise Quaternions
 q0_0 = cos(psi0/2)*cos(theta0/2)*cos(phi0/2) + sin(psi0/2)*sin(theta0/2)*sin(phi0/2);
 q1_0 = cos(psi0/2)*cos(theta0/2)*sin(phi0/2) - sin(psi0/2)*sin(theta0/2)*cos(phi0/2);
@@ -253,7 +252,6 @@ q2_fmin = -10;
 q2_fmax = 10;
 q3_fmin = -10;
 q3_fmax = 10;
-
 
 
 %-------------------------------------------------------------------%
