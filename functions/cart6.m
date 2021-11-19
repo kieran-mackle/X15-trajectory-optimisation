@@ -43,6 +43,17 @@ dthr = input.phase.control(:,2);    % Thrust setting rate
 max_thrust = auxdata.thrust;
 invMOI = auxdata.invMOI;
 MOI = auxdata.MOI;
+S = auxdata.S;                      % (m^2)
+b = auxdata.b;                      % (m)
+c = auxdata.c;                      % (m)
+R = auxdata.R;                      % (J/kg.K)
+gamma = auxdata.gamma;              % (-)
+rad = auxdata.rad;                  % (deg/rad)
+
+% Isp = auxdata.Isp;                  % (N-s/kg)
+Re0 = auxdata.Re0;                  % (m)
+% we = auxdata.we;                    % (rad/s)
+% g0 = auxdata.g0;                    % (m/s)
 
 % Models
 gravity_model = auxdata.gravity_model;
@@ -54,75 +65,59 @@ atmospheric_model = auxdata.atmospheric_model;
 %-------------------------------------------------------------------%
 %                       Calculate Dependencies                      %
 %-------------------------------------------------------------------%
-h = -sBE_L(:,3) - Re;
+h = -sBE_L(:,3) - Re0;
 [T,~,rho] = atmospheric_model(h);
 a = sqrt(gamma.*R.*T);
+V = sqrt(sum(vBED.^2,2));
+qbar = 0.5.*rho.*V.^2;
+Ma = V./a;
+g_L = gravity_model(sBE_L);
 
+% Propulsion
+F_T = thr * max_thrust;
+eta = 0;                        % Thrust vector angle 1
+zeta = 0;                       % Thrust vector angle 2
 
 %-------------------------------------------------------------------%
 %                         Calculate Dynamics                        %
 %-------------------------------------------------------------------%
+
 % Initialisation
 d_vBE_B = zeros(length(t),3);
 d_sBE_L = zeros(length(t),3);
 d_wBE_B = zeros(length(t),3);
-
-
-% Euler angles - not sure if required in the dynamics
-psi = atan( 2*(q1*q2 + q0*q3) / (q0.^2 + q1.^2 - q2.^2 - q3.^2) );
-theta = asin( -2 * (q1*q3 - q0*q2) );
-phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
-
-
-
-% Quaternions - these can just be solved as states?
-% These equations are for initialisation only.
-% q0 = cos(psi/2)*cos(theta/2)*cos(phi/2) + sin(psi/2)*sin(theta/2)*sin(phi/2);
-% q1 = cos(psi/2)*cos(theta/2)*sin(phi/2) - sin(psi/2)*sin(theta/2)*cos(phi/2);
-% q2 = cos(psi/2)*sin(theta/2)*cos(phi/2) + sin(psi/2)*cos(theta/2)*sin(phi/2);
-% q3 = sin(psi/2)*cos(theta/2)*cos(phi/2) - cos(psi/2)*sin(theta/2)*sin(phi/2);
-
-
-
-
-% Aerodynamics
-[CL,CD,Cm] = GetAero(ad,aoa*rad,Ma,fda*rad);
-Cl = 0;
-Cn = 0;
-Cx =  CL.*sin(aoa) - CD.*cos(aoa);
-Cz = -CL.*cos(aoa) - CD.*sin(aoa);
-f_aB = qbar*S*[Cx; 0; Cz];
-maB = qbar*S*[Cl*b;Cm*c;Cn*b];
-
-% Propulsion
-F_T = thr*max_thrust;
-
-f_pB = [cos(eta) * cos(zeta);
-        cos(eta) * sin(eta);
-        -sin(eta)] * F_T;
-mpB = [        0; 
-           -sin(eta); 
-       -cos(eta)*sin(zeta)] * F_T*7.5; %(xp - xcm);
-
-% Absolute force and moment
-f_apB = f_aB + f_pB;
-m_BB = maB + mpB;
-
-% Specific forces
-f_sp_B = (1./m(i)) * f_apB;
-
-
-
-g_L = gravity_model(sBE_L);
-
-
-
-
-
+d_quaternions = zeros(length(t),4);
+dm = zeros(length(t),1);
 
 for i = 1:length(t)
     % Dependencies
     R_BE_B = R_tensor([p(i), q(i), r(i)]);
+    
+    aoa = atan(vBE_B(i,3)/vBE_B(i,1));
+    
+    % Aerodynamics
+    [CL,CD,Cm] = aerodynamics_model(auxdata, aoa*rad, Ma, fda*rad);
+    Cl = 0;
+    Cn = 0;
+    Cx =  CL.*sin(aoa) - CD.*cos(aoa);
+    Cz = -CL.*cos(aoa) - CD.*sin(aoa);
+    f_aB = qbar(i) * S * [Cx; 0; Cz];
+    maB = qbar(i) * S * [Cl*b; Cm*c; Cn*b];
+    
+    % Propulsion
+    f_pB = [cos(eta) * cos(zeta);
+            cos(eta) * sin(eta);
+            -sin(eta)] * F_T(i);
+    mpB = [        0; 
+               -sin(eta); 
+           -cos(eta)*sin(zeta)] * F_T(i)*7.5; %(xp - xcm);
+    
+    % Absolute force and moment
+    f_apB = f_aB + f_pB;
+    m_BB = maB + mpB;
+
+    % Specific forces
+    f_sp_B = (1./m(i)) * f_apB;
     
     % Quaternion matrix
     qtm = [ 0,   -p(i), -q(i), -r(i);
@@ -143,13 +138,12 @@ for i = 1:length(t)
             ];
     
     % Equations of motion
-    d_vBE_B(i,:) = f_sp_B - R_BE_B * vBE_B + T_BL * g_L;
+    d_vBE_B(i,:) = f_sp_B - R_BE_B * vBE_B(i,:) + T_BL * g_L(i,:);
     d_sBE_L(i,:) = T_BL' * vBE_B(i,:);
     d_wBE_B(i,:) = invMOI * (-R_BE_B*MOI*wBE_B(i,:)' + m_BB);
-    d_quaternions = 0.5 * qtm * [q0(i); q1(i); q2(i); q3(i)];
-    
+    d_quaternions(i,:) = 0.5 * qtm * [q0(i); q1(i); q2(i); q3(i)];
+    dm(i) = mass_model(F_T(i));
 end
-
 
 output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions, ...
                    dm, dfda, dthr];
