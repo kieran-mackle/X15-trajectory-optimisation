@@ -32,7 +32,7 @@ auxdata = input.auxdata;
 
 
 if auxdata.altitude_hold == 1
-    J = 0;
+    J = -tf;
 else
     J = tf;
 end
