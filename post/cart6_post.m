@@ -59,15 +59,15 @@ Ma = V./a;
 % theta = asin( -2 * (q1*q3 - q0*q2) );
 % phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
 
-psi = zeros(length(t));
-theta = zeros(length(t));
-phi = zeros(length(t));
-aoas = zeros(length(t));
-fpas = zeros(length(t));
-hdas = zeros(length(t));
-CLs = zeros(length(t));
-CDs = zeros(length(t));
-Cms = zeros(length(t));
+psi = zeros(size(t));
+theta = zeros(size(t));
+phi = zeros(size(t));
+aoas = zeros(size(t));
+fpas = zeros(size(t));
+hdas = zeros(size(t));
+CLs = zeros(size(t));
+CDs = zeros(size(t));
+Cms = zeros(size(t));
 
 for i = 1:length(t)
     

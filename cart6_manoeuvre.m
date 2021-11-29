@@ -110,14 +110,14 @@ D0max    = D0;         % (m)
 % -------------------
 Nmin    = N0;
 Nmax    = N0;                % (m)
-Emin    = -Re0;
+Emin    = 0;
 Emax    = Re0;         % (m)
 Dmin    = D0;
 Dmax    = Df; % (m)
 % -------------------
 Nfmin    = Nf;
 Nfmax    = Nf;                % (m)
-Efmin    = -Re0;
+Efmin    = 0;
 Efmax    = Re0;         % (m)
 Dfmin    = Df;
 Dfmax    = Df;          % (m)
@@ -239,6 +239,7 @@ q2_f = cos(psif/2)*sin(thetaf/2)*cos(phif/2) + sin(psif/2)*cos(thetaf/2)*sin(phi
 q3_f = sin(psif/2)*cos(thetaf/2)*cos(phif/2) - cos(psif/2)*sin(thetaf/2)*sin(phif/2);
 
 % Define limits on quaternions
+% Explicitly define the initial and final bounds for quaternions
 q0_0min = -10;
 q0_0max = 10;
 q1_0min = -10;
