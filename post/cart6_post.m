@@ -46,10 +46,8 @@ gamma = auxdata.gamma;              % (-)
 rad = auxdata.rad;                  % (deg/rad)
 Re0 = auxdata.Re0;                  % (m)
 
-
-
 h = -sBE_L(:,3) - Re0;
-[T,~,rho] = atmospheric_model(h);
+[T,~,rho] = auxdata.atmospheric_model(h);
 a = sqrt(gamma.*R.*T);
 V = sqrt(sum(vBE_B.^2,2));
 % qbar = 0.5.*rho.*V.^2;
@@ -75,7 +73,7 @@ for i = 1:length(t)
     
     % Aerodynamics
     aoa = atan(vBE_B(i,3)/vBE_B(i,1));
-    [CL,CD,Cm] = aerodynamics_model(auxdata, aoa*rad, Ma(i), fda(i)*rad);
+    [CL,CD,Cm] = auxdata.aerodynamics_model(auxdata, aoa*rad, Ma(i), fda(i)*rad);
     
     psi(i) = atan( 2*(q1(i)*q2(i) + q0(i)*q3(i)) / ...
                (q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2) );
