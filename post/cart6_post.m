@@ -4,7 +4,7 @@ function post = cart6_post(auxdata, output, t)
 %  model.
 % ==================================================================
 
-auxdata = input.auxdata;
+auxdata = auxdata;
 state = output.result.solution.phase.state;
 
 % State variables
@@ -31,10 +31,13 @@ q3 = state(:,13);
 % theta = asin( -2 * (q1*q3 - q0*q2) );
 % phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
 
-psi = atan( 2*(q1(i)*q2(i) + q0(i)*q3(i)) / (q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2) );
-theta = asin( -2 * (q1(i)*q3(i) - q0(i)*q2(i)) );
-phi = atan( 2*(q2(i)*q3(i) + q0(i)*q1(i)) / (q0(i).^2 - q1(i).^2 - q2(i).^2 - q3(i).^2) );
-
+for i = 1:length(t)
+    psi(i) = atan( 2*(q1(i)*q2(i) + q0(i)*q3(i)) / ...
+               (q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2) );
+    theta(i) = asin( -2 * (q1(i)*q3(i) - q0(i)*q2(i)) );
+    phi(i) = atan( 2*(q2(i)*q3(i) + q0(i)*q1(i)) / ...
+               (q0(i).^2 - q1(i).^2 - q2(i).^2 - q3(i).^2) );
+end
 
 
 % Construct output struct
