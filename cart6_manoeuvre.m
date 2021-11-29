@@ -124,26 +124,26 @@ Dfmax    = Df;          % (m)
 
 
 % VELOCITY BOUNDS 
-u0min   = u0;
-u0max   = u0;         % (m)
-v0min   = v0;
-v0max   = v0;         % (m)
-w0min   = w0;
-w0max   = w0;         % (m) 
+u0min   = -Mamin*a(1);
+u0max   =  Mamin*a(1);         % (m)
+v0min   = -Mamin*a(1);
+v0max   =  Mamin*a(1);         % (m)
+w0min   = -Mamin*a(1);
+w0max   =  Mamin*a(1);         % (m) 
 % -------------------
 umin   = -Mamin*a(1);
 umax   = Mamax*a(2); % (m)
-vmin   = v0;
-vmax   = v0;         % (m)
-wmin   = w0;
-wmax   = w0;         % (m)   
+vmin   = -Mamin*a(1);
+vmax   =  Mamin*a(1);         % (m)
+wmin   = -Mamin*a(1);
+wmax   =  Mamin*a(1);         % (m)   
 % -------------------
-ufmin   = uf;
-ufmax   = uf; % (m)
-vfmin   = vf;
-vfmax   = vf;         % (m)
-wfmin   = wf;
-wfmax   = wf;         % (m) 
+ufmin   = -Mamin*a(1);
+ufmax   =  Mamin*a(1); % (m)
+vfmin   = -Mamin*a(1);
+vfmax   =  Mamin*a(1);         % (m)
+wfmin   = -Mamin*a(1);
+wfmax   =  Mamin*a(1);         % (m) 
 
 
 % ANGULAR VELOCITY BOUNDS
