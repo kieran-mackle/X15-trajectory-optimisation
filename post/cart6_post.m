@@ -91,6 +91,7 @@ end
 
 
 % Construct output struct
+post.t = t;
 post.sBE_L = sBE_L;
 post.vBE_B = vBE_B;
 post.wBE_B = wBE_B;
