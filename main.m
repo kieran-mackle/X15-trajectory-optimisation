@@ -95,4 +95,4 @@ t = output.result.solution.phase.time;
 % plot6;
 
 post = cart6_post(auxdata, output, t);
-
+plot_cart6(post)

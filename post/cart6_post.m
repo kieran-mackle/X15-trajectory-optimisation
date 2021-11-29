@@ -4,7 +4,6 @@ function post = cart6_post(auxdata, output, t)
 %  model.
 % ==================================================================
 
-auxdata = auxdata;
 state = output.result.solution.phase.state;
 
 % State variables
@@ -23,7 +22,38 @@ q1 = state(:,11);
 q2 = state(:,12);
 q3 = state(:,13);
 
+% Mass
+m = state(:,14);
 
+% Control variables
+fda = state(:,15);       % flap deflection angle
+thr = state(:,16);       % thrust setting
+
+% Control inputs
+% dfda = input.phase.control(:,1);    % Flap angle rate
+% dthr = input.phase.control(:,2);    % Thrust setting rate
+
+
+% Constants
+max_thrust = auxdata.thrust;
+invMOI = auxdata.invMOI;
+MOI = auxdata.MOI;
+S = auxdata.S;                      % (m^2)
+b = auxdata.b;                      % (m)
+c = auxdata.c;                      % (m)
+R = auxdata.R;                      % (J/kg.K)
+gamma = auxdata.gamma;              % (-)
+rad = auxdata.rad;                  % (deg/rad)
+Re0 = auxdata.Re0;                  % (m)
+
+
+
+h = -sBE_L(:,3) - Re0;
+[T,~,rho] = atmospheric_model(h);
+a = sqrt(gamma.*R.*T);
+V = sqrt(sum(vBE_B.^2,2));
+% qbar = 0.5.*rho.*V.^2;
+Ma = V./a;
 
 
 % Euler angles - not sure if required in the dynamics
@@ -31,20 +61,67 @@ q3 = state(:,13);
 % theta = asin( -2 * (q1*q3 - q0*q2) );
 % phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
 
+psi = zeros(length(t));
+theta = zeros(length(t));
+phi = zeros(length(t));
+aoas = zeros(length(t));
+fpas = zeros(length(t));
+hdas = zeros(length(t));
+CLs = zeros(length(t));
+CDs = zeros(length(t));
+Cms = zeros(length(t));
+
 for i = 1:length(t)
+    
+    % Aerodynamics
+    aoa = atan(vBE_B(i,3)/vBE_B(i,1));
+    [CL,CD,Cm] = aerodynamics_model(auxdata, aoa*rad, Ma(i), fda(i)*rad);
+    
     psi(i) = atan( 2*(q1(i)*q2(i) + q0(i)*q3(i)) / ...
                (q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2) );
     theta(i) = asin( -2 * (q1(i)*q3(i) - q0(i)*q2(i)) );
     phi(i) = atan( 2*(q2(i)*q3(i) + q0(i)*q1(i)) / ...
                (q0(i).^2 - q1(i).^2 - q2(i).^2 - q3(i).^2) );
+    
+    
+    % Append
+    aoas(i) = aoa;
+    CLs(i) = CL;
+    CDs(i) = CD;
+    Cms(i) = Cm;
 end
 
 
 % Construct output struct
+post.sBE_L = sBE_L;
+post.vBE_B = vBE_B;
+post.wBE_B = wBE_B;
 post.psi = psi;
 post.theta = theta;
 post.phi = phi;
+post.h = h;
+post.p = p;
+post.q = q;
+post.r = r;
+post.N = sBE_L(:,1);
+post.E = sBE_L(:,2);
+post.D = sBE_L(:,3);
+post.u = vBE_B(:,1);
+post.v = vBE_B(:,2);
+post.w = vBE_B(:,3);
+post.m = m;
+post.fda = fda;
+post.thr = thr;
 
+post.Ma = Ma;
+post.aoa = aoas;
+post.fpa = fpas;
+post.hda = hdas;
+
+post.CL = CLs;
+post.CD = CDs;
+post.Cm = Cms;
+% post.F = F;
 
 
 
