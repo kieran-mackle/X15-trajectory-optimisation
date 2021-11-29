@@ -21,7 +21,7 @@ else
 end
 
 %-------------------------------------------------------------------%
-%                        Boundary Conditions                        %
+%               Boundary Conditions (for initial guess)             %
 %-------------------------------------------------------------------%
 h0      = specification.h0;
 hf      = specification.hf;
@@ -32,11 +32,11 @@ Maf     = specification.Maf;
 a       = sqrt(gamma.*R.*T);
 
 t0      = 0;
-tf      = 15;
+tf      = 10;
 
 % ALTITUDE HOLD MANOEUVRE
 % --------------------------
-% DEFINE POSITION
+% DEFINE POSITION (NED)
 N0      = 0;
 Nf      = 0;                % (m)
 E0      = 0;
@@ -44,7 +44,7 @@ Ef      = Maf*a(2)*tf;      % (m)
 D0      = -Re0 - h0;
 Df      = -Re0 - hf;         % (m)
 
-% DEFINE VELOCITY
+% DEFINE VELOCITY (Body Coordiantes)
 u0      = Ma0*a(1);
 uf      = Maf*a(2);         % (m/s)
 v0      = 0;
@@ -52,7 +52,7 @@ vf      = 0;                % (m/s)
 w0      = 0;
 wf      = 0;                % (m/s)
 
-% DEFINE ANGULAR VELOCITY
+% DEFINE ANGULAR VELOCITY (Body rates)
 p_0       = 0;
 p_f       = 0;
 q_0       = 0;
@@ -93,10 +93,10 @@ tfmax    = 15;              % (s)
 
 % hmin    = 10e3;
 % hmax    = 30e3;             % (m)
-Mamin   = Ma0;
-Mamax   = Ma0;                % (-)                     % Constant mach
+Mamin   = 4;
+Mamax   = 8;                % (-)
 aoamin  = -30*d2r;
-aoamax  = -aoamin;          % (rad)
+aoamax  =  30*d2r;          % (rad)
 % fpa0    = 0*d2r;
 % fpaf    = 0*d2r;            % (rad)
 
@@ -113,11 +113,11 @@ Nmax    = N0;                % (m)
 Emin    = -Re0;
 Emax    = Re0;         % (m)
 Dmin    = D0;
-Dmax    = D0; % (m)
+Dmax    = Df; % (m)
 % -------------------
 Nfmin    = Nf;
 Nfmax    = Nf;                % (m)
-Efmin    = 0;
+Efmin    = -Re0;
 Efmax    = Re0;         % (m)
 Dfmin    = Df;
 Dfmax    = Df;          % (m)
@@ -154,12 +154,12 @@ q_0max  = 0;
 r_0min  = 0;
 r_0max  = 0;
 % -------------------
-pmin    = 0;
-pmax    = 0;
-qmin    = 0;
-qmax    = 0;
-rmin    = 0;
-rmax    = 0;
+pmin    = -10;
+pmax    = 10;
+qmin    = -10;
+qmax    = 10;
+rmin    = -10;
+rmax    = 10;
 % -------------------
 p_fmin  = 0;
 p_fmax  = 0;
@@ -222,9 +222,9 @@ thrfmax  = 1;
 % CONTROL RATE BOUNDS
 % -------------------
 dfdamin = -1e1*d2r;
-dfdamax = -dfdamin;
+dfdamax =  1e1*d2r;
 dthrmin = -0.2; 
-dthrmax = -dthrmin;
+dthrmax =  0.2;
 % -------------------
 
 % Initialise Quaternions
