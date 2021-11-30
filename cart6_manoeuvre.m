@@ -309,8 +309,8 @@ bounds.phase.finalstate.upper   = [Nfmax, Efmax, Dfmax,     ...
                                    q0_fmax, q1_fmax, q2_fmax, q3_fmax, ...
                                    mfmax, fdafmax, thrfmax];
 
-bounds.phase.control.lower      = [dfdamin, dthrmin];
-bounds.phase.control.upper      = [dfdamax, dthrmax];
+bounds.phase.control.lower      = [dfdamin, dthrmin, -1];
+bounds.phase.control.upper      = [dfdamax, dthrmax, 1];
 
 bounds.phase.path.lower         = [aoamin, Mamin];
 bounds.phase.path.upper         = [aoamax, Mamax];
@@ -374,6 +374,7 @@ else
     
     guess.phase.control(:,1)        = dfda;
     guess.phase.control(:,2)        = dthr;
+    guess.phase.control(:,3)        = zeros(size(t));
     
 end
 

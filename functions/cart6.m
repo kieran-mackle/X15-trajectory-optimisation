@@ -39,6 +39,7 @@ thr = input.phase.state(:,16);       % thrust setting
 % Control inputs
 dfda = input.phase.control(:,1);    % Flap angle rate
 dthr = input.phase.control(:,2);    % Thrust setting rate
+dr = input.phase.control(:,3); % Arbitrary control input
 
 % Constants
 max_thrust = auxdata.thrust;
