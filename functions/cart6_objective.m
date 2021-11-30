@@ -35,7 +35,7 @@ V = sqrt(sum(vBE_B.^2,2));
 Ma = V./a;
 
 % ----------------------------------------------------------------------- %
-output.eventgroup(1).event = [Ma(1), Ma(2)];
+% output.eventgroup(1).event = [Ma(1), Ma(2)];
 % output.eventgroup(2).event = [fpa0, fpaf];
 
 
