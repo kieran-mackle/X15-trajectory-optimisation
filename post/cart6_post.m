@@ -81,9 +81,11 @@ for i = 1:length(t)
     phi(i) = atan( 2*(q2(i)*q3(i) + q0(i)*q1(i)) / ...
                (q0(i).^2 - q1(i).^2 - q2(i).^2 - q3(i).^2) );
     
+    [~,~,fpa] = car2pol(vBE_B);
     
     % Append
     aoas(i) = aoa;
+    fpas(i) = fpa;
     CLs(i) = CL;
     CDs(i) = CD;
     Cms(i) = Cm;
