@@ -4,12 +4,14 @@ function output = cart6_objective(input)
 % ================================================================= 
 
 tf      = input.phase.finaltime;
-% X0      = input.phase.initialstate;
-% Xf      = input.phase.finalstate;
+X0      = input.phase.initialstate;
+Xf      = input.phase.finalstate;
 auxdata = input.auxdata;
 
-% Re      = auxdata.Re0;
+sBE_L   = [X0(1:3); Xf(1:3)];
+vBE_B   = [X0(4:6); Xf(4:6)];
 
+% Re      = auxdata.Re0;
 % N0      = X0(:,1);                  Nf      = Xf(:,1);
 % E0      = X0(:,2);                  Ef      = Xf(:,2);
 % D0      = X0(:,3);                  Df      = Xf(:,3);
@@ -26,8 +28,14 @@ auxdata = input.auxdata;
 % V           = sqrt(sum(vBE_B.^2,2));
 % Ma          = V'./a;
 
+h = -sBE_L(:,3) - auxdata.Re0;
+[T,~,rho] = auxdata.atmospheric_model(h);
+a = sqrt(auxdata.gamma.*auxdata.R.*T);
+V = sqrt(sum(vBE_B.^2,2));
+Ma = V./a;
+
 % ----------------------------------------------------------------------- %
-% output.eventgroup(1).event = [Ma(1), Ma(2)];
+output.eventgroup(1).event = [Ma(1), Ma(2)];
 % output.eventgroup(2).event = [fpa0, fpaf];
 
 

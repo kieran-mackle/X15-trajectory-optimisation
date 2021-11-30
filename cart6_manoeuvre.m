@@ -315,6 +315,8 @@ bounds.phase.control.upper      = [dfdamax, dthrmax, 1];
 bounds.phase.path.lower         = [aoamin, Mamin];
 bounds.phase.path.upper         = [aoamax, Mamax];
 
+bounds.eventgroup(1).lower      = [Ma0, Maf];
+bounds.eventgroup(1).upper      = [Ma0, Maf];
 
 %-------------------------------------------------------------------%
 %                     Construct initial guess                       %
