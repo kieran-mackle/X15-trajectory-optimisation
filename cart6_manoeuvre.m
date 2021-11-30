@@ -110,14 +110,14 @@ D0max    = D0;         % (m)
 % -------------------
 Nmin    = N0;
 Nmax    = N0;                % (m)
-Emin    = 0;
+Emin    = -Re0;
 Emax    = Re0;         % (m)
 Dmin    = D0;
 Dmax    = Df; % (m)
 % -------------------
 Nfmin    = Nf;
 Nfmax    = Nf;                % (m)
-Efmin    = 0;
+Efmin    = -Re0;
 Efmax    = Re0;         % (m)
 Dfmin    = Df;
 Dfmax    = Df;          % (m)
@@ -147,12 +147,12 @@ wfmax   =  Mamin*a(1);         % (m)
 
 
 % ANGULAR VELOCITY BOUNDS
-p_0min  = 0;
-p_0max  = 0;
-q_0min  = 0;
-q_0max  = 0;
-r_0min  = 0;
-r_0max  = 0;
+p_0min  = -10;
+p_0max  = 10;
+q_0min  = -10;
+q_0max  = 10;
+r_0min  = -10;
+r_0max  = 10;
 % -------------------
 pmin    = -10;
 pmax    = 10;
@@ -161,12 +161,12 @@ qmax    = 10;
 rmin    = -10;
 rmax    = 10;
 % -------------------
-p_fmin  = 0;
-p_fmax  = 0;
-q_fmin  = 0;
-q_fmax  = 0;
-r_fmin  = 0;
-r_fmax  = 0;
+p_fmin  = -10;
+p_fmax  = 10;
+q_fmin  = -10;
+q_fmax  = 10;
+r_fmin  = -10;
+r_fmax  = 10;
 
 
 % ATTITUDE BOUNDS
