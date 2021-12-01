@@ -81,7 +81,8 @@ for i = 1:length(t)
     phi(i) = atan( 2*(q2(i)*q3(i) + q0(i)*q1(i)) / ...
                (q0(i).^2 - q1(i).^2 - q2(i).^2 - q3(i).^2) );
     
-    [~,~,fpa] = car2pol(vBE_B);
+    vBE_G = TM_BG(phi(i), theta(i), psi(i))' * vBE_B(i,:)';
+    [~,~,fpa] = car2pol(vBE_G);
     
     % Append
     aoas(i) = aoa;
