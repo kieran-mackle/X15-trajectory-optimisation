@@ -93,8 +93,8 @@ tfmax    = 15;              % (s)
 
 % hmin    = 10e3;
 % hmax    = 30e3;             % (m)
-Mamin   = 4;
-Mamax   = 8;                % (-)
+Mamin   = 6;
+Mamax   = 6;                % (-)
 aoamin  = -30*d2r;
 aoamax  =  30*d2r;          % (rad)
 % fpa0    = 0*d2r;
