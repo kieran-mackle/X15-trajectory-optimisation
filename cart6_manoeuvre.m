@@ -170,26 +170,26 @@ r_fmax  = 10;
 
 
 % ATTITUDE BOUNDS
-% phi0min = 0;                    % Roll (rad)
-% phi0max = 0;
-% theta0min = 0;                  % Pitch (rad)
-% theta0max = 0;
-% psi0min = 0;                    % Yaw (rad)
-% psi0max = 0;
-% % -------------------
-% phimin = 0;                    % Roll (rad)
-% phimax = 0;
-% thetamin = 0;                  % Pitch (rad)
-% thetamax = 0;
-% psimin = 0;                    % Yaw (rad)
-% psimax = 0;
-% % -------------------
-% phifmin = 0;                    % Roll (rad)
-% phifmax = 0;
-% thetafmin = 0;                  % Pitch (rad)
-% thetafmax = 0;
-% psifmin = 0;                    % Yaw (rad)
-% psifmax = 0;
+phi0min = 0;                    % Roll (rad)
+phi0max = 0;
+theta0min = 0;                  % Pitch (rad)
+theta0max = 0;
+psi0min = 0;                    % Yaw (rad)
+psi0max = 0;
+% -------------------
+phimin = 0;                    % Roll (rad)
+phimax = 0;
+thetamin = 0;                  % Pitch (rad)
+thetamax = 0;
+psimin = 90*d2r;                    % Yaw (rad)
+psimax = 90*d2r;
+% -------------------
+phifmin = 0;                    % Roll (rad)
+phifmax = 0;
+thetafmin = 0;                  % Pitch (rad)
+thetafmax = 0;
+psifmin = 0;                    % Yaw (rad)
+psifmax = 0;
 
 
 % MASS BOUNDS
@@ -312,8 +312,8 @@ bounds.phase.finalstate.upper   = [Nfmax, Efmax, Dfmax,     ...
 bounds.phase.control.lower      = [dfdamin, dthrmin, -1];
 bounds.phase.control.upper      = [dfdamax, dthrmax, 1];
 
-bounds.phase.path.lower         = [aoamin, Mamin];
-bounds.phase.path.upper         = [aoamax, Mamax];
+bounds.phase.path.lower         = [aoamin, Mamin, phimin, psimin];
+bounds.phase.path.upper         = [aoamax, Mamax, phimax, psimax];
 
 % bounds.eventgroup(1).lower      = [Ma0, Maf];
 % bounds.eventgroup(1).upper      = [Ma0, Maf];

@@ -91,6 +91,8 @@ d_wBE_B = zeros(length(t),3);
 d_quaternions = zeros(length(t),4);
 dm = zeros(length(t),1);
 aoas = zeros(size(t));
+phis = zeros(size(t));
+psis = zeros(size(t));
 
 for i = 1:length(t)
     % Dependencies
@@ -147,13 +149,23 @@ for i = 1:length(t)
     d_quaternions(i,:) = 0.5 * qtm * [q0(i); q1(i); q2(i); q3(i)];
     dm(i) = mass_model(F_T(i));
     
+    % Euler angles
+    psi = atan( 2*(q1(i)*q2(i) + q0(i)*q3(i)) / ...
+               (q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2) );
+    theta = asin( -2 * (q1(i)*q3(i) - q0(i)*q2(i)) );
+    phi = atan( 2*(q2(i)*q3(i) + q0(i)*q1(i)) / ...
+               (q0(i).^2 - q1(i).^2 - q2(i).^2 - q3(i).^2) );
+    
     % Append path variables
     aoas(i) = aoa;
+    phis(i) = phi;
+    psis(i) = psi;
+    
 end
 
 plot(t,h);
 
 output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions, ...
                    dm, dfda, dthr];
-output.path     = [aoas, Ma];
+output.path     = [aoas, Ma, phis, psis];
 
