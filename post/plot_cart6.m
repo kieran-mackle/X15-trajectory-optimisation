@@ -1,7 +1,7 @@
 function plot_cart6(input)
 
 i = 3;
-j = 2;
+j = 3;
 
 figure(1); clf;
 set(gcf,'color','w');
@@ -50,5 +50,27 @@ plot(input.t, input.fda*180/pi);
 xlabel('time (s)');
 ylabel('\delta_f (deg)');
 % axis equal;
+
+subplot(i,j,7);
+hold on; grid on;
+title('Roll Angle');
+plot(input.t, input.phi*180/pi);
+xlabel('time (s)');
+ylabel('\phi (deg)');
+
+subplot(i,j,8);
+hold on; grid on;
+title('Pitch Angle');
+plot(input.t, input.theta*180/pi);
+xlabel('time (s)');
+ylabel('\theta (deg)');
+
+subplot(i,j,9);
+hold on; grid on;
+title('Yaw Angle');
+plot(input.t, input.psi*180/pi);
+xlabel('time (s)');
+ylabel('\psi (deg)');
+
 
 
