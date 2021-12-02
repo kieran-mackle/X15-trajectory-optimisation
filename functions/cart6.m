@@ -170,5 +170,5 @@ plot(t,h);
 
 output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions, ...
                    dm, dfda, dthr];
-output.path     = [aoas, Ma];
+output.path     = [aoas, Ma, h];
 
