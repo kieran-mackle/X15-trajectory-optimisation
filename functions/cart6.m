@@ -163,7 +163,6 @@ for i = 1:length(t)
     
 end
 
-figure(20);
 plot(t,h);
 
 output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions, ...

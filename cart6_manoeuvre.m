@@ -65,8 +65,8 @@ phi0 = 0;                    % Roll (rad)
 phif = 0;
 theta0 = 0;                  % Pitch (rad)
 thetaf = 0;
-psi0 = 90*d2r;                % Yaw (rad)
-psif = 90*d2r;
+psi0 = 0*d2r;                % Yaw (rad)
+psif = 0*d2r;
 
 % DEFINE MASS
 m0      = 10e3;
@@ -110,14 +110,14 @@ D0max    = D0;         % (m)
 % -------------------
 Nmin    = N0;
 Nmax    = N0;                % (m)
-Emin    = -Re0;
+Emin    = 0;
 Emax    = Re0;         % (m)
 Dmin    = D0;
 Dmax    = Df; % (m)
 % -------------------
 Nfmin    = Nf;
 Nfmax    = Nf;                % (m)
-Efmin    = -Re0;
+Efmin    = 0;
 Efmax    = Re0;         % (m)
 Dfmin    = Df;
 Dfmax    = Df;          % (m)

@@ -2,7 +2,7 @@
 %      Pseudospectral optimisation problem for X-15 Delta wing.         
 % ================================================================= 
 
-clearvars; clc;
+clearvars; clc; clf;
 
 % ----------------------------------------------------------------- %
 %                  Initialise environment with paths                %
