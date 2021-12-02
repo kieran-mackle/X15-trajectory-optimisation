@@ -72,7 +72,10 @@ h = -sBE_L(:,3) - Re0;
 a = sqrt(gamma.*R.*T);
 V = sqrt(sum(vBE_B.^2,2));
 qbar = 0.5.*rho.*V.^2;
-Ma = V./a;
+Ma = 6*ones(length(t),1);
+if any(a > 0)
+    Ma(a>0) = V(a>0)./a(a>0);
+end
 g_L = gravity_model(sBE_L);
 
 % Propulsion
