@@ -40,7 +40,7 @@ thr = input.phase.state(:,16);       % thrust setting
 dfda = input.phase.control(:,1);    % Flap angle rate
 dthr = input.phase.control(:,2);    % Thrust setting rate
 dr = input.phase.control(:,3); % Arbitrary control input
-pitch_control = input.phase.control(:,4);%zeros(size(t));
+pitch_control = zeros(size(t)); % input.phase.control(:,4); %
 
 % Constants
 max_thrust = auxdata.thrust;
@@ -172,4 +172,5 @@ plot(t,h);
 output.dynamics = [d_sBE_L, d_vBE_B, d_wBE_B, d_quaternions, ...
                    dm, dfda, dthr];
 output.path     = [aoas, Ma];
+output.integrand = (h - 20e3).^2;
 

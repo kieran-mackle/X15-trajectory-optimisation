@@ -65,8 +65,8 @@ phi0 = 0;                    % Roll (rad)
 phif = 0;
 theta0 = 0;                  % Pitch (rad)
 thetaf = 0;
-psi0 = 0*d2r;                % Yaw (rad)
-psif = 0*d2r;
+psi0 = 90*d2r;                % Yaw (rad)
+psif = 90*d2r;
 
 % DEFINE MASS
 m0      = 10e3;
@@ -110,14 +110,14 @@ D0max    = D0;         % (m)
 % -------------------
 Nmin    = N0;
 Nmax    = N0;                % (m)
-Emin    = 0;
+Emin    = -Re0;
 Emax    = Re0;         % (m)
 Dmin    = D0;
 Dmax    = Df; % (m)
 % -------------------
 Nfmin    = Nf;
 Nfmax    = Nf;                % (m)
-Efmin    = 0;
+Efmin    = -Re0;
 Efmax    = Re0;         % (m)
 Dfmin    = Df;
 Dfmax    = Df;          % (m)
@@ -170,26 +170,26 @@ r_fmax  = 10;
 
 
 % ATTITUDE BOUNDS
-phi0min = 0;                    % Roll (rad)
-phi0max = 0;
-theta0min = 0;                  % Pitch (rad)
-theta0max = 0;
-psi0min = 0;                    % Yaw (rad)
-psi0max = 0;
-% -------------------
-phimin = 0;                    % Roll (rad)
-phimax = 0;
-thetamin = 0;                  % Pitch (rad)
-thetamax = 0;
-psimin = 90*d2r;                    % Yaw (rad)
-psimax = 90*d2r;
-% -------------------
-phifmin = 0;                    % Roll (rad)
-phifmax = 0;
-thetafmin = 0;                  % Pitch (rad)
-thetafmax = 0;
-psifmin = 0;                    % Yaw (rad)
-psifmax = 0;
+% phi0min = 0;                    % Roll (rad)
+% phi0max = 0;
+% theta0min = 0;                  % Pitch (rad)
+% theta0max = 0;
+% psi0min = 0;                    % Yaw (rad)
+% psi0max = 0;
+% % -------------------
+% phimin = -180*d2r;                    % Roll (rad)
+% phimax = 180*d2r;
+% thetamin = -180*d2r;                  % Pitch (rad)
+% thetamax = 180*d2r;
+% psimin = -180*d2r;                    % Yaw (rad)
+% psimax = 180*d2r;
+% % -------------------
+% phifmin = 0;                    % Roll (rad)
+% phifmax = 0;
+% thetafmin = 0;                  % Pitch (rad)
+% thetafmax = 0;
+% psifmin = 0;                    % Yaw (rad)
+% psifmax = 0;
 
 
 % MASS BOUNDS
@@ -240,6 +240,14 @@ q3_f = sin(psif/2)*cos(thetaf/2)*cos(phif/2) - cos(psif/2)*sin(thetaf/2)*sin(phi
 
 % Define limits on quaternions
 % Explicitly define the initial and final bounds for quaternions
+% q0_0min = q0_0;
+% q0_0max = q0_0;
+% q1_0min = q1_0;
+% q1_0max = q1_0;
+% q2_0min = q2_0;
+% q2_0max = q2_0;
+% q3_0min = q3_0;
+% q3_0max = q3_0;
 q0_0min = -10;
 q0_0max = 10;
 q1_0min = -10;
@@ -258,6 +266,14 @@ q2max = 10;
 q3min = -10;
 q3max = 10;
 % -------------------
+% q0_fmin = q0_f;
+% q0_fmax = q0_f;
+% q1_fmin = q1_f;
+% q1_fmax = q1_f;
+% q2_fmin = q2_f;
+% q2_fmax = q2_f;
+% q3_fmin = q3_f;
+% q3_fmax = q3_f;
 q0_fmin = -10;
 q0_fmax = 10;
 q1_fmin = -10;
@@ -309,11 +325,14 @@ bounds.phase.finalstate.upper   = [Nfmax, Efmax, Dfmax,     ...
                                    q0_fmax, q1_fmax, q2_fmax, q3_fmax, ...
                                    mfmax, fdafmax, thrfmax];
 
-bounds.phase.control.lower      = [dfdamin, dthrmin, -1, -1];
-bounds.phase.control.upper      = [dfdamax, dthrmax, 1, 1];
+bounds.phase.control.lower      = [dfdamin, dthrmin, -1];
+bounds.phase.control.upper      = [dfdamax, dthrmax, 1];
 
 bounds.phase.path.lower         = [aoamin, Mamin];
 bounds.phase.path.upper         = [aoamax, Mamax];
+
+bounds.phase.integral.lower     = [0];
+bounds.phase.integral.upper     = [10e3];
 
 % bounds.eventgroup(1).lower      = [Ma0, Maf];
 % bounds.eventgroup(1).upper      = [Ma0, Maf];
@@ -323,10 +342,10 @@ bounds.phase.path.upper         = [aoamax, Mamax];
 %-------------------------------------------------------------------%
 if imported_guess == 1
     % Use initial guess file
-    load('NewGuess.mat');
-    guess.phase.time            = newguess.t;
-    guess.phase.state           = newguess.state;
-    guess.phase.control         = newguess.control;
+%     load('NewGuess.mat');
+%     guess.phase.time            = newguess.t;
+%     guess.phase.state           = newguess.state;
+%     guess.phase.control         = newguess.control;
     
 else
     % Linearly interpolate guess
@@ -377,7 +396,9 @@ else
     guess.phase.control(:,1)        = dfda;
     guess.phase.control(:,2)        = dthr;
     guess.phase.control(:,3)        = zeros(size(t));
-    guess.phase.control(:,4)        = zeros(size(t));
+%     guess.phase.control(:,4)        = zeros(size(t));
+
+    guess.phase.integral            = zeros(1,1);
     
 end
 
