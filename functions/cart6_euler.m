@@ -23,18 +23,18 @@ q = input.phase.state(:,8);
 r = input.phase.state(:,9);
 
 % Euler angles
-wBE_B = input.phase.state(:,10:12);   % [phi, theta, psi]
+wBE_L = input.phase.state(:,10:12);   % [phi, theta, psi]
 phi = input.phase.state(:,10);
 theta = input.phase.state(:,11);
 psi = input.phase.state(:,12);
 
 
 % Mass
-m = input.phase.state(:,14);
+m = input.phase.state(:,13);
 
 % Control variables
-fda = input.phase.state(:,15);       % flap deflection angle
-thr = input.phase.state(:,16);       % thrust setting
+fda = input.phase.state(:,14);       % flap deflection angle
+thr = input.phase.state(:,15);       % thrust setting
 
 % Control inputs
 dfda = input.phase.control(:,1);    % Flap angle rate
@@ -63,7 +63,6 @@ gravity_model = auxdata.gravity_model;
 aerodynamics_model = auxdata.aerodynamics_model;
 mass_model = auxdata.mass_model;
 atmospheric_model = auxdata.atmospheric_model;
-
 
 %-------------------------------------------------------------------%
 %                       Calculate Dependencies                      %
@@ -95,8 +94,6 @@ d_wBE_B = zeros(length(t),3);
 d_Euler = zeros(length(t),3);
 dm = zeros(length(t),1);
 aoas = zeros(size(t));
-phis = zeros(size(t));
-psis = zeros(size(t));
 
 for i = 1:length(t)
     % Dependencies
@@ -129,25 +126,21 @@ for i = 1:length(t)
     f_sp_B = (1./m(i)) * f_apB;
    
     % Body to local-level transformation matrix
-    T_LB = [1,    sin(phi)*tan(theta),   cos(phi)*tan(theta);
-            0,          cos(phi),            -sin(phi);
-            0,    sin(phi)/cos(theta),   cos(phi)/cos(theta)];
+    T_Eu = [1,    sin(phi(i))*tan(theta(i)),   cos(phi)*tan(theta(i));
+            0,          cos(phi(i)),            -sin(phi(i));
+            0,    sin(phi)/cos(theta(i)),   cos(phi(i))/cos(theta(i))];
     
+    T_BL = TM_BG(phi(i), theta(i), psi(i));
+       
     % Equations of motion
     d_vBE_B(i,:) = f_sp_B - R_BE_B * vBE_B(i,:)' + T_BL * g_L(i,:)';
     d_sBE_L(i,:) = T_BL' * vBE_B(i,:)';
     d_wBE_B(i,:) = invMOI * (-R_BE_B*MOI*wBE_B(i,:)' + m_BB);
-    
-    
-    d_Euler(i,:) = T_LB * [p; q; r];
-    
-    
+    d_Euler(i,:) = T_Eu * [p(i); q(i); r(i)];
     dm(i) = mass_model(F_T(i));
 
-    
     % Append path variables
     aoas(i) = aoa;
-
     
 end
 
