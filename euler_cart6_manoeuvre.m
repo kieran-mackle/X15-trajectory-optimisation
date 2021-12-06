@@ -275,8 +275,8 @@ bounds.phase.control.upper      = [dfdamax, dthrmax, 1];
 bounds.phase.path.lower         = [aoamin, Mamin];
 bounds.phase.path.upper         = [aoamax, Mamax];
 
-bounds.phase.integral.lower     = [0];
-bounds.phase.integral.upper     = [10e3];
+% bounds.phase.integral.lower     = [0];
+% bounds.phase.integral.upper     = [10e3];
 
 % bounds.eventgroup(1).lower      = [Ma0, Maf];
 % bounds.eventgroup(1).upper      = [Ma0, Maf];
