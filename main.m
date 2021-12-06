@@ -48,7 +48,7 @@ manoeuvre_spec.use_guess = 0;
 % ----------------------------------------------------------------- %
 %                     Assign function handles                       %
 %------------------------------------------------------------------ %
-dynamics_func               = @cart6;           % @tensor6 / @cart3 / @cart6
+dynamics_func               = @cart6_euler;           % @tensor6 / @cart3 / @cart6
 objective_func              = @cart6_objective; % @objective / @cartesian_objective / @cart6_objective;
 
 % ----------------------------------------------------------------- %

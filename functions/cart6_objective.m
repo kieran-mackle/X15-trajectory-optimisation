@@ -7,7 +7,7 @@ tf      = input.phase.finaltime;
 X0      = input.phase.initialstate;
 Xf      = input.phase.finalstate;
 auxdata = input.auxdata;
-q = input.phase.integral(:,1);
+% q = input.phase.integral(:,1);
 
 sBE_L   = [X0(1:3); Xf(1:3)];
 vBE_B   = [X0(4:6); Xf(4:6)];

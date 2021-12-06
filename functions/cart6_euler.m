@@ -126,9 +126,9 @@ for i = 1:length(t)
     f_sp_B = (1./m(i)) * f_apB;
    
     % Body to local-level transformation matrix
-    T_Eu = [1,    sin(phi(i))*tan(theta(i)),   cos(phi)*tan(theta(i));
+    T_Eu = [1,    sin(phi(i))*tan(theta(i)),   cos(phi(i))*tan(theta(i));
             0,          cos(phi(i)),            -sin(phi(i));
-            0,    sin(phi)/cos(theta(i)),   cos(phi(i))/cos(theta(i))];
+            0,    sin(phi(i))/cos(theta(i)),   cos(phi(i))/cos(theta(i))];
     
     T_BL = TM_BG(phi(i), theta(i), psi(i));
        
