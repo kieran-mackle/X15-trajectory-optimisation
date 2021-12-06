@@ -170,26 +170,26 @@ r_fmax  = 10;
 
 
 % ATTITUDE BOUNDS
-% phi0min = 0;                    % Roll (rad)
-% phi0max = 0;
-% theta0min = 0;                  % Pitch (rad)
-% theta0max = 0;
-% psi0min = 0;                    % Yaw (rad)
-% psi0max = 0;
-% % -------------------
-% phimin = -180*d2r;                    % Roll (rad)
-% phimax = 180*d2r;
-% thetamin = -180*d2r;                  % Pitch (rad)
-% thetamax = 180*d2r;
-% psimin = -180*d2r;                    % Yaw (rad)
-% psimax = 180*d2r;
-% % -------------------
-% phifmin = 0;                    % Roll (rad)
-% phifmax = 0;
-% thetafmin = 0;                  % Pitch (rad)
-% thetafmax = 0;
-% psifmin = 0;                    % Yaw (rad)
-% psifmax = 0;
+phi0min = 0;                    % Roll (rad)
+phi0max = 0;
+theta0min = -10*d2r;                  % Pitch (rad)
+theta0max = 10*d2r;
+psi0min = 90*d2r;                    % Yaw (rad)
+psi0max = 90*d2r;
+% -------------------
+phimin = -180*d2r;                    % Roll (rad)
+phimax = 180*d2r;
+thetamin = -80*d2r;                  % Pitch (rad)
+thetamax = 80*d2r;
+psimin = -180*d2r;                    % Yaw (rad)
+psimax = 180*d2r;
+% -------------------
+phifmin = 0;                    % Roll (rad)
+phifmax = 0;
+thetafmin = 10*d2r;                  % Pitch (rad)
+thetafmax = 10*d2r;
+psifmin = 90*d2r;                    % Yaw (rad)
+psifmax = 90*d2r;
 
 
 % MASS BOUNDS
@@ -227,62 +227,6 @@ dthrmin = -0.2;
 dthrmax =  0.2;
 % -------------------
 
-% Initialise Quaternions
-q0_0 = cos(psi0/2)*cos(theta0/2)*cos(phi0/2) + sin(psi0/2)*sin(theta0/2)*sin(phi0/2);
-q1_0 = cos(psi0/2)*cos(theta0/2)*sin(phi0/2) - sin(psi0/2)*sin(theta0/2)*cos(phi0/2);
-q2_0 = cos(psi0/2)*sin(theta0/2)*cos(phi0/2) + sin(psi0/2)*cos(theta0/2)*sin(phi0/2);
-q3_0 = sin(psi0/2)*cos(theta0/2)*cos(phi0/2) - cos(psi0/2)*sin(theta0/2)*sin(phi0/2);
-
-q0_f = cos(psif/2)*cos(thetaf/2)*cos(phif/2) + sin(psif/2)*sin(thetaf/2)*sin(phif/2);
-q1_f = cos(psif/2)*cos(thetaf/2)*sin(phif/2) - sin(psif/2)*sin(thetaf/2)*cos(phif/2);
-q2_f = cos(psif/2)*sin(thetaf/2)*cos(phif/2) + sin(psif/2)*cos(thetaf/2)*sin(phif/2);
-q3_f = sin(psif/2)*cos(thetaf/2)*cos(phif/2) - cos(psif/2)*sin(thetaf/2)*sin(phif/2);
-
-% Define limits on quaternions
-% Explicitly define the initial and final bounds for quaternions
-% q0_0min = q0_0;
-% q0_0max = q0_0;
-% q1_0min = q1_0;
-% q1_0max = q1_0;
-% q2_0min = q2_0;
-% q2_0max = q2_0;
-% q3_0min = q3_0;
-% q3_0max = q3_0;
-q0_0min = -10;
-q0_0max = 10;
-q1_0min = -10;
-q1_0max = 10;
-q2_0min = -10;
-q2_0max = 10;
-q3_0min = -10;
-q3_0max = 10;
-% -------------------
-q0min = -10;
-q0max = 10;
-q1min = -10;
-q1max = 10;
-q2min = -10;
-q2max = 10;
-q3min = -10;
-q3max = 10;
-% -------------------
-% q0_fmin = q0_f;
-% q0_fmax = q0_f;
-% q1_fmin = q1_f;
-% q1_fmax = q1_f;
-% q2_fmin = q2_f;
-% q2_fmax = q2_f;
-% q3_fmin = q3_f;
-% q3_fmax = q3_f;
-q0_fmin = -10;
-q0_fmax = 10;
-q1_fmin = -10;
-q1_fmax = 10;
-q2_fmin = -10;
-q2_fmax = 10;
-q3_fmin = -10;
-q3_fmax = 10;
-
 
 %-------------------------------------------------------------------%
 %                           Construct bounds                        %
@@ -295,34 +239,34 @@ bounds.phase.finaltime.upper    = tfmax;
 bounds.phase.initialstate.lower = [N0min, E0min, D0min,     ...
                                    u0min, v0min, w0min,     ...
                                    p_0min, q_0min, r_0min,  ...
-                                   q0_0min, q1_0min, q2_0min, q3_0min, ...
+                                   phi0min, theta0min, psi0min, ...
                                    m0min, fda0min, thr0min];
 bounds.phase.initialstate.upper = [N0max, E0max, D0max,     ...
                                    u0max, v0max, w0max,     ...
                                    p_0max, q_0max, r_0max,  ...
-                                   q0_0max, q1_0max, q2_0max, q3_0max, ...
+                                   phi0max, theta0max, psi0max, ...
                                    m0max, fda0max, thr0max];
 
 bounds.phase.state.lower        = [Nmin, Emin, Dmin,        ...
                                    umin, vmin, wmin,     ...
                                    pmin, qmin, rmin,        ...
-                                   q0min, q1min, q2min, q3min, ...
+                                   phimin, thetamin, psimin, ...
                                    mmin, fdamin, thrmin];
 bounds.phase.state.upper        = [Nmax, Emax, Dmax,        ...
                                    umax, vmax, wmax,     ...
                                    pmax, qmax, rmax,        ...
-                                   q0max, q1max, q2max, q3max, ...
+                                   phimax, thetamax, psimax, ...
                                    mmax, fdamax, thrmax];
 
 bounds.phase.finalstate.lower   = [Nfmin, Efmin, Dfmin,     ...
                                    ufmin, vfmin, wfmin,     ...
                                    p_fmin, q_fmin, r_fmin,  ...
-                                   q0_fmin, q1_fmin, q2_fmin, q3_fmin, ...
+                                   phifmin, thetafmin, psifmin, ...
                                    mfmin, fdafmin, thrfmin];
 bounds.phase.finalstate.upper   = [Nfmax, Efmax, Dfmax,     ...
                                    ufmax, vfmax, wfmax,     ...
                                    p_fmax, q_fmax, r_fmax,  ...
-                                   q0_fmax, q1_fmax, q2_fmax, q3_fmax, ...
+                                   phifmax, thetafmax, psifmax, ...
                                    mfmax, fdafmax, thrfmax];
 
 bounds.phase.control.lower      = [dfdamin, dthrmin, -1];
@@ -360,10 +304,9 @@ else
     p       = linspace(p_0, p_f, steps);
     q       = linspace(q_0, q_f, steps);
     r       = linspace(r_0, r_f, steps);
-    q0      = linspace(q0_0, q0_f, steps);
-    q1      = linspace(q1_0, q1_f, steps);
-    q2      = linspace(q2_0, q2_f, steps);
-    q3      = linspace(q3_0, q3_f, steps);
+    phi     = linspace(phi0, phif, steps);
+    theta   = linspace(theta0, thetaf, steps);
+    psi     = linspace(psi0, psif, steps);
     m       = linspace(m0, mf, steps);
     fda     = linspace(fda0, fdaf, steps);
     dfda    = linspace(dfda0, dfdaf, steps);
@@ -384,19 +327,17 @@ else
     guess.phase.state(:,8)          = q;
     guess.phase.state(:,9)          = r;
     
-    guess.phase.state(:,10)         = q0;
-    guess.phase.state(:,11)         = q1;
-    guess.phase.state(:,12)         = q2;
-    guess.phase.state(:,13)         = q3;
+    guess.phase.state(:,10)         = phi;
+    guess.phase.state(:,11)         = theta;
+    guess.phase.state(:,12)         = psi;
     
-    guess.phase.state(:,14)         = m;
-    guess.phase.state(:,15)         = fda;
-    guess.phase.state(:,16)         = thr;
+    guess.phase.state(:,13)         = m;
+    guess.phase.state(:,14)         = fda;
+    guess.phase.state(:,15)         = thr;
     
     guess.phase.control(:,1)        = dfda;
     guess.phase.control(:,2)        = dthr;
     guess.phase.control(:,3)        = zeros(size(t));
-%     guess.phase.control(:,4)        = zeros(size(t));
 
     guess.phase.integral            = zeros(1,1);
     
