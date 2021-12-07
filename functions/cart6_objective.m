@@ -41,7 +41,7 @@ Ma = V./a;
 
 
 if auxdata.altitude_hold == 1
-    J = -tf; % integral of fpa ^ 2
+    J = (15-tf)^2; % integral of fpa ^ 2
 else
     J = tf;
 end

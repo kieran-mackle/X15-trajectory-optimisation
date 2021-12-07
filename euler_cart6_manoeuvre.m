@@ -89,7 +89,7 @@ dthrf   = 0;
 t0min    = 0;
 t0max    = 0;              % (s)
 tfmin    = 10;
-tfmax    = 15;              % (s)
+tfmax    = 20;              % (s)
 
 % hmin    = 10e3;
 % hmax    = 30e3;             % (m)
@@ -174,22 +174,22 @@ phi0min = 0;                    % Roll (rad)
 phi0max = 0;
 theta0min = -10*d2r;                  % Pitch (rad)
 theta0max = 10*d2r;
-psi0min = 90*d2r;                    % Yaw (rad)
-psi0max = 90*d2r;
+psi0min = -180*d2r;                    % Yaw (rad)
+psi0max =  180*d2r;
 % -------------------
 phimin = -180*d2r;                    % Roll (rad)
 phimax = 180*d2r;
 thetamin = -80*d2r;                  % Pitch (rad)
 thetamax = 80*d2r;
 psimin = -180*d2r;                    % Yaw (rad)
-psimax = 180*d2r;
+psimax =  180*d2r;
 % -------------------
 phifmin = 0;                    % Roll (rad)
 phifmax = 0;
 thetafmin = 10*d2r;                  % Pitch (rad)
 thetafmax = 10*d2r;
-psifmin = 90*d2r;                    % Yaw (rad)
-psifmax = 90*d2r;
+psifmin = -180*d2r;                    % Yaw (rad)
+psifmax =  180*d2r;
 
 
 % MASS BOUNDS
