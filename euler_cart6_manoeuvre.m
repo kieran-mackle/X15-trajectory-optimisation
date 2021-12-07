@@ -177,8 +177,8 @@ theta0max = 10*d2r;
 psi0min = 90*d2r;                    % Yaw (rad)
 psi0max =  90*d2r;
 % -------------------
-phimin = -180*d2r;                    % Roll (rad)
-phimax = 180*d2r;
+phimin = 0*d2r;                    % Roll (rad)
+phimax = 0*d2r;
 thetamin = -80*d2r;                  % Pitch (rad)
 thetamax = 80*d2r;
 psimin = 90*d2r;                    % Yaw (rad)
