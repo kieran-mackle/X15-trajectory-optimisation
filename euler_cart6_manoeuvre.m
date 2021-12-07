@@ -73,10 +73,10 @@ m0      = 10e3;
 mf      = m0;               % (kg)
 
 % DEFINE CONTROLS
-fda0    = 5.7*pi/180;
+fda0    = 5.629*pi/180;
 fdaf    = fda0;
-thr0    = 0.1; 
-thrf    = 0.1;
+thr0    = 0.2715; 
+thrf    = 0.2715;
 
 dfda0   = 0;
 dfdaf   = 0;
@@ -95,8 +95,8 @@ tfmax    = 20;              % (s)
 % hmax    = 30e3;             % (m)
 Mamin   = 4;
 Mamax   = 8;                % (-)
-aoamin  = -30*d2r;
-aoamax  =  30*d2r;          % (rad)
+aoamin  = -10*d2r;
+aoamax  = 10*d2r;          % (rad)
 % fpa0    = 0*d2r;
 % fpaf    = 0*d2r;            % (rad)
 
