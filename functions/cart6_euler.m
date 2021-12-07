@@ -124,7 +124,7 @@ for i = 1:length(t)
 
     % Specific forces
     f_sp_B = (1./m(i)) * f_apB;
-   
+    
     % Body to local-level transformation matrix
     T_Eu = [1,    sin(phi(i))*tan(theta(i)),   cos(phi(i))*tan(theta(i));
             0,          cos(phi(i)),            -sin(phi(i));

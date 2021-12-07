@@ -93,8 +93,8 @@ tfmax    = 15;              % (s)
 
 % hmin    = 10e3;
 % hmax    = 30e3;             % (m)
-Mamin   = 6;
-Mamax   = 6;                % (-)
+Mamin   = 4;
+Mamax   = 8;                % (-)
 aoamin  = -30*d2r;
 aoamax  =  30*d2r;          % (rad)
 % fpa0    = 0*d2r;
@@ -110,40 +110,40 @@ D0max    = D0;         % (m)
 % -------------------
 Nmin    = N0;
 Nmax    = N0;                % (m)
-Emin    = -Re0;
+Emin    = 0;
 Emax    = Re0;         % (m)
 Dmin    = D0;
 Dmax    = Df; % (m)
 % -------------------
 Nfmin    = Nf;
 Nfmax    = Nf;                % (m)
-Efmin    = -Re0;
+Efmin    = 0;
 Efmax    = Re0;         % (m)
 Dfmin    = Df;
 Dfmax    = Df;          % (m)
 
 
 % VELOCITY BOUNDS 
-u0min   = -Mamin*a(1);
-u0max   =  Mamin*a(1);         % (m)
-v0min   = -Mamin*a(1);
-v0max   =  Mamin*a(1);         % (m)
-w0min   = -Mamin*a(1);
-w0max   =  Mamin*a(1);         % (m) 
+u0min   = -Mamax*a(1);
+u0max   =  Mamax*a(1);          % (m/s)
+v0min   = -Mamax*a(1);
+v0max   =  Mamax*a(1);          % (m/s)
+w0min   = -Mamax*a(1);
+w0max   =  Mamax*a(1);          % (m/s) 
 % -------------------
-umin   = -Mamin*a(1);
-umax   = Mamax*a(2); % (m)
-vmin   = -Mamin*a(1);
-vmax   =  Mamin*a(1);         % (m)
-wmin   = -Mamin*a(1);
-wmax   =  Mamin*a(1);         % (m)   
+umin   = -Mamax*a(1);
+umax   =  Mamax*a(2);           % (m/s)
+vmin   = -Mamax*a(1);
+vmax   =  Mamax*a(1);           % (m/s)
+wmin   = -Mamax*a(1);   
+wmax   =  Mamax*a(1);           % (m/s)   
 % -------------------
-ufmin   = -Mamin*a(1);
-ufmax   =  Mamin*a(1); % (m)
-vfmin   = -Mamin*a(1);
-vfmax   =  Mamin*a(1);         % (m)
-wfmin   = -Mamin*a(1);
-wfmax   =  Mamin*a(1);         % (m) 
+ufmin   = -Mamax*a(1);
+ufmax   =  Mamax*a(1);          % (m/s)
+vfmin   = -Mamax*a(1);
+vfmax   =  Mamax*a(1);          % (m/s)
+wfmin   = -Mamax*a(1);
+wfmax   =  Mamax*a(1);          % (m/s) 
 
 
 % ANGULAR VELOCITY BOUNDS
