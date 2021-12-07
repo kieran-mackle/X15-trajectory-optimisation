@@ -6,8 +6,11 @@
 % functions to determine trim point of vehicle.                     %
 % ================================================================= %
 
-clear all;
+clearvars;
 
+%-------------------------------------------------------------------%
+%                         Define search space                       %
+%-------------------------------------------------------------------%
 h           = 20e3;
 Mach        = 6;
 N           = 100;
@@ -30,7 +33,7 @@ T           = T_min:d_T:T_max;
 [AOA,FDA,THR] = meshgrid(aoa,fda,T);
 
 %-------------------------------------------------------------------%
-%                  Load vehicle configuration script                %
+%                        Calculate IsoSurfaces                      %
 %-------------------------------------------------------------------%
 auxdata     = get_config('deck1.csv');
 
@@ -43,27 +46,33 @@ Re          = auxdata.Re0;
 R           = auxdata.R;
 gamma       = auxdata.gamma;
 mue         = auxdata.mue;
-r           = Re + h;
 
+% Aerodynamics
 [CL,CD,Cm]  = GetAero(auxdata,AOA,Ma,FDA);
 
 [Temp, ~, rho]  = GetAtmo(h);
 a               = sqrt(gamma.*R.*Temp);
+g           = 9.81;
 
 q           = 0.5.*rho.*Ma.^2.*a.^2;
 L           = CL.*q.*S;
 D           = CD.*q.*S;
 M           = Cm.*q.*S.*c;
-W           = m.*(mue./r.^2);
+W           = m.*g;
 
-d1          = L - W + THR.*sin(AOA.*deg);
-d2          = D - THR.*cos(AOA.*deg);
-d3          = M;
+% IsoSurfaces
+d1          = L - W + THR.*sin(AOA.*deg);   % Vertical resolution
+d2          = D - THR.*cos(AOA.*deg);       % Horizontal resolution
+d3          = M;                            % Moment resolution
 
 alt         = join(['h = ',num2str(h/1e3),' km']);
 mach        = join(['Ma = ',num2str(Mach)]);
 name        = join(['Isosurfaces for ',alt,', ',mach]);
 
+
+%-------------------------------------------------------------------%
+%                             Plot results                          %
+%-------------------------------------------------------------------%
 figure(1); clf;
 title(name);
 hold on; view(3);
