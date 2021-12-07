@@ -58,9 +58,9 @@ Ma = V./a;
 % theta = asin( -2 * (q1*q3 - q0*q2) );
 % phi = atan( 2*(q2*q3 + q0*q1) / (q0.^2 - q1.^2 - q2.^2 - q3.^2) );
 
-psi = zeros(size(t));
-theta = zeros(size(t));
-phi = zeros(size(t));
+% psi = zeros(size(t));
+% theta = zeros(size(t));
+% phi = zeros(size(t));
 aoas = zeros(size(t));
 fpas = zeros(size(t));
 hdas = zeros(size(t));
@@ -73,12 +73,6 @@ for i = 1:length(t)
     % Aerodynamics
     aoa = atan(vBE_B(i,3)/vBE_B(i,1));
     [CL,CD,Cm] = auxdata.aerodynamics_model(auxdata, aoa*rad, Ma(i), fda(i)*rad);
-    
-%     psi(i) = atan( 2*(q1(i)*q2(i) + q0(i)*q3(i)) / ...
-%                (q0(i).^2 + q1(i).^2 - q2(i).^2 - q3(i).^2) );
-%     theta(i) = asin( -2 * (q1(i)*q3(i) - q0(i)*q2(i)) );
-%     phi(i) = atan( 2*(q2(i)*q3(i) + q0(i)*q1(i)) / ...
-%                (q0(i).^2 - q1(i).^2 - q2(i).^2 - q3(i).^2) );
     
     vBE_G = TM_BG(phi(i), theta(i), psi(i))' * vBE_B(i,:)';
     [~,~,fpa] = car2pol(vBE_G);
