@@ -4,6 +4,17 @@ function post = euler_cart6_post(auxdata, output, t)
 %  model.
 % ==================================================================
 
+createGuess = 1;
+
+% Create new guess for re-run ------------------------------------- %
+if createGuess == 1
+    solution            = output.result.solution.phase;
+    newguess.t          = solution.time;
+    newguess.state      = solution.state;
+    newguess.control    = solution.control;
+    save('NewGuess.mat', 'newguess');
+end
+
 state = output.result.solution.phase.state;
 
 % State variables
@@ -160,3 +171,5 @@ else
     clear solution config reply* total
     save([folder,auxdata.name]);
 end
+
+

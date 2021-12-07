@@ -286,10 +286,10 @@ bounds.phase.path.upper         = [aoamax, Mamax];
 %-------------------------------------------------------------------%
 if imported_guess == 1
     % Use initial guess file
-%     load('NewGuess.mat');
-%     guess.phase.time            = newguess.t;
-%     guess.phase.state           = newguess.state;
-%     guess.phase.control         = newguess.control;
+    load('NewGuess.mat');
+    guess.phase.time            = newguess.t;
+    guess.phase.state           = newguess.state;
+    guess.phase.control         = newguess.control;
     
 else
     % Linearly interpolate guess
