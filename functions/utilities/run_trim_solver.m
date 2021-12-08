@@ -37,6 +37,11 @@ ub = [bounds.phase.state.upper, bounds.phase.control.upper];
 % Define dynamics function
 dynamics_func = @cart6_euler;
 
+
+% Need to constrain Mach number and altitude 
+
+
+
 % Call solver
 x = solve_trim(auxdata, dynamics_func, initial, lb, ub);
 
@@ -47,3 +52,4 @@ input.phase.state = x(1:15);
 input.phase.control = x(16:end);
 out = dynamics_func(input);
 
+[Ma, h] = calculate_outputs(auxdata, x)

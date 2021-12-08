@@ -147,26 +147,47 @@ wfmax   =  Mamax*a(1);          % (m/s)
 
 
 % ANGULAR VELOCITY BOUNDS
-p_0min  = -10;
-p_0max  = 10;
-q_0min  = -10;
-q_0max  = 10;
-r_0min  = -10;
-r_0max  = 10;
+% p_0min  = -10;
+% p_0max  = 10;
+% q_0min  = -10;
+% q_0max  = 10;
+% r_0min  = -10;
+% r_0max  = 10;
+% % -------------------
+% pmin    = -10;
+% pmax    = 10;
+% qmin    = -10;
+% qmax    = 10;
+% rmin    = -10;
+% rmax    = 10;
+% % -------------------
+% p_fmin  = -10;
+% p_fmax  = 10;
+% q_fmin  = -10;
+% q_fmax  = 10;
+% r_fmin  = -10;
+% r_fmax  = 10;
+
+p_0min  = 0;
+p_0max  = 0;
+q_0min  = 0;
+q_0max  = 0;
+r_0min  = 0;
+r_0max  = 0;
 % -------------------
-pmin    = -10;
-pmax    = 10;
-qmin    = -10;
-qmax    = 10;
-rmin    = -10;
-rmax    = 10;
+pmin    = 0;
+pmax    = 0;
+qmin    = 0;
+qmax    = 0;
+rmin    = 0;
+rmax    = 0;
 % -------------------
-p_fmin  = -10;
-p_fmax  = 10;
-q_fmin  = -10;
-q_fmax  = 10;
-r_fmin  = -10;
-r_fmax  = 10;
+p_fmin  = 0;
+p_fmax  = 0;
+q_fmin  = 0;
+q_fmax  = 0;
+r_fmin  = 0;
+r_fmax  = 0;
 
 
 % ATTITUDE BOUNDS
