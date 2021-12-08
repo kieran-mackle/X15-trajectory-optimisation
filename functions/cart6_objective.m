@@ -41,7 +41,7 @@ Ma = V./a;
 
 
 if auxdata.altitude_hold == 1
-    J = (15-tf)^2 + norm(Ma - 6);
+    J = (15-tf)^2;% + norm(Ma - 6);
 else
     J = tf;
 end

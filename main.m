@@ -29,7 +29,7 @@ manoeuvre_spec.h0 = 20e3;
 manoeuvre_spec.hf = 20e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
-manoeuvre_spec.use_guess = 0;
+manoeuvre_spec.use_guess = 1;
 
     % POLAR
 % [bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
