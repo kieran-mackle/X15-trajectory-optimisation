@@ -15,7 +15,21 @@ function J = dynamics_wrapper(x0)
     % Only want to minimise accelerations
     % State vector: [N, E, D, u, v, w, p, q, r, phi, theta, psi, m, fda, thr]
     %               [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,   11,   12, 13, 14,  15 ]
-    rates = norm(output.dynamics([1, 3, 4:6, 10:12, 14:15]));
+    dN = output.dynamics(1);
+    dD = output.dynamics(3);
+    du = output.dynamics(4);
+    dv = output.dynamics(5);
+    dw = output.dynamics(6);
+    dq = output.dynamics(8);
+    dphi = output.dynamics(10);
+    dtheta = output.dynamics(11);
+    dpsi = output.dynamics(12);
+    dfda = output.dynamics(14);
+    dthr = output.dynamics(15);
+    
+%     rates = norm(output.dynamics([1, 3, 4:6, 10:12, 14:15]));
+    rates = dN^2 + dD^2 + du^2 + dv^2 + dw^2 + dq^2 + ...
+            dphi^2 + dtheta^2 + dpsi^2 + dfda^2 + dthr^2;
     
     % Target deviations
     [Ma,~] = calculate_outputs(auxdata, x0);
