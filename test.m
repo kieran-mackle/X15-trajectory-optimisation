@@ -32,7 +32,7 @@ Maf     = specification.Maf;
 a       = sqrt(gamma.*R.*T);
 
 t0      = 0;
-tf      = 15;
+tf      = 20;
 
 % ALTITUDE HOLD MANOEUVRE
 % --------------------------
@@ -45,7 +45,7 @@ D0      = -Re0 - h0;
 Df      = -Re0 - hf;         % (m)
 
 % DEFINE VELOCITY (Body Coordiantes)
-u0      = 1769.4;
+u0      = Ma0*a(1);
 uf      = Maf*a(2);         % (m/s)
 v0      = 0;
 vf      = 0;                % (m/s)
@@ -63,8 +63,8 @@ r_f       = 0;
 % DEFINE ATTITUDE (Euler angles)
 phi0 = 0;                    % Roll (rad)
 phif = 0;
-theta0 = 0.03354;                  % Pitch (rad)
-thetaf = 0.03354;
+theta0 = 2*d2r;                  % Pitch (rad)
+thetaf = 0*d2r;
 psi0 = 90*d2r;                % Yaw (rad)
 psif = 90*d2r;
 
@@ -73,10 +73,10 @@ m0      = 10e3;
 mf      = m0;               % (kg)
 
 % DEFINE CONTROLS
-fda0    = 0.098602;
-fdaf    = 0.098602;
-thr0    = 0.27121; 
-thrf    = 0.27121;
+fda0    = 5*d2r;
+fdaf    = 5*d2r;
+thr0    = 0.27; 
+thrf    = 0.27;
 
 dfda0   = 0;
 dfdaf   = 0;
@@ -88,7 +88,7 @@ dthrf   = 0;
 %-------------------------------------------------------------------%
 t0min    = 0;
 t0max    = 0;              % (s)
-tfmin    = 10;
+tfmin    = 0;
 tfmax    = 60;              % (s)
 
 % hmin    = 10e3;
@@ -191,12 +191,12 @@ r_fmax  = 0;
 
 
 % ATTITUDE BOUNDS
-phi0min = phi0;                    % Roll (rad)
-phi0max = phi0;
-theta0min = theta0;                  % Pitch (rad)
-theta0max = theta0;
-psi0min = psi0;                    % Yaw (rad)
-psi0max = psi0;
+phi0min = 0;                    % Roll (rad)
+phi0max = 0;
+theta0min = -15*d2r;                  % Pitch (rad)
+theta0max = 15*d2r;
+psi0min = 90*d2r;                    % Yaw (rad)
+psi0max = 90*d2r;
 % -------------------
 phimin = 0;                    % Roll (rad)
 phimax = 0;
@@ -225,10 +225,10 @@ mfmax    = mf;               % (kg)
 
 
 % CONTROL BOUNDS
-fda0min  = fda0;
-fda0max  = fda0;       % (rad)
-thr0min  = thr0;
-thr0max  = thr0;  
+fda0min  = -40*d2r;
+fda0max  = 40*d2r;       % (rad)
+thr0min  = 0;
+thr0max  = 1;  
 % -------------------
 fdamin  = -40*d2r;
 fdamax  = 40*d2r;          % (rad)
