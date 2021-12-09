@@ -32,7 +32,7 @@ Maf     = specification.Maf;
 a       = sqrt(gamma.*R.*T);
 
 t0      = 0;
-tf      = 10;
+tf      = 15;
 
 % ALTITUDE HOLD MANOEUVRE
 % --------------------------
@@ -89,7 +89,7 @@ dthrf   = 0;
 t0min    = 0;
 t0max    = 0;              % (s)
 tfmin    = 10;
-tfmax    = 20;              % (s)
+tfmax    = 60;              % (s)
 
 % hmin    = 10e3;
 % hmax    = 30e3;             % (m)
@@ -97,8 +97,8 @@ Mamin   = 4;
 Mamax   = 8;                % (-)
 aoamin  = -10*d2r;
 aoamax  = 10*d2r;          % (rad)
-% fpa0    = 0*d2r;
-% fpaf    = 0*d2r;            % (rad)
+fpa0    = 0*d2r;
+fpaf    = 0*d2r;            % (rad)
 
 % POSITIONAL BOUNDS
 N0min    = N0;
@@ -112,8 +112,8 @@ Nmin    = N0;
 Nmax    = N0;                % (m)
 Emin    = 0;
 Emax    = Re0;         % (m)
-Dmin    = D0;
-Dmax    = Df; % (m)
+Dmin    = min(D0, Df);
+Dmax    = max(D0, Df); % (m)
 % -------------------
 Nfmin    = Nf;
 Nfmax    = Nf;                % (m)
@@ -124,12 +124,12 @@ Dfmax    = Df;          % (m)
 
 
 % VELOCITY BOUNDS 
-u0min   = u0;
-u0max   = u0;          % (m/s)
-v0min   = 0;
-v0max   = 0;          % (m/s)
-w0min   = w0;
-w0max   = w0;          % (m/s) 
+u0min   = -Mamax*a(1);
+u0max   = Mamax*a(1);          % (m/s)
+v0min   = -Mamax*a(1);
+v0max   = Mamax*a(1);          % (m/s)
+w0min   = -Mamax*a(1);
+w0max   = Mamax*a(1);          % (m/s) 
 % -------------------
 umin   = -Mamax*a(1);
 umax   =  Mamax*a(2);           % (m/s)
@@ -138,12 +138,12 @@ vmax   =  Mamax*a(1);           % (m/s)
 wmin   = -Mamax*a(1);   
 wmax   =  Mamax*a(1);           % (m/s)   
 % -------------------
-ufmin   = uf;
-ufmax   = uf;          % (m/s)
-vfmin   = 0;
-vfmax   = 0;          % (m/s)
-wfmin   = wf;
-wfmax   = wf;          % (m/s) 
+ufmin   = -Mamax*a(1);
+ufmax   =  Mamax*a(1);          % (m/s)
+vfmin   = -Mamax*a(1);
+vfmax   =  Mamax*a(1);          % (m/s)
+wfmin   = -Mamax*a(1);
+wfmax   =  Mamax*a(1);          % (m/s) 
 
 
 % ANGULAR VELOCITY BOUNDS
@@ -177,8 +177,8 @@ r_0max  = 0;
 % -------------------
 pmin    = 0;
 pmax    = 0;
-qmin    = 0;
-qmax    = 0;
+qmin    = -10;
+qmax    = 10;
 rmin    = 0;
 rmax    = 0;
 % -------------------
@@ -198,19 +198,19 @@ theta0max = theta0;
 psi0min = psi0;                    % Yaw (rad)
 psi0max = psi0;
 % -------------------
-phimin = 0*d2r;                    % Roll (rad)
-phimax = 0*d2r;
+phimin = 0;                    % Roll (rad)
+phimax = 0;
 thetamin = -80*d2r;                  % Pitch (rad)
 thetamax = 80*d2r;
 psimin = 90*d2r;                    % Yaw (rad)
 psimax =  90*d2r;
 % -------------------
-phifmin = phi0;                    % Roll (rad)
-phifmax = phi0;
-thetafmin = thetaf;                  % Pitch (rad)
-thetafmax = thetaf;
-psifmin = psif;                    % Yaw (rad)
-psifmax = psif;
+phifmin = 0;                    % Roll (rad)
+phifmax = 0;
+thetafmin = -15*d2r;                  % Pitch (rad)
+thetafmax = 15*d2r;
+psifmin = 90*d2r;                    % Yaw (rad)
+psifmax =  90*d2r;
 
 
 % MASS BOUNDS
@@ -235,10 +235,10 @@ fdamax  = 40*d2r;          % (rad)
 thrmin  = 0;
 thrmax  = 1;  
 % -------------------
-fdafmin  = fdaf;
-fdafmax  = fdaf;          % (rad)
-thrfmin  = thrf;
-thrfmax  = thrf;  
+fdafmin  = -40*d2r;
+fdafmax  = 40*d2r;          % (rad)
+thrfmin  = 0;
+thrfmax  = 1;  
 
 % CONTROL RATE BOUNDS
 % -------------------
@@ -299,9 +299,11 @@ bounds.phase.path.upper         = [aoamax, Mamax];
 % bounds.phase.integral.lower     = [0];
 % bounds.phase.integral.upper     = [10e3];
 
-% bounds.eventgroup(1).lower      = [Ma0, Maf];
-% bounds.eventgroup(1).upper      = [Ma0, Maf];
+bounds.eventgroup(1).lower      = [Ma0, Maf];
+bounds.eventgroup(1).upper      = [Ma0, Maf];
 
+bounds.eventgroup(2).lower      = [fpa0, fpaf];
+bounds.eventgroup(2).upper      = [fpa0, fpaf];
 %-------------------------------------------------------------------%
 %                     Construct initial guess                       %
 %-------------------------------------------------------------------%

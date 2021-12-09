@@ -23,13 +23,13 @@ auxdata.atmospheric_model = @(h)GetAtmo(h);
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
-manoeuvre_spec.type = 'hold';              % 'climb' / 'hold'
-manoeuvre_spec.name = '20km_hold_from_trim_MaPenalty';
+manoeuvre_spec.type = 'climb';              % 'climb' / 'hold'
+manoeuvre_spec.name = '20_25_climb_from_trim';
 manoeuvre_spec.h0 = 20e3;
-manoeuvre_spec.hf = 20e3;
+manoeuvre_spec.hf = 25e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
-manoeuvre_spec.use_guess = 1;
+manoeuvre_spec.use_guess = 0;
 
     % POLAR
 % [bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
@@ -49,15 +49,15 @@ manoeuvre_spec.use_guess = 1;
 % ----------------------------------------------------------------- %
 %                     Assign function handles                       %
 %------------------------------------------------------------------ %
-dynamics_func               = @cart6_euler;           % @tensor6 / @cart3 / @cart6
-objective_func              = @cart6_objective; % @objective / @cartesian_objective / @cart6_objective;
+dynamics_func               = @cart6_euler;             % @tensor6 / @cart3 / @cart6
+objective_func              = @cart6_objective;         % @objective / @cartesian_objective / @cart6_objective;
 
 % ----------------------------------------------------------------- %
 %               Provide mesh refinement and method                  %
 %------------------------------------------------------------------ %
 mesh.method                 = 'hp-PattersonRao';
 mesh.tolerance              = 1e-1;
-mesh.maxiterations          = 3;
+mesh.maxiterations          = 2;
 
 % ----------------------------------------------------------------- %
 %                    Construct GPOPS-II input                       %
