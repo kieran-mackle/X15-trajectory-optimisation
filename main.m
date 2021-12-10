@@ -40,10 +40,7 @@ manoeuvre_spec.use_guess = 0;
 % plot_bounds_and_guess(bounds, guess, auxdata)
 
     % CARTESIAN 6DOF
-% [bounds, guess, auxdata] = test(manoeuvre_spec, auxdata);
 [bounds, guess, auxdata] = cart6_manoeuvre(manoeuvre_spec, auxdata);
-% [bounds, guess, auxdata] = euler_cart6_manoeuvre(manoeuvre_spec, auxdata);
-% [bounds, guess, auxdata] = cart6_climb(manoeuvre_spec, auxdata);
 % plot_bounds_and_guess(bounds, guess, auxdata)
 
 % ----------------------------------------------------------------- %
