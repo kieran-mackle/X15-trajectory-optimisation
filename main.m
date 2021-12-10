@@ -93,6 +93,5 @@ t = output.result.solution.phase.time;
 % post6;
 % plot6;
 
-% post = cart6_post(auxdata, output, t);
 post = euler_cart6_post(auxdata, output, t);
 plot_cart6(post)

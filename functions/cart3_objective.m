@@ -1,4 +1,4 @@
-function output = cartesian_objective(input)
+function output = cart3_objective(input)
 % =============== Altitude hold objective function ================ 
 % Generalised objective function for X-15 trajectory optimisation.
 % ================================================================= 

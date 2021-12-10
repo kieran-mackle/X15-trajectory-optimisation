@@ -1,4 +1,4 @@
-function [bounds, guess, auxdata] = cart_manoeuvre(specification, auxdata)
+function [bounds, guess, auxdata] = cart3_manoeuvre(specification, auxdata)
 
 % TODO
 % 1) Develop for altitude hold
