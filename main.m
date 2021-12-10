@@ -23,13 +23,13 @@ auxdata.atmospheric_model = @(h)GetAtmo(h);
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
-manoeuvre_spec.type = 'climb';              % 'climb' / 'hold'
-manoeuvre_spec.name = '20_25_climb_from_trim';
+manoeuvre_spec.type = 'hold';              % 'climb' / 'hold'
+manoeuvre_spec.name = 'new20hold';
 manoeuvre_spec.h0 = 20e3;
-manoeuvre_spec.hf = 25e3;
+manoeuvre_spec.hf = 20e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
-manoeuvre_spec.use_guess = 1;
+manoeuvre_spec.use_guess = 0;
 
     % POLAR
 % [bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
@@ -39,9 +39,9 @@ manoeuvre_spec.use_guess = 1;
 % [bounds, guess, auxdata] = cart_manoeuvre(manoeuvre_spec, auxdata);
 % plot_bounds_and_guess(bounds, guess, auxdata)
 
-
     % CARTESIAN 6DOF
-[bounds, guess, auxdata] = test(manoeuvre_spec, auxdata);
+% [bounds, guess, auxdata] = test(manoeuvre_spec, auxdata);
+[bounds, guess, auxdata] = cart6_manoeuvre(manoeuvre_spec, auxdata);
 % [bounds, guess, auxdata] = euler_cart6_manoeuvre(manoeuvre_spec, auxdata);
 % [bounds, guess, auxdata] = cart6_climb(manoeuvre_spec, auxdata);
 % plot_bounds_and_guess(bounds, guess, auxdata)
