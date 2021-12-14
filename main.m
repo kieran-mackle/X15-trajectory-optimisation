@@ -14,7 +14,7 @@ run('./inputs/load_paths.m')
 %------------------------------------------------------------------ %
 auxdata = get_config('deck1.csv');  % Filename of aerodeck in ./aero/
 auxdata.hd = pwd;
-auxdata.coordinates = 'cartesian';  % 'polar' or 'cartesian'
+auxdata.coordinates = 'polar';  % 'polar' or 'cartesian'
 auxdata.mass_model = @(F)0; % Mass rate of change
 auxdata.aerodynamics_model = @GetAero;
 auxdata.gravity_model = @(h)[0,0,9.81].*ones(size(h,1),1);
@@ -24,30 +24,30 @@ auxdata.atmospheric_model = @(h)GetAtmo(h);
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
 manoeuvre_spec.type = 'hold';              % 'climb' / 'hold'
-manoeuvre_spec.name = 'new20hold';
+manoeuvre_spec.name = '20km_hold_polar';
 manoeuvre_spec.h0 = 20e3;
 manoeuvre_spec.hf = 20e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
 manoeuvre_spec.use_guess = 0;
 
-    % POLAR
-% [bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
-% auxdata = configure_inputs(auxdata);
+    % POLAR 6DOF
+[bounds, guess, auxdata] = manoeuvre(manoeuvre_spec, auxdata);
+auxdata = configure_inputs(auxdata);
 
     % CARTESIAN 3DOF
 % [bounds, guess, auxdata] = cart_manoeuvre(manoeuvre_spec, auxdata);
 % plot_bounds_and_guess(bounds, guess, auxdata)
 
     % CARTESIAN 6DOF
-[bounds, guess, auxdata] = cart6_manoeuvre(manoeuvre_spec, auxdata);
+% [bounds, guess, auxdata] = cart6_manoeuvre(manoeuvre_spec, auxdata);
 % plot_bounds_and_guess(bounds, guess, auxdata)
 
 % ----------------------------------------------------------------- %
 %                     Assign function handles                       %
 %------------------------------------------------------------------ %
-dynamics_func               = @cart6_euler;             % @tensor6 / @cart3 / @cart6
-objective_func              = @cart6_objective;         % @objective / @cartesian_objective / @cart6_objective;
+dynamics_func               = @tensor6;             % @tensor6 / @cart3 / @cart6_euler
+objective_func              = @objective;         % @objective / @cart3_objective / @cart6_objective;
 
 % ----------------------------------------------------------------- %
 %               Provide mesh refinement and method                  %
