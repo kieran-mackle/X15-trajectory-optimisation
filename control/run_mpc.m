@@ -7,6 +7,9 @@
 % in a Cartesian coordinate system. Only the control inputs are maintained
 % and passed between each environment. 
 
+% NOTES
+% - seg violation when altitude weight is too high??
+
 
 % Add MPC controller directory
 addpath '/home/kieran/Documents/MATLAB/MPC'
@@ -19,7 +22,7 @@ clearvars; deg = pi/180; rad = 180/pi;
 % ----------------------------------------------------------------------- %
 params.timestep     = 0.05;
 params.horizon      = 75;
-params.sim_time     = 5;
+params.sim_time     = 50;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 
