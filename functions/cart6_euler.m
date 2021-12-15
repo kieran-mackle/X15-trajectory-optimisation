@@ -39,7 +39,7 @@ thr = input.phase.state(:,15);       % thrust setting
 % Control inputs
 dfda = input.phase.control(:,1);    % Flap angle rate
 dthr = input.phase.control(:,2);    % Thrust setting rate
-dr = input.phase.control(:,3); % Arbitrary control input
+% dr = input.phase.control(:,3); % Arbitrary control input
 pitch_control = zeros(size(t)); % input.phase.control(:,4); %
 
 % Constants
