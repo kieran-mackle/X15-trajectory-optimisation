@@ -69,7 +69,7 @@ constraints.hard.output  = [   0,      0     ;
                                0,      1     ;
                                0,      0     ;
                                0,      0     ];
-                           
+
 % Set constraint weights
 % ------------------------
 % Use nan for hard constraints
@@ -106,8 +106,6 @@ dyn_input.phase.state       = initial.state;
 sim_input.dynamics_input    = dyn_input;
 sim_input.plant_model       = plant_model;
 sim_input.Ts                = params.timestep;
-
-
 
 
 
