@@ -25,7 +25,7 @@ convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 run('./../inputs/load_paths.m')
 % Use GPOPS altitude hold solution to get initial trim state
-load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
+load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
 
 out = output.result.solution.phase;
 x0  = out.state(1,:);

@@ -25,7 +25,7 @@ t0      = 0;                    tf      = 20;               % (s)
 
 % Define speed, heading and flight-path angle boundaries
 V0      = Ma2V(Ma0,h0);         Vf      = Ma2V(Maf,hf);     % (m/s)
-hda0    = 0*d2r;                hdaf    = 0*d2r;            % (rad)
+hda0    = 90*d2r;               hdaf    = 90*d2r;            % (rad)
 fpa0    = 0*d2r;                fpaf    = 0*d2r;            % (rad)
 
 % Define geodetic longitude and latitude
@@ -82,24 +82,29 @@ distmin = 1.2*min(dist0,distf);
 distmax = 0.8*max(dist0,distf);
 
 % Define minimum and maximum bounds
-vxmin   = -1e4;                 vxmax   = -vxmin;
-vymin   = -1e4;                 vymax   = -vymin;
-vzmin   = -1e4;                 vzmax   = -vzmin;
 
 if strcmpi(specification.type, 'hold')
     pmin    = 0*d2r;             pmax    = -pmin;
     qmin    = 0*d2r;             qmax    = -qmin;
     rmin    = 0*d2r;             rmax    = -rmin;
+    
+    vxmin   = 0;                    vxmax   = 0;
+    vymin   = -1e4;                 vymax   = -vymin;
+    vzmin   = -1e4;                 vzmax   = -vzmin;
 else
     pmin    = -1e1*d2r;             pmax    = -pmin;
     qmin    = -1e1*d2r;             qmax    = -qmin;
     rmin    = -1e1*d2r;             rmax    = -rmin;
+    
+    vxmin   = -1e4;                 vxmax   = -vxmin;
+    vymin   = -1e4;                 vymax   = -vymin;
+    vzmin   = -1e4;                 vzmax   = -vzmin;
 end
 
 if strcmpi(specification.type, 'hold')
-    rollmin = 0*d2r;                rollmax = -rollmin;
-    pitchmin = -89*d2r;             pitchmax = -pitchmin;
-    yawmin  = 0*d2r;                yawmax  = -yawmin;
+    rollmin = 0;                    rollmax = 0;
+    pitchmin = -80*d2r;             pitchmax = 80*d2r;
+    yawmin  = 90*d2r;               yawmax  = 90*d2r;
 else
     rollmin = -180*d2r;             rollmax = -rollmin;
     pitchmin = -89*d2r;             pitchmax = -pitchmin;

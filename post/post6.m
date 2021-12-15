@@ -238,7 +238,7 @@ forwardsim.m0       = plotting.m(1);
 %-------------------------------------------------------------------%
 %                      Run forward simulation                       %
 %-------------------------------------------------------------------%
-FSResults = sim('forwardsim6',plotting.t(end));
+% FSResults = sim('forwardsim6',plotting.t(end));
 
 %-------------------------------------------------------------------%
 %                     Write CSV file of Results                     %
