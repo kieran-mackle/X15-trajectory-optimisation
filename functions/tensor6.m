@@ -185,6 +185,6 @@ end
 
 
 % Debugging --------------- %
-plot(t,h);
+% plot(t,h);
 
 end
