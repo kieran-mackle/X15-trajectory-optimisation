@@ -21,8 +21,8 @@ clearvars; deg = pi/180; rad = 180/pi;
 % Define MPC Environment
 % ----------------------------------------------------------------------- %
 params.timestep     = 0.05;
-params.horizon      = 75;
-params.sim_time     = 50;
+params.horizon      = 100;
+params.sim_time     = 30;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 
@@ -53,8 +53,8 @@ reference_function          = @cart6_reference;
 cost_weightings.output         = 1e3* [1, 0, 0, 0, 0;   % Altitude
                                        0, 0, 0, 0, 0;   % FDA
                                        0, 0, 0, 0, 0;   % THR
-                                       0, 0, 0, 1, 0;   % Ma
-                                       0, 0, 0, 0, 1];  % FPA
+                                       0, 0, 0, 0.5, 0;   % Ma
+                                       0, 0, 0, 0, 0.5];  % FPA
 cost_weightings.control        = eye(length(initial.control));
 
 
