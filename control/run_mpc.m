@@ -22,7 +22,7 @@ clearvars; deg = pi/180; rad = 180/pi;
 % ----------------------------------------------------------------------- %
 params.timestep     = 0.05;
 params.horizon      = 100;
-params.sim_time     = 30;
+params.sim_time     = 35;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 
