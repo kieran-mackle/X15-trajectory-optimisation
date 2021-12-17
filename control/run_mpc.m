@@ -22,7 +22,7 @@ clearvars; deg = pi/180; rad = 180/pi;
 % ----------------------------------------------------------------------- %
 params.timestep     = 0.05;
 params.horizon      = 100;
-params.sim_time     = 35;
+params.sim_time     = 10;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 
@@ -47,21 +47,22 @@ auxdata.atmospheric_model = @(h)GetAtmo(h);
 control_model.auxdata       = auxdata;
 control_model.dynamics      = @cart6_euler;
 control_model.output        = @cart6_output;
+control_model.mapping_func  = @tensor6plant_to_euler6control;
 reference_function          = @cart6_reference;
 
 % Define cost and constraint matrices
 cost_weightings.output         = 1e3* [1, 0, 0, 0, 0;   % Altitude
                                        0, 0, 0, 0, 0;   % FDA
                                        0, 0, 0, 0, 0;   % THR
-                                       0, 0, 0, 0.5, 0;   % Ma
-                                       0, 0, 0, 0, 0.5];  % FPA
+                                       0, 0, 0, 1, 0;   % Ma
+                                       0, 0, 0, 0, 0.1];  % FPA
 cost_weightings.control        = eye(length(initial.control));
 
 
 % Quadprog constraint handling options
 constraints.type = 'soft';      % None, soft, hard or mixed
 penalty_method = 'linear';      % Quadratic or linear
-penalty_weight      = 1e3;
+penalty_weight      = 1e5;
 
 constraints.hard.rate    = [-10*deg, 10*deg;
                             -0.2,   0.2];
