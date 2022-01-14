@@ -64,11 +64,11 @@ penalty_method = 'linear';      % Quadratic or linear
 penalty_weight      = 1e5;
 
 constraints.hard.rate    = [-10*deg, 10*deg;
-                            -0.2,   0.2;
-                            0, 0]; % dummy input
+                            -0.2,   0.2];
+%                             0, 0]; % dummy input
 constraints.hard.input   = [-10*deg, 10*deg;
-                            -0.2,   0.2;
-                            0, 0]; % dummy input
+                            -0.2,   0.2];
+%                             0, 0]; % dummy input
 constraints.hard.output  = [   0,      0     ;
                             -40*deg, 40*deg  ;
                                0,      1     ;
@@ -79,11 +79,11 @@ constraints.hard.output  = [   0,      0     ;
 % ------------------------
 % Use nan for hard constraints
 constraints.weights.hard_rate   = [0, 0;
-                                   0, 0;
                                    0, 0];
+%                                    0, 0];
 constraints.weights.hard_input  = 1e8 * [10, 10;
-                                         1, 1;
-                                         0, 0];
+                                         1, 1];
+%                                          0, 0];
 constraints.weights.hard_output = 1e8 *  [0, 0;
                                           10, 10;
                                           1, 1;
@@ -99,6 +99,8 @@ mpc_input.params            = params;
 mpc_input.initial           = initial;
 mpc_input.solver            = convex_solver;
 
+% TODO - add function to check dimensions of constraints (especiall control
+% weights etc.) match the initial guess dimensions
 
 % ----------------------------------------------------------------------- %
 % Define Simulation Environment
@@ -108,7 +110,7 @@ mpc_input.solver            = convex_solver;
 % Define plant model - as vehicle responds in the environment
 plant_model = control_model;
 
-% auxdata = configure_inputs(auxdata);
+auxdata = configure_inputs(auxdata);
 plant_model.auxdata         = auxdata;
 plant_model.dynamics        = @tensor6;
 plant_model.output          = @X15_outputs;
