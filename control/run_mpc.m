@@ -7,28 +7,23 @@
 % in a Cartesian coordinate system. Only the control inputs are maintained
 % and passed between each environment. 
 
-% NOTES
-% - seg violation when altitude weight is too high??
-
-
 % Add MPC controller directory
 addpath '/home/kieran/Documents/MATLAB/MPC'
 
 clearvars; deg = pi/180; rad = 180/pi;
-
 
 % ----------------------------------------------------------------------- %
 % Define MPC Environment
 % ----------------------------------------------------------------------- %
 params.timestep     = 0.05;
 params.horizon      = 100;
-params.sim_time     = 10;
+params.sim_time     = 30;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
-
 
 run('./../inputs/load_paths.m')
 % Use GPOPS altitude hold solution to get initial trim state
-load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
+% load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
+load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
 
 out = output.result.solution.phase;
 x0  = out.state(1,:);
@@ -48,6 +43,7 @@ control_model.auxdata       = auxdata;
 control_model.dynamics      = @cart6_euler;
 control_model.output        = @cart6_output;
 control_model.mapping_func  = @tensor6plant_to_euler6control;
+% control_model.mapping_func  = @(in)in;
 reference_function          = @cart6_reference;
 
 % Define cost and constraint matrices
@@ -55,7 +51,7 @@ cost_weightings.output         = 1e3* [1, 0, 0, 0, 0;   % Altitude
                                        0, 0, 0, 0, 0;   % FDA
                                        0, 0, 0, 0, 0;   % THR
                                        0, 0, 0, 1, 0;   % Ma
-                                       0, 0, 0, 0, 0.1];  % FPA
+                                       0, 0, 0, 0, 1];  % FPA
 cost_weightings.control        = eye(length(initial.control));
 
 
@@ -65,9 +61,11 @@ penalty_method = 'linear';      % Quadratic or linear
 penalty_weight      = 1e5;
 
 constraints.hard.rate    = [-10*deg, 10*deg;
-                            -0.2,   0.2];
+                            -0.2,   0.2;
+                            0, 0]; % dummy input
 constraints.hard.input   = [-10*deg, 10*deg;
-                            -0.2,   0.2];
+                            -0.2,   0.2;
+                            0, 0]; % dummy input
 constraints.hard.output  = [   0,      0     ;
                             -40*deg, 40*deg  ;
                                0,      1     ;
@@ -78,9 +76,11 @@ constraints.hard.output  = [   0,      0     ;
 % ------------------------
 % Use nan for hard constraints
 constraints.weights.hard_rate   = [0, 0;
+                                   0, 0;
                                    0, 0];
 constraints.weights.hard_input  = 1e8 * [10, 10;
-                                         1, 1];
+                                         1, 1;
+                                         0, 0];
 constraints.weights.hard_output = 1e8 *  [0, 0;
                                           10, 10;
                                           1, 1;
@@ -101,7 +101,9 @@ mpc_input.solver            = convex_solver;
 % Define Simulation Environment
 % ----------------------------------------------------------------------- %
 % Define plant model - as vehicle responds in the environment
-auxdata = configure_inputs(auxdata);
+plant_model = control_model;
+
+% auxdata = configure_inputs(auxdata);
 plant_model.auxdata         = auxdata;
 plant_model.dynamics        = @tensor6;
 plant_model.output          = @X15_outputs;
@@ -111,8 +113,6 @@ sim_input.dynamics_input    = dyn_input;
 sim_input.plant_model       = plant_model;
 sim_input.Ts                = params.timestep;
 
-
-
 % ----------------------------------------------------------------------- %
 % Run Simulation
 % ----------------------------------------------------------------------- %
@@ -121,3 +121,4 @@ input.sim_input = sim_input;
 input.reference_function = reference_function;
 
 output = mpc_control(input);
+
