@@ -15,6 +15,9 @@ clearvars; deg = pi/180; rad = 180/pi;
 % ----------------------------------------------------------------------- %
 % Define MPC Environment
 % ----------------------------------------------------------------------- %
+% This is where all functions and variable relating to the control model
+% are defined.
+
 params.timestep     = 0.05;
 params.horizon      = 100;
 params.sim_time     = 30;
@@ -22,8 +25,8 @@ convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 run('./../inputs/load_paths.m')
 % Use GPOPS altitude hold solution to get initial trim state
-% load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
-load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
+load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
+% load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
 
 out = output.result.solution.phase;
 x0  = out.state(1,:);
@@ -100,6 +103,8 @@ mpc_input.solver            = convex_solver;
 % ----------------------------------------------------------------------- %
 % Define Simulation Environment
 % ----------------------------------------------------------------------- %
+% This is where all functions and variables related to the simulation model
+% are defined. 
 % Define plant model - as vehicle responds in the environment
 plant_model = control_model;
 
