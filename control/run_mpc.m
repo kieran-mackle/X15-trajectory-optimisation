@@ -18,9 +18,9 @@ clearvars; deg = pi/180; rad = 180/pi;
 % This is where all functions and variable relating to the control model
 % are defined.
 
-params.timestep     = 0.05;
-params.horizon      = 100;
-params.sim_time     = 30;
+params.timestep     = 0.25;
+params.horizon      = 50;
+params.sim_time     = 15;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 run('./../inputs/load_paths.m')
@@ -53,8 +53,8 @@ reference_function          = @cart6_reference;
 cost_weightings.output         = 1e3* [1, 0, 0, 0, 0;   % Altitude
                                        0, 0, 0, 0, 0;   % FDA
                                        0, 0, 0, 0, 0;   % THR
-                                       0, 0, 0, 1, 0;   % Ma
-                                       0, 0, 0, 0, 1];  % FPA
+                                       0, 0, 0, 0.5, 0;   % Ma
+                                       0, 0, 0, 0, 0.5];  % FPA
 cost_weightings.control        = eye(length(initial.control));
 
 
@@ -84,7 +84,7 @@ constraints.weights.hard_rate   = [0, 0;
 constraints.weights.hard_input  = 1e8 * [10, 10;
                                          1, 1];
 %                                          0, 0];
-constraints.weights.hard_output = 1e8 *  [0, 0;
+constraints.weights.hard_output = 1e7 *  [0, 0;
                                           10, 10;
                                           1, 1;
                                           0, 0;
