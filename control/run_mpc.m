@@ -7,10 +7,14 @@
 % in a Cartesian coordinate system. Only the control inputs are maintained
 % and passed between each environment. 
 
-% Add MPC controller directory
+% Initialisation
+run('./../inputs/load_paths.m')
 addpath '/home/kieran/Documents/MATLAB/MPC'
-
 clearvars; deg = pi/180; rad = 180/pi;
+
+% Define coordinate systems
+control_system = 'Cartesian';
+simulation_system = 'Polar';
 
 % ----------------------------------------------------------------------- %
 % Define MPC Environment
@@ -21,20 +25,19 @@ clearvars; deg = pi/180; rad = 180/pi;
 params.timestep     = 0.025;
 params.horizon      = 100;
 params.sim_time     = 15;
-convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
+convex_solver       = 'gurobi'; % 'quadprog' / 'gurobi'
 
-run('./../inputs/load_paths.m')
-% Use GPOPS altitude hold solution to get initial trim state - should match
-% simulation coordinates
-load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat') % Polar
-% load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')  % Cartesian
+% Get initial trim state from GPOPS solutions
+if strcmpi(simulation_system, 'Polar')
+    % Load Polar initial state
+    load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
+else
+    % Load Cartesian initial state
+    load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
+end
 
-out = output.result.solution.phase;
-x0  = out.state(1,:);
-u0  = out.control(1,:);
-
-initial.state = x0;
-initial.control = u0;
+initial.state = output.result.solution.phase.state(1,:);
+initial.control = output.result.solution.phase.control(1,:);
 
 % Add cartesian models to auxdata
 auxdata.mass_model = @(F)0;
@@ -43,21 +46,23 @@ auxdata.gravity_model = @(h)[0,0,9.81];
 auxdata.atmospheric_model = @(h)GetAtmo(h);
 
 % Define control model - as seen by MPC 
-control_model.auxdata       = auxdata;
-control_model.dynamics      = @cart6_euler;
-control_model.output        = @cart6_output;
-control_model.mapping_func  = @tensor6plant_to_euler6control;
-% control_model.mapping_func  = @(in)in; % when plant and sim model are the
-% same
-reference_function          = @cart6_reference;
+control_model.auxdata = auxdata;
+control_model.dynamics = @cart6_euler;
+control_model.output = @cart6_output;
+if strcmpi(simulation_system, control_system)
+    control_model.mapping_func = @(in)in;
+else
+    control_model.mapping_func = @tensor6plant_to_euler6control;
+end
+reference_function = @cart6_reference;
 
 % Define cost and constraint matrices
-cost_weightings.output         = 1e3* [1, 0, 0, 0, 0;   % Altitude
-                                       0, 0, 0, 0, 0;   % FDA
-                                       0, 0, 0, 0, 0;   % THR
-                                       0, 0, 0, 0.5, 0;   % Ma
-                                       0, 0, 0, 0, 0.5];  % FPA
-cost_weightings.control        = eye(length(initial.control));
+cost_weightings.output = 1e3* [1, 0, 0, 0, 0;   % Altitude
+                               0, 0, 0, 0, 0;   % FDA
+                               0, 0, 0, 0, 0;   % THR
+                               0, 0, 0, 0.5, 0;   % Ma
+                               0, 0, 0, 0, 0.5];  % FPA
+cost_weightings.control = eye(length(initial.control));
 
 
 % Quadprog constraint handling options
