@@ -18,15 +18,16 @@ clearvars; deg = pi/180; rad = 180/pi;
 % This is where all functions and variable relating to the control model
 % are defined.
 
-params.timestep     = 0.25;
-params.horizon      = 50;
+params.timestep     = 0.025;
+params.horizon      = 100;
 params.sim_time     = 15;
 convex_solver       = 'gurobi';       % 'quadprog' / 'gurobi'
 
 run('./../inputs/load_paths.m')
-% Use GPOPS altitude hold solution to get initial trim state
-load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
-% load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
+% Use GPOPS altitude hold solution to get initial trim state - should match
+% simulation coordinates
+load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat') % Polar
+% load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')  % Cartesian
 
 out = output.result.solution.phase;
 x0  = out.state(1,:);
@@ -46,7 +47,8 @@ control_model.auxdata       = auxdata;
 control_model.dynamics      = @cart6_euler;
 control_model.output        = @cart6_output;
 control_model.mapping_func  = @tensor6plant_to_euler6control;
-% control_model.mapping_func  = @(in)in;
+% control_model.mapping_func  = @(in)in; % when plant and sim model are the
+% same
 reference_function          = @cart6_reference;
 
 % Define cost and constraint matrices
@@ -61,7 +63,7 @@ cost_weightings.control        = eye(length(initial.control));
 % Quadprog constraint handling options
 constraints.type = 'soft';      % None, soft, hard or mixed
 penalty_method = 'linear';      % Quadratic or linear
-penalty_weight      = 1e5;
+penalty_weight = 1e5;
 
 constraints.hard.rate    = [-10*deg, 10*deg;
                             -0.2,   0.2];
