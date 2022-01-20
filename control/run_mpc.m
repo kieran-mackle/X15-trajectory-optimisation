@@ -10,11 +10,13 @@
 % Initialisation
 run('./../inputs/load_paths.m')
 addpath '/home/kieran/Documents/MATLAB/MPC'
-% clearvars; deg = pi/180; rad = 180/pi;
+clearvars; deg = pi/180; rad = 180/pi;
 
 % Define coordinate systems
 control_system = 'Cartesian';
 simulation_system = 'Polar';
+
+show_plots = 0;
 
 % ----------------------------------------------------------------------- %
 % Define MPC Environment
@@ -24,23 +26,23 @@ simulation_system = 'Polar';
 
 params.timestep     = 0.025;
 params.horizon      = 100;
-params.sim_time     = 10;
+params.sim_time     = 20;
 convex_solver       = 'gurobi'; % 'quadprog' / 'gurobi'
 
 % Get initial trim state from GPOPS solutions
-% if strcmpi(simulation_system, 'Polar')
-%     % Load Polar initial state
-%     load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
-% else
-%     % Load Cartesian initial state
-%     load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
-% end
-% 
-% initial.state = output.result.solution.phase.state(1,:);
-% initial.control = output.result.solution.phase.control(1,:);
+if strcmpi(simulation_system, 'Polar')
+    % Load Polar initial state
+    load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
+else
+    % Load Cartesian initial state
+    load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
+end
 
-initial.state = mpc_hold_output.state(:,end)';
-initial.control = mpc_hold_output.control(:,end)';
+initial.state = output.result.solution.phase.state(1,:);
+initial.control = output.result.solution.phase.control(1,:);
+
+% initial.state = mpc_hold_output.state(:,end)';
+% initial.control = mpc_hold_output.control(:,end)';
 
 % Add cartesian models to auxdata
 auxdata.mass_model = @(F)0;
@@ -63,7 +65,7 @@ elseif strcmpi(control_system,'Cartesian') && strcmpi(simulation_system,'Polar')
 end
 
 % Define cost and constraint matrices
-cost_weightings.output = 1e3* [1, 0, 0, 0, 0;   % Altitude
+cost_weightings.output = 1e3* [10, 0, 0, 0, 0;   % Altitude
                                0, 0, 0, 0, 0;   % FDA
                                0, 0, 0, 0, 0;   % THR
                                0, 0, 0, 0.5, 0;   % Ma
@@ -96,7 +98,7 @@ constraints.weights.hard_rate   = [0, 0;
 constraints.weights.hard_input  = 1e8 * [10, 10;
                                          1, 1];
 %                                          0, 0];
-constraints.weights.hard_output = 1e7 *  [0, 0;
+constraints.weights.hard_output = 1e9 *  [0, 0;
                                           10, 10;
                                           1, 1;
                                           0, 0;
@@ -110,6 +112,7 @@ mpc_input.penalty_weight    = penalty_weight;
 mpc_input.params            = params;
 mpc_input.initial           = initial;
 mpc_input.solver            = convex_solver;
+mpc_input.show_plots        = show_plots;
 
 % TODO - add function to check dimensions of constraints (especiall control
 % weights etc.) match the initial guess dimensions
@@ -136,6 +139,7 @@ sim_input.N                 = 1000; % Forward simulation steps
 % ----------------------------------------------------------------------- %
 % Run Simulation
 % ----------------------------------------------------------------------- %
+input.show_plots = show_plots;
 input.mpc_input = mpc_input;
 input.sim_input = sim_input;
 input.reference_function = reference_function;
