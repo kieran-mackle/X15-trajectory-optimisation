@@ -10,7 +10,7 @@
 % Initialisation
 run('./../inputs/load_paths.m')
 addpath '/home/kieran/Documents/MATLAB/MPC'
-clearvars; deg = pi/180; rad = 180/pi;
+% clearvars; deg = pi/180; rad = 180/pi;
 
 % Define coordinate systems
 control_system = 'Cartesian';
@@ -24,20 +24,23 @@ simulation_system = 'Polar';
 
 params.timestep     = 0.025;
 params.horizon      = 100;
-params.sim_time     = 15;
+params.sim_time     = 10;
 convex_solver       = 'gurobi'; % 'quadprog' / 'gurobi'
 
 % Get initial trim state from GPOPS solutions
-if strcmpi(simulation_system, 'Polar')
-    % Load Polar initial state
-    load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
-else
-    % Load Cartesian initial state
-    load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
-end
+% if strcmpi(simulation_system, 'Polar')
+%     % Load Polar initial state
+%     load('./../Results/Config1/6DOF/20km_hold_polar/20km_hold_polar.mat')
+% else
+%     % Load Cartesian initial state
+%     load('./../Results/Config1/6DOF/20km_hold/20km_hold.mat')
+% end
+% 
+% initial.state = output.result.solution.phase.state(1,:);
+% initial.control = output.result.solution.phase.control(1,:);
 
-initial.state = output.result.solution.phase.state(1,:);
-initial.control = output.result.solution.phase.control(1,:);
+initial.state = mpc_hold_output.state(:,end)';
+initial.control = mpc_hold_output.control(:,end)';
 
 % Add cartesian models to auxdata
 auxdata.mass_model = @(F)0;
@@ -49,12 +52,15 @@ auxdata.atmospheric_model = @(h)GetAtmo(h);
 control_model.auxdata = auxdata;
 control_model.dynamics = @cart6_euler;
 control_model.output = @cart6_output;
+reference_function = @cart6_reference;
+
 if strcmpi(simulation_system, control_system)
+    % one-to-one mapping function
     control_model.mapping_func = @(in)in;
-else
+elseif strcmpi(control_system,'Cartesian') && strcmpi(simulation_system,'Polar')
+    % Polar to Cartesian mapping function
     control_model.mapping_func = @tensor6plant_to_euler6control;
 end
-reference_function = @cart6_reference;
 
 % Define cost and constraint matrices
 cost_weightings.output = 1e3* [1, 0, 0, 0, 0;   % Altitude
@@ -63,7 +69,6 @@ cost_weightings.output = 1e3* [1, 0, 0, 0, 0;   % Altitude
                                0, 0, 0, 0.5, 0;   % Ma
                                0, 0, 0, 0, 0.5];  % FPA
 cost_weightings.control = eye(length(initial.control));
-
 
 % Quadprog constraint handling options
 constraints.type = 'soft';      % None, soft, hard or mixed
@@ -126,6 +131,7 @@ dyn_input.phase.state       = initial.state;
 sim_input.dynamics_input    = dyn_input;
 sim_input.plant_model       = plant_model;
 sim_input.Ts                = params.timestep;
+sim_input.N                 = 1000; % Forward simulation steps
 
 % ----------------------------------------------------------------------- %
 % Run Simulation
@@ -134,5 +140,5 @@ input.mpc_input = mpc_input;
 input.sim_input = sim_input;
 input.reference_function = reference_function;
 
-output = mpc_control(input);
+mpc_output = mpc_control(input);
 
