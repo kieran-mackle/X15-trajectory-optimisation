@@ -7,7 +7,7 @@ clearvars; clc; clf;
 % ----------------------------------------------------------------- %
 %                  Initialise environment with paths                %
 %------------------------------------------------------------------ %
-run('./inputs/load_paths.m')
+% run('./inputs/load_paths.m')
 
 % ----------------------------------------------------------------- %
 %                  Load vehicle configuration script                %
@@ -23,10 +23,10 @@ auxdata.atmospheric_model = @(h)GetAtmo(h);
 % ----------------------------------------------------------------- %
 %                       Load manoeuvre script                       %
 %------------------------------------------------------------------ %
-manoeuvre_spec.type = 'hold';              % 'climb' / 'hold'
+manoeuvre_spec.type = 'climb';              % 'climb' / 'hold'
 manoeuvre_spec.name = '20km_hold_cart';
 manoeuvre_spec.h0 = 20e3;
-manoeuvre_spec.hf = 20e3;
+manoeuvre_spec.hf = 25e3;
 manoeuvre_spec.Ma0 = 6;
 manoeuvre_spec.Maf = 6;
 manoeuvre_spec.use_guess = 0;
